@@ -4,8 +4,12 @@ apache2 (2.4.4-7) UNRELEASED; urgency=low
 
   * Allow access to /srv, beyond /var/www for user supplied vhosts by default.
     Thanks to joeyh for pointing this out.
+  * Allow the use of apache2-maintscript-helper from a sub-function. We rely
+    on dpkg's arguments supplied in $1, $2 etc. This clashes with function
+    arguments supplied to to sh sub-function. Allow manual override in such
+    cases.
 
- -- Arno Töll <arno@debian.org>  Sun, 09 Jun 2013 14:00:51 +0200
+ -- Arno Töll <arno@debian.org>  Sun, 16 Jun 2013 11:49:30 +0200
 
 apache2 (2.4.4-6) unstable; urgency=low
 
