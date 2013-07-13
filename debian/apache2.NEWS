@@ -1,4 +1,4 @@
-apache2 (2.4.1-1) experimental; urgency=low
+apache2 (2.4.4-7) unstable; urgency=low
 
   This package introduces a new major release of the Apache HTTP server. It is
   likely the site configuration needs changes to work with this release.
@@ -21,9 +21,13 @@ apache2 (2.4.1-1) experimental; urgency=low
   a2enmod mpm_prefork
 
   We did change the security model for Apache in our default configuration. We
-  do not allow access to the file system outside /var/www, /srv and /usr/share.
+  do not allow access to the file system outside /var/www and /usr/share.
   If you are running virtual hosts or scripts outside these directories, you
   need to whitelist them in your configuration to grant access through HTTP.
+  Special care must be taken if you are using a sub-directory in /srv to serve
+  your content as recommended by the File Hierarchy Standard (FHS). You must
+  allow access to your served directory explicity in the corresponding virtual
+  host, or by allowing access in apache2.conf as proposed.
 
   Moreover, the configuration mechanism in Debian has changed. All
   configurations in sites-enabled and conf-enabled need a ".conf" suffix now.
