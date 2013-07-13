@@ -230,8 +230,8 @@ to install Apache configuration files depending on a user input, for example if
 they interface to the user through L<debconf(1)>.
 
 The defaults is to always execute the scripts. The named function should be
-provided in the F<prerm> and F<postinst> scripts, before the B<#DEBHELPER#>
-token.
+provided in the F<prerm>, F<postrm> and F<postinst> scripts, before the
+B<#DEBHELPER#> token.
 
 =item S<B<--restart>> S<B<-r>>
 
