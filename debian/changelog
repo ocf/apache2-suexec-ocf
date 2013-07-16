@@ -1,5 +1,6 @@
 apache2 (2.4.4-7) UNRELEASED; urgency=low
 
+  [ Arno Töll ]
   * Document our security model in our NEWS file and highlight we do not allow
     access to /srv. Thanks to joeyh for pointing this out.
   * Allow the use of apache2-maintscript-helper from a sub-function. We rely
@@ -7,6 +8,11 @@ apache2 (2.4.4-7) UNRELEASED; urgency=low
     arguments supplied to to sh sub-function. Allow manual override in such
     cases.
   * Mention that the dh_apache2 conditional must be present in postrm too (Closes: #716694)
+
+  [ Stefan Fritsch ]
+  * Don't fail package upgrade or removal just because the configuration is in
+    an inconsistent state. Closes: #716921
+  * Improve error output of init script.
 
  -- Arno Töll <arno@debian.org>  Sat, 13 Jul 2013 22:20:05 +0200
 

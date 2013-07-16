@@ -81,6 +81,42 @@ HTCACHECLEAN="$ENV /usr/sbin/htcacheclean"
 PIDFILE=$(. $APACHE_ENVVARS && echo $APACHE_PID_FILE)
 APACHE2_INIT_MESSAGE=""
 
+CONFTEST_OUTFILE=
+cleanup() {
+	if [ -n "$CONFTEST_OUTFILE" ] ; then
+		rm -f "$CONFTEST_OUTFILE"
+	fi
+}
+trap cleanup 0  # "0" means "EXIT", but "EXIT" is not portable
+
+
+apache_conftest() {
+	[ -z "$CONFTEST_OUTFILE" ] || rm -f "$CONFTEST_OUTFILE"
+	CONFTEST_OUTFILE=$(mktemp)
+	if ! $APACHE2CTL configtest > "$CONFTEST_OUTFILE" 2>&1 ; then
+		return 1
+	else
+		rm -f "$CONFTEST_OUTFILE"
+		CONFTEST_OUTFILE=
+		return 0
+	fi
+}
+
+clear_error_msg() {
+	[ -z "$CONFTEST_OUTFILE" ] || rm -f "$CONFTEST_OUTFILE"
+	CONFTEST_OUTFILE=
+	APACHE2_INIT_MESSAGE=
+}
+
+print_error_msg() {
+	[ -z "$APACHE2_INIT_MESSAGE" ] || log_warning_msg "$APACHE2_INIT_MESSAGE"
+	if [ -n "$CONFTEST_OUTFILE" ] ; then
+		echo "Output of config test was:" >&2
+		cat "$CONFTEST_OUTFILE" >&2
+		rm -f "$CONFTEST_OUTFILE"
+		CONFTEST_OUTFILE=
+	fi
+}
 
 apache_wait_start() {
 	local STATUS=$1
@@ -138,12 +174,12 @@ do_start()
 	        return 1
 	fi
 
-	if $APACHE2CTL configtest > /dev/null 2>&1; then
+	if apache_conftest ; then
 	        $APACHE2CTL start
 	        apache_wait_start $?
 	        return $?
 	else
-	        APACHE2_INIT_MESSAGE="The apache2$DIR_SUFFIX configtest failed. Please run '$APACHE2CTL configtest' manually and read the log file to discover problems"
+	        APACHE2_INIT_MESSAGE="The apache2$DIR_SUFFIX configtest failed."
 	        return 2
 	fi
 }
@@ -183,12 +219,13 @@ do_stop()
 	        return 1
 	fi
 
-	if [ $AP_RET = 2 ] && $APACHE2CTL configtest > /dev/null 2>&1; then
+	if [ $AP_RET = 2 ] && apache_conftest ; then
 	        $APACHE2CTL $STOP > /dev/null 2>&1
 	        apache_wait_stop $?
 	        return $?
 	else
 	        if [ $AP_RET = 2 ]; then
+					clear_error_msg
 	                APACHE2_INIT_MESSAGE="The apache2$DIR_SUFFIX configtest failed, so we are trying to kill it manually. This is almost certainly suboptimal, so please make sure your system is working as you'd expect now!"
 	                killproc -p $PIDFILE $DAEMON
 	                apache_wait_stop $?
@@ -206,7 +243,7 @@ do_stop()
 # Function that sends a SIGHUP to the daemon/service
 #
 do_reload() {
-	if $APACHE2CTL configtest > /dev/null 2>&1; then
+	if apache_conftest; then
 	        if ! pidofproc -p $PIDFILE "$DAEMON" > /dev/null 2>&1 ; then
 	                APACHE2_INIT_MESSAGE="Apache2 is not running"
 	                return 2
@@ -270,7 +307,7 @@ case "$1" in
 	RET_STATUS=$?
 	case "$RET_STATUS" in
 		0|1)
-			log_end_msg 0
+			log_success_msg
 			[ "$VERBOSE" != no ] && [ $RET_STATUS = 1 ] && log_warning_msg "Server was already running"
 			if check_htcacheclean ; then
 				[ "$VERBOSE" != no ] && log_daemon_msg "Starting HTTP cache cleaning daemon" "htcacheclean"
@@ -279,9 +316,8 @@ case "$1" in
 			fi
 	        ;;
 		2)
-			log_end_msg 1
-			[ -n "$APACHE2_INIT_MESSAGE" ] && echo $APACHE2_INIT_MESSAGE >&2
 			log_failure_msg
+			print_error_msg
 			exit 1
 			;;
 	esac
@@ -292,15 +328,16 @@ case "$1" in
 	RET_STATUS=$?
 	case "$RET_STATUS" in
 		0|1)
-			log_end_msg 0
+			log_success_msg
 			[ "$VERBOSE" != no ] && [ $RET_STATUS = 1 ] && log_warning_msg "Server was not running"
 	        ;;
 		2)
-			log_end_msg 1
+			log_failure_msg
+			print_error_msg
 			exit 1
 	        ;;
 	esac
-	[ "$VERBOSE" != no ] && [ "x$APACHE2_INIT_MESSAGE" != "x" ] && log_warning_msg "$APACHE2_INIT_MESSAGE"
+	print_error_msg
 
 	if check_htcacheclean ; then
 		[ "$VERBOSE" != no ] && log_daemon_msg "Stopping HTTP cache cleaning daemon" "htcacheclean"
@@ -319,16 +356,16 @@ case "$1" in
 	RET_STATUS=$?
 	case "$RET_STATUS" in
 		0|1)
-			log_end_msg 0
+			log_success_msg
 			[ "$VERBOSE" != no ] && [ $RET_STATUS = 1 ] && log_warning_msg "Server was already running"
 			;;
 		2)
-			log_end_msg 1
 			log_failure_msg
+			print_error_msg
 			exit 1
 			;;
 	esac
-	[ "$VERBOSE" != no ] && [ "x$APACHE2_INIT_MESSAGE" != "x" ] && log_warning_msg "$APACHE2_INIT_MESSAGE"
+	print_error_msg
 	;;
   restart)
 	log_daemon_msg "Restarting $DESC" "$NAME"
@@ -342,6 +379,7 @@ case "$1" in
 					;;
 				1|*)
 					log_end_msg 1 # Old process is still or failed to running
+					print_error_msg
 					exit 1
 					;;
 			esac
@@ -349,6 +387,7 @@ case "$1" in
 		*)
 			# Failed to stop
 			log_end_msg 1
+			print_error_msg
 			exit 1
 			;;
 	esac
