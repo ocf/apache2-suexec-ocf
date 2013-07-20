@@ -19,3 +19,4 @@ itk-fix-htaccess-reads-for-persistent-connections.patch
 itk-rerun-configure.patch
 upstream-fixes
 allow-strtoul.patch
+CVE-2013-1896.patch

@@ -1,4 +1,4 @@
-apache2 (2.4.4-7) UNRELEASED; urgency=low
+apache2 (2.4.4-7) unstable; urgency=low
 
   [ Arno Töll ]
   * Document our security model in our NEWS file and highlight we do not allow
@@ -10,13 +10,15 @@ apache2 (2.4.4-7) UNRELEASED; urgency=low
   * Mention that the dh_apache2 conditional must be present in postrm too (Closes: #716694)
   * Fix "dh_apache2 ignores alternative httpd on conf files" by correctly
     checking the supplied arguments, we were off by one (Closes: #717299).
+  * CVE-2013-1896: Add patch provided by Marc Deslauriers to fix a denial of service via MERGE
+    request (Closes: #717272)
 
   [ Stefan Fritsch ]
   * Don't fail package upgrade or removal just because the configuration is in
-    an inconsistent state. Closes: #716921
+    an inconsistent state (Closes: #716921, #717343).
   * Improve error output of init script.
 
- -- Arno Töll <arno@debian.org>  Sat, 20 Jul 2013 12:37:31 +0200
+ -- Arno Töll <arno@debian.org>  Sat, 20 Jul 2013 13:26:50 +0200
 
 apache2 (2.4.4-6) unstable; urgency=low
 
