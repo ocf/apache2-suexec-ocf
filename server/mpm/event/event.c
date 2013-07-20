@@ -2126,7 +2126,13 @@ static void child_main(int child_num_arg)
     apr_threadattr_detach_set(thread_attr, 0);
 
     if (ap_thread_stacksize != 0) {
-        apr_threadattr_stacksize_set(thread_attr, ap_thread_stacksize);
+        rv = apr_threadattr_stacksize_set(thread_attr, ap_thread_stacksize);
+        if (rv != APR_SUCCESS && rv != APR_ENOTIMPL) {
+            ap_log_error(APLOG_MARK, APLOG_WARNING, rv, ap_server_conf, APLOGNO(02436)
+                         "WARNING: ThreadStackSize of %" APR_SIZE_T_FMT " is "
+                         "inappropriate, using default", 
+                         ap_thread_stacksize);
+        }
     }
 
     ts->threads = threads;
@@ -3234,6 +3240,9 @@ static const char *set_worker_factor(cmd_parms * cmd, void *dummy,
     val = strtod(arg, &endptr);
     if (*endptr)
         return "error parsing value";
+
+    if (val <= 0)
+        return "AsyncRequestWorkerFactor argument must be a positive number";
 
     worker_factor = val * WORKER_FACTOR_SCALE;
     if (worker_factor == 0)

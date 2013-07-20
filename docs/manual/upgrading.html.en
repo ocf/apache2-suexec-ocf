@@ -118,6 +118,10 @@
     <code class="directive"><a href="./mod/mod_authz_core.html#requirenone">RequireNone</a></code>, and
     <code class="directive"><a href="./mod/mod_authz_core.html#requireall">RequireAll</a></code>.</p>
 
+    <p>If you use <code class="module"><a href="./mod/mod_authz_dbm.html">mod_authz_dbm</a></code>, you must port your 
+    configuration to use <code>Require dbm-group ...</code> in place
+    of <code>Require group ...</code>.</p>
+
     <h4><a name="access" id="access">Access control</a></h4>
       
 
@@ -322,6 +326,13 @@ Allow from example.org
       has been moved into <code class="module"><a href="./mod/mod_authn_core.html">mod_authn_core</a></code>.  
       </li>
 
+      <li>The RewriteLog and RewriteLogLevel directives have been removed.
+      This functionality is now provided by configuring the appropriate
+      level of logging for the <code class="module"><a href="./mod/mod_rewrite.html">mod_rewrite</a></code> module using
+      the <code class="directive"><a href="./mod/core.html#loglevel">LogLevel</a></code> directive.
+      See also the <a href="mod/mod_rewrite.html#logging">mod_rewrite logging</a>
+      section.</li>
+
     </ul>
 
   </div><div class="top"><a href="#page-header"><img alt="top" src="./images/up.gif" /></a></div>
@@ -346,6 +357,10 @@ Allow from example.org
  - load module <code class="module"><a href="./mod/mod_access_compat.html">mod_access_compat</a></code>, or update configuration to 2.4 authorization directives.</li>
       <li><code>Ignoring deprecated use of DefaultType in line NN of /path/to/httpd.conf</code> - remove <code class="directive"><a href="./mod/core.html#defaulttype">DefaultType</a></code>
       and replace with other configuration settings.</li>
+      <li><code>Invalid command 'AddOutputFilterByType', perhaps misspelled 
+      or defined by a module not included in the server configuration
+      </code> - <code class="directive"><a href="./mod/mod_filter.html#addoutputfilterbytype">AddOutputFilterByType</a></code> 
+      has moved from the core to mod_filter, which must be loaded.</li>
     </ul></li>
     <li>Errors serving requests:
     <ul>

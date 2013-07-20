@@ -195,6 +195,7 @@ usados para describir las directivas de Apache</a></li>
 <li><a href="mod/mod_buffer.html">Módulo Apache mod_buffer</a></li>
 <li><a href="mod/mod_cache.html">Módulo Apache mod_cache</a></li>
 <li><a href="mod/mod_cache_disk.html">Módulo Apache mod_cache_disk</a></li>
+<li><a href="mod/mod_cache_socache.html">Módulo Apache mod_cache_socache</a></li>
 <li><a href="mod/mod_cern_meta.html">Módulo Apache mod_cern_meta</a></li>
 <li><a href="mod/mod_cgi.html">Módulo Apache mod_cgi</a></li>
 <li><a href="mod/mod_cgid.html">Módulo Apache mod_cgid</a></li>
@@ -233,6 +234,7 @@ usados para describir las directivas de Apache</a></li>
 <li><a href="mod/mod_log_forensic.html">Módulo Apache mod_log_forensic</a></li>
 <li><a href="mod/mod_logio.html">Módulo Apache mod_logio</a></li>
 <li><a href="mod/mod_lua.html">Módulo Apache mod_lua</a></li>
+<li><a href="mod/mod_macro.html">Módulo Apache mod_macro</a></li>
 <li><a href="mod/mod_mime.html">Módulo Apache mod_mime</a></li>
 <li><a href="mod/mod_mime_magic.html">Módulo Apache mod_mime_magic</a></li>
 <li><a href="mod/mod_negotiation.html">Módulo Apache mod_negotiation</a></li>
@@ -249,6 +251,7 @@ usados para describir las directivas de Apache</a></li>
 <li><a href="mod/mod_proxy_html.html">Módulo Apache mod_proxy_html</a></li>
 <li><a href="mod/mod_proxy_http.html">Módulo Apache mod_proxy_http</a></li>
 <li><a href="mod/mod_proxy_scgi.html">Módulo Apache mod_proxy_scgi</a></li>
+<li><a href="mod/mod_proxy_wstunnel.html">Módulo Apache mod_proxy_wstunnel</a></li>
 <li><a href="mod/mod_ratelimit.html">Módulo Apache mod_ratelimit</a></li>
 <li><a href="mod/mod_reflector.html">Módulo Apache mod_reflector</a></li>
 <li><a href="mod/mod_remoteip.html">Módulo Apache mod_remoteip</a></li>

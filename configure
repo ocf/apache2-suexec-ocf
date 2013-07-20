@@ -751,6 +751,7 @@ MOD_SESSION_LDADD
 MOD_PROXY_EXPRESS_LDADD
 MOD_PROXY_BALANCER_LDADD
 MOD_PROXY_AJP_LDADD
+MOD_PROXY_WSTUNNEL_LDADD
 MOD_PROXY_FDPASS_LDADD
 MOD_PROXY_SCGI_LDADD
 MOD_PROXY_FCGI_LDADD
@@ -802,6 +803,7 @@ MOD_ECHO_LDADD
 MOD_DUMPIO_LDADD
 MOD_BUCKETEER_LDADD
 MOD_DBD_LDADD
+MOD_MACRO_LDADD
 MOD_WATCHDOG_LDADD
 MOD_SO_LDADD
 INSTALL_DSO
@@ -809,6 +811,7 @@ MOD_SOCACHE_DC_LDADD
 MOD_SOCACHE_MEMCACHE_LDADD
 MOD_SOCACHE_DBM_LDADD
 MOD_SOCACHE_SHMCB_LDADD
+MOD_CACHE_SOCACHE_LDADD
 MOD_CACHE_DISK_LDADD
 MOD_CACHE_LDADD
 MOD_FILE_CACHE_LDADD
@@ -993,6 +996,7 @@ enable_isapi
 enable_file_cache
 enable_cache
 enable_cache_disk
+enable_cache_socache
 enable_socache_shmcb
 enable_socache_dbm
 enable_socache_memcache
@@ -1000,6 +1004,7 @@ enable_socache_dc
 with_distcache
 enable_so
 enable_watchdog
+enable_macro
 enable_dbd
 enable_bucketeer
 enable_dumpio
@@ -1053,6 +1058,7 @@ enable_proxy_http
 enable_proxy_fcgi
 enable_proxy_scgi
 enable_proxy_fdpass
+enable_proxy_wstunnel
 enable_proxy_ajp
 enable_proxy_balancer
 enable_proxy_express
@@ -1791,6 +1797,7 @@ Optional Features:
                           management module (e.g. mod_cache_disk) is also
                           necessary.
   --enable-cache-disk     disk caching module
+  --enable-cache-socache  shared object caching module
   --enable-socache-shmcb  shmcb small object cache provider
   --enable-socache-dbm    dbm small object cache provider
   --enable-socache-memcache
@@ -1799,6 +1806,7 @@ Optional Features:
   --enable-so             DSO capability. This module will be automatically
                           enabled unless you build all modules statically.
   --enable-watchdog       Watchdog module
+  --enable-macro          Define and use macros in configuration files
   --enable-dbd            Apache DBD Framework
   --enable-bucketeer      buckets manipulation filter. Useful only for
                           developers and testing purposes.
@@ -1868,6 +1876,8 @@ Optional Features:
                           --enable-proxy.
   --enable-proxy-fdpass   Apache proxy to Unix Daemon Socket module. Requires
                           --enable-proxy.
+  --enable-proxy-wstunnel Apache proxy Websocket Tunnel module. Requires and
+                          is enabled by --enable-proxy.
   --enable-proxy-ajp      Apache proxy AJP module. Requires and is enabled by
                           --enable-proxy.
   --enable-proxy-balancer Apache proxy BALANCER module. Requires and is
@@ -6361,13 +6371,14 @@ case $host in
       ;;
   *-linux-*)
       case `uname -r` in
-        2.[2-9]* )
+        # Unserialized accept() was not recommended until Linux 2.2.
+        [01].* | 2.[01]* )
+            ;;
+        * )
 
   test "x$silent" != "xyes" && echo "  forcing SINGLE_LISTEN_UNSERIALIZED_ACCEPT to \"1\""
   SINGLE_LISTEN_UNSERIALIZED_ACCEPT="1"
 
-            ;;
-        * )
             ;;
       esac
       ;;
@@ -11770,12 +11781,14 @@ EOF
 
 cache_objs="mod_cache.lo cache_storage.lo cache_util.lo "
 cache_disk_objs="mod_cache_disk.lo"
+cache_socache_objs="mod_cache_socache.lo"
 
 case "$host" in
   *os2*)
     # OS/2 DLLs must resolve all symbols at build time
     # and we need some from main cache module
     cache_disk_objs="$cache_disk_objs mod_cache.la"
+    cache_socache_objs="$cache_socache_objs mod_cache.la"
     ;;
 esac
 
@@ -12063,6 +12076,140 @@ EOF
 
 
   APACHE_VAR_SUBST="$APACHE_VAR_SUBST MOD_CACHE_DISK_LDADD"
+
+
+
+  fi
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable mod_cache_socache" >&5
+$as_echo_n "checking whether to enable mod_cache_socache... " >&6; }
+    # Check whether --enable-cache-socache was given.
+if test "${enable_cache_socache+set}" = set; then :
+  enableval=$enable_cache_socache; force_cache_socache=$enableval
+else
+  enable_cache_socache=most
+fi
+
+    _apmod_extra_msg=""
+        case "$enable_cache_socache" in
+    yes|static|shared)
+      _apmod_required="yes"
+      ;;
+    *)
+      case "$module_selection" in
+      reallyall|all|most)
+        _apmod_required="no"
+        ;;
+      *)
+        _apmod_required="yes"
+        ;;
+      esac
+  esac
+  if test "$enable_cache_socache" = "static"; then
+    enable_cache_socache=static
+  elif test "$enable_cache_socache" = "yes"; then
+    enable_cache_socache=$module_default
+  elif test "$enable_cache_socache" = "most"; then
+    if test "$module_selection" = "most" -o "$module_selection" = "all" -o \
+            "$module_selection" = "reallyall"
+    then
+      enable_cache_socache=$module_default
+    elif test "$module_selection" = "few" -o "$module_selection" = "none"; then
+      enable_cache_socache=no
+    fi
+    _apmod_extra_msg=" ($module_selection)"
+  elif test "$enable_cache_socache" = "maybe-all"; then
+    if test "$module_selection" = "all" -o "$module_selection" = "reallyall"
+    then
+      enable_cache_socache=$module_default
+      _apmod_extra_msg=" ($module_selection)"
+    else
+      enable_cache_socache=no
+    fi
+  elif test "$enable_cache_socache" = "no" -a "$module_selection" = "reallyall" -a \
+            "$force_cache_socache" != "no" ; then
+      enable_cache_socache=$module_default
+      _apmod_extra_msg=" ($module_selection)"
+  fi
+  if test "$enable_cache_socache" != "no"; then
+            :
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_cache_socache$_apmod_extra_msg" >&5
+$as_echo "$enable_cache_socache$_apmod_extra_msg" >&6; }
+  if test "$enable_cache_socache" != "no"; then
+    case "$enable_cache_socache" in
+    static*)
+      MODLIST="$MODLIST cache_socache"
+      if test "cache_socache" = "so"; then
+          sharedobjs=yes
+      fi
+      shared="";;
+    *)
+      enable_cache_socache=`echo $enable_cache_socache|sed 's/shared,*//'`
+      sharedobjs=yes
+      shared=yes
+      DSO_MODULES="$DSO_MODULES cache_socache"
+      if test "most" = "yes" ; then
+        ENABLED_DSO_MODULES="${ENABLED_DSO_MODULES},cache_socache"
+      fi
+      ;;
+    esac
+
+
+  if test -z "$cache_socache_objs"; then
+    objects="mod_cache_socache.lo"
+  else
+    objects="$cache_socache_objs"
+  fi
+
+  if test -z "$module_standalone"; then
+    if test -z "$shared"; then
+      # The filename of a convenience library must have a "lib" prefix:
+      libname="libmod_cache_socache.la"
+      BUILTIN_LIBS="$BUILTIN_LIBS $modpath_current/$libname"
+      modpath_static="$modpath_static $libname"
+      cat >>$modpath_current/modules.mk<<EOF
+$libname: $objects
+	\$(MOD_LINK) $objects \$(MOD_CACHE_SOCACHE_LDADD)
+EOF
+      if test ! -z "\$(MOD_CACHE_SOCACHE_LDADD)"; then
+
+  if test "x$AP_LIBS" = "x"; then
+    test "x$silent" != "xyes" && echo "  setting AP_LIBS to \"\$(MOD_CACHE_SOCACHE_LDADD)\""
+    AP_LIBS="\$(MOD_CACHE_SOCACHE_LDADD)"
+  else
+    apr_addto_bugger="\$(MOD_CACHE_SOCACHE_LDADD)"
+    for i in $apr_addto_bugger; do
+      apr_addto_duplicate="0"
+      for j in $AP_LIBS; do
+        if test "x$i" = "x$j"; then
+          apr_addto_duplicate="1"
+          break
+        fi
+      done
+      if test $apr_addto_duplicate = "0"; then
+        test "x$silent" != "xyes" && echo "  adding \"$i\" to AP_LIBS"
+        AP_LIBS="$AP_LIBS $i"
+      fi
+    done
+  fi
+
+      fi
+    else
+      apache_need_shared=yes
+      libname="mod_cache_socache.la"
+      shobjects=`echo $objects | sed 's/\.lo/.slo/g'`
+      modpath_shared="$modpath_shared $libname"
+      cat >>$modpath_current/modules.mk<<EOF
+$libname: $shobjects
+	\$(SH_LINK) -rpath \$(libexecdir) -module -avoid-version  $objects \$(MOD_CACHE_SOCACHE_LDADD)
+EOF
+    fi
+  fi
+
+
+  APACHE_VAR_SUBST="$APACHE_VAR_SUBST MOD_CACHE_SOCACHE_LDADD"
 
 
 
@@ -13363,6 +13510,141 @@ EOF
 
 
   APACHE_VAR_SUBST="$APACHE_VAR_SUBST MOD_WATCHDOG_LDADD"
+
+
+
+  fi
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable mod_macro" >&5
+$as_echo_n "checking whether to enable mod_macro... " >&6; }
+    # Check whether --enable-macro was given.
+if test "${enable_macro+set}" = set; then :
+  enableval=$enable_macro; force_macro=$enableval
+else
+  enable_macro=most
+fi
+
+    _apmod_extra_msg=""
+        case "$enable_macro" in
+    yes|static|shared)
+      _apmod_required="yes"
+      ;;
+    *)
+      case "$module_selection" in
+      reallyall|all|most)
+        _apmod_required="no"
+        ;;
+      *)
+        _apmod_required="yes"
+        ;;
+      esac
+  esac
+  if test "$enable_macro" = "static"; then
+    enable_macro=static
+  elif test "$enable_macro" = "yes"; then
+    enable_macro=$module_default
+  elif test "$enable_macro" = "most"; then
+    if test "$module_selection" = "most" -o "$module_selection" = "all" -o \
+            "$module_selection" = "reallyall"
+    then
+      enable_macro=$module_default
+    elif test "$module_selection" = "few" -o "$module_selection" = "none"; then
+      enable_macro=no
+    fi
+    _apmod_extra_msg=" ($module_selection)"
+  elif test "$enable_macro" = "maybe-all"; then
+    if test "$module_selection" = "all" -o "$module_selection" = "reallyall"
+    then
+      enable_macro=$module_default
+      _apmod_extra_msg=" ($module_selection)"
+    else
+      enable_macro=no
+    fi
+  elif test "$enable_macro" = "no" -a "$module_selection" = "reallyall" -a \
+            "$force_macro" != "no" ; then
+      enable_macro=$module_default
+      _apmod_extra_msg=" ($module_selection)"
+  fi
+  if test "$enable_macro" != "no"; then
+            :
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_macro$_apmod_extra_msg" >&5
+$as_echo "$enable_macro$_apmod_extra_msg" >&6; }
+  if test "$enable_macro" != "no"; then
+    case "$enable_macro" in
+    static*)
+      MODLIST="$MODLIST macro"
+      if test "macro" = "so"; then
+          sharedobjs=yes
+      fi
+      shared="";;
+    *)
+      enable_macro=`echo $enable_macro|sed 's/shared,*//'`
+      sharedobjs=yes
+      shared=yes
+      DSO_MODULES="$DSO_MODULES macro"
+      if test "most" = "yes" ; then
+        ENABLED_DSO_MODULES="${ENABLED_DSO_MODULES},macro"
+      fi
+      ;;
+    esac
+
+
+  if test -z ""; then
+    objects="mod_macro.lo"
+  else
+    objects=""
+  fi
+
+  if test -z "$module_standalone"; then
+    if test -z "$shared"; then
+      # The filename of a convenience library must have a "lib" prefix:
+      libname="libmod_macro.la"
+      BUILTIN_LIBS="$BUILTIN_LIBS $modpath_current/$libname"
+      modpath_static="$modpath_static $libname"
+      cat >>$modpath_current/modules.mk<<EOF
+$libname: $objects
+	\$(MOD_LINK) $objects \$(MOD_MACRO_LDADD)
+EOF
+      if test ! -z "\$(MOD_MACRO_LDADD)"; then
+
+  if test "x$AP_LIBS" = "x"; then
+    test "x$silent" != "xyes" && echo "  setting AP_LIBS to \"\$(MOD_MACRO_LDADD)\""
+    AP_LIBS="\$(MOD_MACRO_LDADD)"
+  else
+    apr_addto_bugger="\$(MOD_MACRO_LDADD)"
+    for i in $apr_addto_bugger; do
+      apr_addto_duplicate="0"
+      for j in $AP_LIBS; do
+        if test "x$i" = "x$j"; then
+          apr_addto_duplicate="1"
+          break
+        fi
+      done
+      if test $apr_addto_duplicate = "0"; then
+        test "x$silent" != "xyes" && echo "  adding \"$i\" to AP_LIBS"
+        AP_LIBS="$AP_LIBS $i"
+      fi
+    done
+  fi
+
+      fi
+    else
+      apache_need_shared=yes
+      libname="mod_macro.la"
+      shobjects=`echo $objects | sed 's/\.lo/.slo/g'`
+      modpath_shared="$modpath_shared $libname"
+      cat >>$modpath_current/modules.mk<<EOF
+$libname: $shobjects
+	\$(SH_LINK) -rpath \$(libexecdir) -module -avoid-version  $objects \$(MOD_MACRO_LDADD)
+EOF
+    fi
+  fi
+
+
+  APACHE_VAR_SUBST="$APACHE_VAR_SUBST MOD_MACRO_LDADD"
 
 
 
@@ -18609,7 +18891,7 @@ EOF
 
 
 
-lua_objects="lua_apr.lo lua_config.lo mod_lua.lo lua_request.lo lua_vmprep.lo lua_dbd.lo"
+lua_objects="lua_apr.lo lua_config.lo mod_lua.lo lua_request.lo lua_vmprep.lo lua_dbd.lo lua_passwd.lo"
 
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable mod_lua" >&5
@@ -21099,6 +21381,7 @@ proxy_fcgi_objs="mod_proxy_fcgi.lo"
 proxy_scgi_objs="mod_proxy_scgi.lo"
 proxy_fdpass_objs="mod_proxy_fdpass.lo"
 proxy_ajp_objs="mod_proxy_ajp.lo ajp_header.lo ajp_link.lo ajp_msg.lo ajp_utils.lo"
+proxy_wstunnel_objs="mod_proxy_wstunnel.lo"
 proxy_balancer_objs="mod_proxy_balancer.lo"
 
 case "$host" in
@@ -21112,6 +21395,7 @@ case "$host" in
     proxy_scgi_objs="$proxy_scgi_objs mod_proxy.la"
     proxy_fdpass_objs="$proxy_fdpass_objs mod_proxy.la"
     proxy_ajp_objs="$proxy_ajp_objs mod_proxy.la"
+    proxy_wstunnel_objs="$proxy_wstunnel_objs mod_proxy.la"
     proxy_balancer_objs="$proxy_balancer_objs mod_proxy.la"
     ;;
 esac
@@ -22056,6 +22340,161 @@ EOF
 
 
   APACHE_VAR_SUBST="$APACHE_VAR_SUBST MOD_PROXY_FDPASS_LDADD"
+
+
+
+  fi
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable mod_proxy_wstunnel" >&5
+$as_echo_n "checking whether to enable mod_proxy_wstunnel... " >&6; }
+    # Check whether --enable-proxy-wstunnel was given.
+if test "${enable_proxy_wstunnel+set}" = set; then :
+  enableval=$enable_proxy_wstunnel; force_proxy_wstunnel=$enableval
+else
+  enable_proxy_wstunnel=$proxy_mods_enable
+fi
+
+    _apmod_extra_msg=""
+        case "$enable_proxy_wstunnel" in
+    yes|static|shared)
+      _apmod_required="yes"
+      ;;
+    *)
+      case "$module_selection" in
+      reallyall|all|most)
+        _apmod_required="no"
+        ;;
+      *)
+        _apmod_required="yes"
+        ;;
+      esac
+  esac
+  if test "$enable_proxy_wstunnel" = "static"; then
+    enable_proxy_wstunnel=static
+  elif test "$enable_proxy_wstunnel" = "yes"; then
+    enable_proxy_wstunnel=$module_default
+  elif test "$enable_proxy_wstunnel" = "most"; then
+    if test "$module_selection" = "most" -o "$module_selection" = "all" -o \
+            "$module_selection" = "reallyall"
+    then
+      enable_proxy_wstunnel=$module_default
+    elif test "$module_selection" = "few" -o "$module_selection" = "none"; then
+      enable_proxy_wstunnel=no
+    fi
+    _apmod_extra_msg=" ($module_selection)"
+  elif test "$enable_proxy_wstunnel" = "maybe-all"; then
+    if test "$module_selection" = "all" -o "$module_selection" = "reallyall"
+    then
+      enable_proxy_wstunnel=$module_default
+      _apmod_extra_msg=" ($module_selection)"
+    else
+      enable_proxy_wstunnel=no
+    fi
+  elif test "$enable_proxy_wstunnel" = "no" -a "$module_selection" = "reallyall" -a \
+            "$force_proxy_wstunnel" != "no" ; then
+      enable_proxy_wstunnel=$module_default
+      _apmod_extra_msg=" ($module_selection)"
+  fi
+  if test "$enable_proxy_wstunnel" != "no"; then
+            { $as_echo "$as_me:${as_lineno-$LINENO}: result: checking dependencies" >&5
+$as_echo "checking dependencies" >&6; }
+            if test "$enable_proxy" = "no" ; then
+                              enable_proxy_wstunnel=no
+                              { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: \"mod_proxy is disabled but required for mod_proxy_wstunnel\"" >&5
+$as_echo "$as_me: WARNING: \"mod_proxy is disabled but required for mod_proxy_wstunnel\"" >&2;}
+                            elif test "$enable_proxy_wstunnel" = "static" && test "$enable_proxy" != "static" ; then
+                              enable_proxy_wstunnel=no
+                              { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: \"cannot build mod_proxy_wstunnel statically if mod_proxy is built shared\"" >&5
+$as_echo "$as_me: WARNING: \"cannot build mod_proxy_wstunnel statically if mod_proxy is built shared\"" >&2;}
+                            else
+            :
+            fi
+            { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable mod_proxy_wstunnel" >&5
+$as_echo_n "checking whether to enable mod_proxy_wstunnel... " >&6; }
+            if test "$enable_proxy_wstunnel" = "no"; then
+              if test "$_apmod_required" = "no"; then
+                _apmod_extra_msg=" (disabled)"
+              else
+                as_fn_error $? "mod_proxy_wstunnel has been requested but can not be built due to prerequisite failures" "$LINENO" 5
+              fi
+            fi
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_proxy_wstunnel$_apmod_extra_msg" >&5
+$as_echo "$enable_proxy_wstunnel$_apmod_extra_msg" >&6; }
+  if test "$enable_proxy_wstunnel" != "no"; then
+    case "$enable_proxy_wstunnel" in
+    static*)
+      MODLIST="$MODLIST proxy_wstunnel"
+      if test "proxy_wstunnel" = "so"; then
+          sharedobjs=yes
+      fi
+      shared="";;
+    *)
+      enable_proxy_wstunnel=`echo $enable_proxy_wstunnel|sed 's/shared,*//'`
+      sharedobjs=yes
+      shared=yes
+      DSO_MODULES="$DSO_MODULES proxy_wstunnel"
+      if test "$proxy_mods_enable" = "yes" ; then
+        ENABLED_DSO_MODULES="${ENABLED_DSO_MODULES},proxy_wstunnel"
+      fi
+      ;;
+    esac
+
+
+  if test -z "$proxy_wstunnel_objs"; then
+    objects="mod_proxy_wstunnel.lo"
+  else
+    objects="$proxy_wstunnel_objs"
+  fi
+
+  if test -z "$module_standalone"; then
+    if test -z "$shared"; then
+      # The filename of a convenience library must have a "lib" prefix:
+      libname="libmod_proxy_wstunnel.la"
+      BUILTIN_LIBS="$BUILTIN_LIBS $modpath_current/$libname"
+      modpath_static="$modpath_static $libname"
+      cat >>$modpath_current/modules.mk<<EOF
+$libname: $objects
+	\$(MOD_LINK) $objects \$(MOD_PROXY_WSTUNNEL_LDADD)
+EOF
+      if test ! -z "\$(MOD_PROXY_WSTUNNEL_LDADD)"; then
+
+  if test "x$AP_LIBS" = "x"; then
+    test "x$silent" != "xyes" && echo "  setting AP_LIBS to \"\$(MOD_PROXY_WSTUNNEL_LDADD)\""
+    AP_LIBS="\$(MOD_PROXY_WSTUNNEL_LDADD)"
+  else
+    apr_addto_bugger="\$(MOD_PROXY_WSTUNNEL_LDADD)"
+    for i in $apr_addto_bugger; do
+      apr_addto_duplicate="0"
+      for j in $AP_LIBS; do
+        if test "x$i" = "x$j"; then
+          apr_addto_duplicate="1"
+          break
+        fi
+      done
+      if test $apr_addto_duplicate = "0"; then
+        test "x$silent" != "xyes" && echo "  adding \"$i\" to AP_LIBS"
+        AP_LIBS="$AP_LIBS $i"
+      fi
+    done
+  fi
+
+      fi
+    else
+      apache_need_shared=yes
+      libname="mod_proxy_wstunnel.la"
+      shobjects=`echo $objects | sed 's/\.lo/.slo/g'`
+      modpath_shared="$modpath_shared $libname"
+      cat >>$modpath_current/modules.mk<<EOF
+$libname: $shobjects
+	\$(SH_LINK) -rpath \$(libexecdir) -module -avoid-version  $objects \$(MOD_PROXY_WSTUNNEL_LDADD)
+EOF
+    fi
+  fi
+
+
+  APACHE_VAR_SUBST="$APACHE_VAR_SUBST MOD_PROXY_WSTUNNEL_LDADD"
 
 
 

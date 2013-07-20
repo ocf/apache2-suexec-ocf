@@ -752,7 +752,7 @@ AP_DECLARE(char *) ap_getword_nulls(apr_pool_t *atrans, const char **line,
 static char *substring_conf(apr_pool_t *p, const char *start, int len,
                             char quote)
 {
-    char *result = apr_palloc(p, len + 2);
+    char *result = apr_palloc(p, len + 1);
     char *resp = result;
     int i;
 
@@ -783,7 +783,7 @@ AP_DECLARE(char *) ap_getword_conf(apr_pool_t *p, const char **line)
     char *res;
     char quote;
 
-    while (*str && apr_isspace(*str))
+    while (apr_isspace(*str))
         ++str;
 
     if (!*str) {
@@ -815,7 +815,7 @@ AP_DECLARE(char *) ap_getword_conf(apr_pool_t *p, const char **line)
         res = substring_conf(p, str, strend - str, 0);
     }
 
-    while (*strend && apr_isspace(*strend))
+    while (apr_isspace(*strend))
         ++strend;
     *line = strend;
     return res;
@@ -1286,27 +1286,58 @@ AP_DECLARE(char *) ap_get_list_item(apr_pool_t *p, const char **field)
     return token;
 }
 
+typedef enum ap_etag_e {
+    AP_ETAG_NONE,
+    AP_ETAG_WEAK,
+    AP_ETAG_STRONG
+} ap_etag_e;
+
 /* Find an item in canonical form (lowercase, no extra spaces) within
  * an HTTP field value list.  Returns 1 if found, 0 if not found.
  * This would be much more efficient if we stored header fields as
  * an array of list items as they are received instead of a plain string.
  */
-AP_DECLARE(int) ap_find_list_item(apr_pool_t *p, const char *line,
-                                  const char *tok)
+static int find_list_item(apr_pool_t *p, const char *line,
+                                  const char *tok, ap_etag_e type)
 {
     const unsigned char *pos;
     const unsigned char *ptr = (const unsigned char *)line;
     int good = 0, addspace = 0, in_qpair = 0, in_qstr = 0, in_com = 0;
 
-    if (!line || !tok)
+    if (!line || !tok) {
         return 0;
+    }
+    if (type == AP_ETAG_STRONG && *tok != '\"') {
+        return 0;
+    }
+    if (type == AP_ETAG_WEAK) {
+        if (*tok == 'W' && (*(tok+1)) == '/' && (*(tok+2)) == '\"') {
+            tok += 2;
+        }
+        else if (*tok != '\"') {
+            return 0;
+        }
+    }
 
     do {  /* loop for each item in line's list */
 
         /* Find first non-comma, non-whitespace byte */
-
-        while (*ptr == ',' || apr_isspace(*ptr))
+        while (*ptr == ',' || apr_isspace(*ptr)) {
             ++ptr;
+        }
+
+        /* Account for strong or weak Etags, depending on our search */
+        if (type == AP_ETAG_STRONG && *ptr != '\"') {
+            break;
+        }
+        if (type == AP_ETAG_WEAK) {
+            if (*ptr == 'W' && (*(ptr+1)) == '/' && (*(ptr+2)) == '\"') {
+                ptr += 2;
+            }
+            else if (*ptr != '\"') {
+                break;
+            }
+        }
 
         if (*ptr)
             good = 1;  /* until proven otherwise for this item */
@@ -1374,7 +1405,8 @@ AP_DECLARE(int) ap_find_list_item(apr_pool_t *p, const char *line,
                                if (in_com || in_qstr)
                                    good = good && (*pos++ == *ptr);
                                else
-                                   good = good && (*pos++ == apr_tolower(*ptr));
+                                   good = good
+                                       && (apr_tolower(*pos++) == apr_tolower(*ptr));
                                addspace = 0;
                                break;
                 }
@@ -1388,6 +1420,34 @@ AP_DECLARE(int) ap_find_list_item(apr_pool_t *p, const char *line,
     return good;
 }
 
+/* Find an item in canonical form (lowercase, no extra spaces) within
+ * an HTTP field value list.  Returns 1 if found, 0 if not found.
+ * This would be much more efficient if we stored header fields as
+ * an array of list items as they are received instead of a plain string.
+ */
+AP_DECLARE(int) ap_find_list_item(apr_pool_t *p, const char *line,
+                                  const char *tok)
+{
+    return find_list_item(p, line, tok, AP_ETAG_NONE);
+}
+
+/* Find a strong Etag in canonical form (lowercase, no extra spaces) within
+ * an HTTP field value list.  Returns 1 if found, 0 if not found.
+ */
+AP_DECLARE(int) ap_find_etag_strong(apr_pool_t *p, const char *line,
+                                    const char *tok)
+{
+    return find_list_item(p, line, tok, AP_ETAG_STRONG);
+}
+
+/* Find a weak ETag in canonical form (lowercase, no extra spaces) within
+ * an HTTP field value list.  Returns 1 if found, 0 if not found.
+ */
+AP_DECLARE(int) ap_find_etag_weak(apr_pool_t *p, const char *line,
+                                  const char *tok)
+{
+    return find_list_item(p, line, tok, AP_ETAG_WEAK);
+}
 
 /* Retrieve a token, spacing over it and returning a pointer to
  * the first non-white byte afterwards.  Note that these tokens
@@ -1405,7 +1465,7 @@ AP_DECLARE(char *) ap_get_token(apr_pool_t *p, const char **accept_line,
 
     /* Find first non-white byte */
 
-    while (*ptr && apr_isspace(*ptr))
+    while (apr_isspace(*ptr))
         ++ptr;
 
     tok_start = ptr;
@@ -1427,7 +1487,7 @@ AP_DECLARE(char *) ap_get_token(apr_pool_t *p, const char **accept_line,
 
     /* Advance accept_line pointer to the next non-white byte */
 
-    while (*ptr && apr_isspace(*ptr))
+    while (apr_isspace(*ptr))
         ++ptr;
 
     *accept_line = ptr;
@@ -1849,16 +1909,33 @@ AP_DECLARE(char *) ap_escape_logitem(apr_pool_t *p, const char *str)
     char *ret;
     unsigned char *d;
     const unsigned char *s;
+    apr_size_t length, escapes = 0;
 
     if (!str) {
         return NULL;
     }
 
-    ret = apr_palloc(p, 4 * strlen(str) + 1); /* Be safe */
+    /* Compute how many characters need to be escaped */
+    s = (const unsigned char *)str;
+    for (; *s; ++s) {
+        if (TEST_CHAR(*s, T_ESCAPE_LOGITEM)) {
+            escapes++;
+        }
+    }
+    
+    /* Compute the length of the input string, including NULL */
+    length = s - (const unsigned char *)str + 1;
+    
+    /* Fast path: nothing to escape */
+    if (escapes == 0) {
+        return apr_pmemdup(p, str, length);
+    }
+    
+    /* Each escaped character needs up to 3 extra bytes (0 --> \x00) */
+    ret = apr_palloc(p, length + 3 * escapes);
     d = (unsigned char *)ret;
     s = (const unsigned char *)str;
     for (; *s; ++s) {
-
         if (TEST_CHAR(*s, T_ESCAPE_LOGITEM)) {
             *d++ = '\\';
             switch(*s) {
@@ -2885,4 +2962,46 @@ AP_DECLARE(void) ap_get_loadavg(ap_loadavg_t *ld)
         }
     }
 #endif
+}
+
+AP_DECLARE(char *) ap_get_exec_line(apr_pool_t *p,
+                                    const char *cmd,
+                                    const char * const * argv)
+{
+    char buf[MAX_STRING_LEN];
+    apr_procattr_t *procattr;
+    apr_proc_t *proc;
+    apr_file_t *fp;
+    apr_size_t nbytes = 1;
+    char c;
+    int k;
+
+    if (apr_procattr_create(&procattr, p) != APR_SUCCESS)
+        return NULL;
+    if (apr_procattr_io_set(procattr, APR_FULL_BLOCK, APR_FULL_BLOCK,
+                            APR_FULL_BLOCK) != APR_SUCCESS)
+        return NULL;
+    if (apr_procattr_dir_set(procattr,
+                             ap_make_dirstr_parent(p, cmd)) != APR_SUCCESS)
+        return NULL;
+    if (apr_procattr_cmdtype_set(procattr, APR_PROGRAM) != APR_SUCCESS)
+        return NULL;
+    proc = apr_pcalloc(p, sizeof(apr_proc_t));
+    if (apr_proc_create(proc, cmd, argv, NULL, procattr, p) != APR_SUCCESS)
+        return NULL;
+    fp = proc->out;
+
+    if (fp == NULL)
+        return NULL;
+    /* XXX: we are reading 1 byte at a time here */
+    for (k = 0; apr_file_read(fp, &c, &nbytes) == APR_SUCCESS
+                && nbytes == 1 && (k < MAX_STRING_LEN-1)     ; ) {
+        if (c == '\n' || c == '\r')
+            break;
+        buf[k++] = c;
+    }
+    buf[k] = '\0'; 
+    apr_file_close(fp);
+
+    return apr_pstrndup(p, buf, k);
 }

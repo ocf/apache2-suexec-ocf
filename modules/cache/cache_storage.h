@@ -40,6 +40,20 @@ int cache_remove_url(cache_request_rec *cache, request_rec *r);
 int cache_create_entity(cache_request_rec *cache, request_rec *r,
                         apr_off_t size, apr_bucket_brigade *in);
 int cache_select(cache_request_rec *cache, request_rec *r);
+
+/**
+ * invalidate a specific URL entity in all caches
+ *
+ * All cached entities for this URL are removed, usually in
+ * response to a POST/PUT or DELETE.
+ *
+ * This function returns OK if at least one entity was found and
+ * removed, and DECLINED if no cached entities were removed.
+ * @param cache cache_request_rec
+ * @param r request_rec
+ */
+int cache_invalidate(cache_request_rec *cache, request_rec *r);
+
 apr_status_t cache_generate_key_default(request_rec *r, apr_pool_t* p,
         const char **key);
 
@@ -47,11 +61,12 @@ apr_status_t cache_generate_key_default(request_rec *r, apr_pool_t* p,
  * Merge in cached headers into the response
  * @param h cache_handle_t
  * @param r request_rec
- * @param preserve_orig If 1, the values in r->headers_out are preserved.
- *        Otherwise, they are overwritten by the cached value.
+ * @param top headers to be applied
+ * @param bottom headers to be overwritten
+ * @param revalidation true if revalidation is taking place
  */
-void cache_accept_headers(cache_handle_t *h, request_rec *r,
-        int preserve_orig);
+void cache_accept_headers(cache_handle_t *h, request_rec *r, apr_table_t *top,
+        apr_table_t *bottom, int revalidation);
 
 #ifdef __cplusplus
 }

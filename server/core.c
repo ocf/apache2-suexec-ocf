@@ -1489,8 +1489,8 @@ static const char *set_error_document(cmd_parms *cmd, void *conf_,
 
     if (error_number == 401 && what == REMOTE_PATH) {
         ap_log_error(APLOG_MARK, APLOG_NOTICE, 0, cmd->server, APLOGNO(00113)
-                     "cannot use a full URL in a 401 ErrorDocument "
-                     "directive --- ignoring!");
+                     "%s:%d cannot use a full URL in a 401 ErrorDocument "
+                     "directive --- ignoring!", cmd->directive->filename, cmd->directive->line_num);
     }
     else { /* Store it... */
         if (conf->response_code_strings == NULL) {
@@ -1500,7 +1500,7 @@ static const char *set_error_document(cmd_parms *cmd, void *conf_,
                             RESPONSE_CODES);
         }
 
-        if (strcmp(msg, "default") == 0) {
+        if (strcasecmp(msg, "default") == 0) {
             /* special case: ErrorDocument 404 default restores the
              * canned server error response
              */
@@ -4768,13 +4768,18 @@ AP_DECLARE(void) ap_random_insecure_bytes(void *buf, apr_size_t size)
 AP_DECLARE(apr_uint32_t) ap_random_pick(apr_uint32_t min, apr_uint32_t max)
 {
     apr_uint32_t number;
+#if (!__GNUC__ || __GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8) || \
+     !__sparc__ || APR_SIZEOF_VOIDP != 8)
+    /* This triggers a gcc bug on sparc/64bit with gcc < 4.8, PR 52900 */
     if (max < 16384) {
         apr_uint16_t num16;
         ap_random_insecure_bytes(&num16, sizeof(num16));
         RAND_RANGE(num16, min, max, APR_UINT16_MAX);
         number = num16;
     }
-    else {
+    else
+#endif
+    {
         ap_random_insecure_bytes(&number, sizeof(number));
         RAND_RANGE(number, min, max, APR_UINT32_MAX);
     }
@@ -4788,6 +4793,12 @@ static apr_status_t core_insert_network_bucket(conn_rec *c,
     apr_bucket *e = apr_bucket_socket_create(socket, c->bucket_alloc);
     APR_BRIGADE_INSERT_TAIL(bb, e);
     return APR_SUCCESS;
+}
+
+static apr_status_t core_dirwalk_stat(apr_finfo_t *finfo, request_rec *r,
+                                      apr_int32_t wanted) 
+{
+    return apr_stat(finfo, r->filename, wanted, r->pool);
 }
 
 static void core_dump_config(apr_pool_t *p, server_rec *s)
@@ -4866,7 +4877,8 @@ static void register_hooks(apr_pool_t *p)
     ap_hook_child_status(ap_core_child_status, NULL, NULL, APR_HOOK_MIDDLE);
     ap_hook_insert_network_bucket(core_insert_network_bucket, NULL, NULL,
                                   APR_HOOK_REALLY_LAST);
-
+    ap_hook_dirwalk_stat(core_dirwalk_stat, NULL, NULL, APR_HOOK_REALLY_LAST);
+    
     /* register the core's insert_filter hook and register core-provided
      * filters
      */

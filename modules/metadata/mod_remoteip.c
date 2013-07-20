@@ -170,10 +170,9 @@ static const char *proxies_set(cmd_parms *cmd, void *cfg,
     }
 
     if (rv != APR_SUCCESS) {
-        char msgbuf[128];
-        apr_strerror(rv, msgbuf, sizeof(msgbuf));
-        return apr_pstrcat(cmd->pool, "RemoteIP: Error parsing IP ", arg,
-                           " (", msgbuf, " error) for ", cmd->cmd->name, NULL);
+        return apr_psprintf(cmd->pool,
+                            "RemoteIP: Error parsing IP %s (%pm error) for %s",
+                            arg, &rv, cmd->cmd->name);
     }
 
     return NULL;
@@ -192,9 +191,8 @@ static const char *proxylist_read(cmd_parms *cmd, void *cfg,
     filename = ap_server_root_relative(cmd->temp_pool, filename);
     rv = ap_pcfg_openfile(&cfp, cmd->temp_pool, filename);
     if (rv != APR_SUCCESS) {
-        return apr_psprintf(cmd->pool, "%s: Could not open file %s: %s",
-                            cmd->cmd->name, filename,
-                            apr_strerror(rv, lbuf, sizeof(lbuf)));
+        return apr_psprintf(cmd->pool, "%s: Could not open file %s: %pm",
+                            cmd->cmd->name, filename, &rv);
     }
 
     while (!(ap_cfg_getline(lbuf, MAX_STRING_LEN, cfp))) {
@@ -205,6 +203,7 @@ static const char *proxylist_read(cmd_parms *cmd, void *cfg,
             }
             errmsg = proxies_set(cmd, cfg, arg);
             if (errmsg) {
+                ap_cfg_closefile(cfp);
                 errmsg = apr_psprintf(cmd->pool, "%s at line %d of %s",
                                       errmsg, cfp->line_number, filename);
                 return errmsg;

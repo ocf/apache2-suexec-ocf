@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+#ifndef _PASSWD_COMMON_H
+#define _PASSWD_COMMON_H
+
 #include "apr.h"
 #include "apr_lib.h"
 #include "apr_strings.h"
@@ -80,9 +83,16 @@ struct passwd_ctx {
     enum {
         PW_PROMPT = 0,
         PW_ARG,
-        PW_STDIN
+        PW_STDIN,
+        PW_PROMPT_VERIFY,
     } passwd_src;
 };
+
+
+/*
+ * To be used as apr_pool_abort_fn
+ */
+int abort_on_oom(int rc);
 
 /*
  * Write a line to the file. On error, print a message and exit
@@ -108,3 +118,6 @@ int get_password(struct passwd_ctx *ctx);
  * Make a password record from the given information.
  */
 int mkhash(struct passwd_ctx *ctx);
+
+#endif /* _PASSWD_COMMON_H */
+

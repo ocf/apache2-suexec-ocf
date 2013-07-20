@@ -611,7 +611,9 @@ static int dav_created(request_rec *r, const char *locn, const char *what,
     const char *body;
 
     if (locn == NULL) {
-        locn = r->uri;
+        locn = r->unparsed_uri;
+    } else {
+        locn = ap_escape_uri(r->pool, locn);
     }
 
     /* did the target resource already exist? */
@@ -707,6 +709,12 @@ static dav_error *dav_get_resource(request_rec *r, int label_allowed,
 
     conf = ap_get_module_config(r->per_dir_config, &dav_module);
     /* assert: conf->provider != NULL */
+    if (conf->provider == NULL) {
+        return dav_new_error(r->pool, HTTP_METHOD_NOT_ALLOWED, 0, 0,
+                             apr_psprintf(r->pool,
+				          "DAV not enabled for %s",
+					  ap_escape_html(r->pool, r->uri)));
+    }
 
     /* resolve the resource */
     err = (*conf->provider->repos->get_resource)(r, conf->dir,
@@ -995,8 +1003,8 @@ static int dav_method_put(request_rec *r)
                 else {
                     /* XXX: should this actually be HTTP_BAD_REQUEST? */
                     http_err = HTTP_INTERNAL_SERVER_ERROR;
-                    msg = apr_psprintf(r->pool, "Could not get next bucket "
-                                       "brigade (URI: %s)", msg);
+                    msg = apr_psprintf(r->pool, "An error occurred while reading"
+                                       " the request body (URI: %s)", msg);
                 }
                 err = dav_new_error(r->pool, http_err, 0, rc, msg);
                 break;
@@ -1018,18 +1026,19 @@ static int dav_method_put(request_rec *r)
                     continue;
                 }
 
-                rc = apr_bucket_read(b, &data, &len, APR_BLOCK_READ);
-                if (rc != APR_SUCCESS) {
-                    err = dav_new_error(r->pool, HTTP_BAD_REQUEST, 0, rc,
-                                        apr_psprintf(r->pool,
-                                                    "An error occurred while reading"
-                                                    " the request body (URI: %s)",
-                                                    ap_escape_html(r->pool, r->uri)));
-                    break;
-                }
-
                 if (err == NULL) {
                     /* write whatever we read, until we see an error */
+                    rc = apr_bucket_read(b, &data, &len, APR_BLOCK_READ);
+                    if (rc != APR_SUCCESS) {
+                       err = dav_new_error(r->pool, HTTP_BAD_REQUEST, 0, rc,
+                                           apr_psprintf(r->pool,
+                                                        "An error occurred while"
+                                                        " reading the request body"
+                                                        " from the bucket (URI: %s)",
+                                                        ap_escape_html(r->pool, r->uri)));
+                        break;
+                    }
+
                     err = (*resource->hooks->write_stream)(stream, data, len);
                 }
             }
@@ -1041,10 +1050,7 @@ static int dav_method_put(request_rec *r)
 
         err2 = (*resource->hooks->close_stream)(stream,
                                                 err == NULL /* commit */);
-        if (err2 != NULL && err == NULL) {
-            /* no error during the write, but we hit one at close. use it. */
-            err = err2;
-        }
+        err = dav_join_error(err, err2);
     }
 
     /*
@@ -1062,6 +1068,7 @@ static int dav_method_put(request_rec *r)
 
     /* check for errors now */
     if (err != NULL) {
+        err = dav_join_error(err, err2); /* don't forget err2 */
         return dav_handle_err(r, err, NULL);
     }
 
@@ -2683,11 +2690,6 @@ static int dav_method_copymove(request_rec *r, int is_move)
                                   "Destination URI had an error.");
     }
 
-    if (dav_get_provider(lookup.rnew) == NULL) {
-        return dav_error_response(r, HTTP_METHOD_NOT_ALLOWED,
-                                  "DAV not enabled for Destination URI.");
-    }
-
     /* Resolve destination resource */
     err = dav_get_resource(lookup.rnew, 0 /* label_allowed */,
                            0 /* use_checked_in */, &resnew);
@@ -2749,10 +2751,10 @@ static int dav_method_copymove(request_rec *r, int is_move)
     }
 
     /*
-     * Check If-Headers and existing locks for each resource in the source
-     * if we are performing a MOVE. We will return a 424 response with a
-     * DAV:multistatus body. The multistatus responses will contain the
-     * information about any resource that fails the validation.
+     * Check If-Headers and existing locks for each resource in the source.
+     * We will return a 424 response with a DAV:multistatus body.
+     * The multistatus responses will contain the information about any
+     * resource that fails the validation.
      *
      * We check the parent resource, too, since this is a MOVE. Moving the
      * resource effectively removes it from the parent collection, so we
@@ -2761,17 +2763,17 @@ static int dav_method_copymove(request_rec *r, int is_move)
      * If a problem occurs with the Request-URI itself, then a plain error
      * (rather than a multistatus) will be returned.
      */
-    if (is_move
-        && (err = dav_validate_request(r, resource, depth, NULL,
-                                       &multi_response,
-                                       DAV_VALIDATE_PARENT
-                                       | DAV_VALIDATE_USE_424,
-                                       NULL)) != NULL) {
+    if ((err = dav_validate_request(r, resource, depth, NULL,
+                                    &multi_response,
+                                    DAV_VALIDATE_PARENT
+                                    | DAV_VALIDATE_USE_424,
+                                    NULL)) != NULL) {
         err = dav_push_error(r->pool, err->status, 0,
                              apr_psprintf(r->pool,
-                                          "Could not MOVE %s due to a failed "
+                                          "Could not %s %s due to a failed "
                                           "precondition on the source "
                                           "(e.g. locks).",
+                                          is_move ? "MOVE" : "COPY",
                                           ap_escape_html(r->pool, r->uri)),
                              err);
         return dav_handle_err(r, err, multi_response);

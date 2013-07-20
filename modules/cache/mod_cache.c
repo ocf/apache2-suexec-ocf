@@ -34,6 +34,7 @@ static ap_filter_rec_t *cache_save_subreq_filter_handle;
 static ap_filter_rec_t *cache_out_filter_handle;
 static ap_filter_rec_t *cache_out_subreq_filter_handle;
 static ap_filter_rec_t *cache_remove_url_filter_handle;
+static ap_filter_rec_t *cache_invalidate_filter_handle;
 
 /*
  * CACHE handler
@@ -75,11 +76,6 @@ static int cache_quick_handler(request_rec *r, int lookup)
     ap_filter_rec_t *cache_out_handle;
     cache_server_conf *conf;
 
-    /* Delay initialization until we know we are handling a GET */
-    if (r->method_number != M_GET) {
-        return DECLINED;
-    }
-
     conf = (cache_server_conf *) ap_get_module_config(r->server->module_config,
                                                       &cache_module);
 
@@ -106,6 +102,9 @@ static int cache_quick_handler(request_rec *r, int lookup)
     /*
      * Are we allowed to serve cached info at all?
      */
+    if (!ap_cache_check_no_store(cache, r)) {
+        return DECLINED;
+    }
 
     /* find certain cache controlling headers */
     auth = apr_table_get(r->headers_in, "Authorization");
@@ -115,6 +114,40 @@ static int cache_quick_handler(request_rec *r, int lookup)
      */
     if (auth) {
         return DECLINED;
+    }
+
+    /* Are we PUT/POST/DELETE? If so, prepare to invalidate the cached entities.
+     */
+    switch (r->method_number) {
+    case M_PUT:
+    case M_POST:
+    case M_DELETE:
+    {
+
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, APR_SUCCESS, r, APLOGNO(02461)
+                "PUT/POST/DELETE: Adding CACHE_INVALIDATE filter for %s",
+                r->uri);
+
+        /* Add cache_invalidate filter to this request to force a
+         * cache entry to be invalidated if the response is
+         * ultimately successful (2xx).
+         */
+        ap_add_output_filter_handle(
+                cache_invalidate_filter_handle, cache, r,
+                r->connection);
+
+        return DECLINED;
+    }
+    case M_GET: {
+        break;
+    }
+    default : {
+
+        ap_log_rerror(
+                APLOG_MARK, APLOG_DEBUG, APR_SUCCESS, r, APLOGNO(02462) "cache: Method '%s' not cacheable by mod_cache, ignoring: %s", r->method, r->uri);
+
+        return DECLINED;
+    }
     }
 
     /*
@@ -176,9 +209,10 @@ static int cache_quick_handler(request_rec *r, int lookup)
                      * is available later during running the filter may be
                      * different due to an internal redirect.
                      */
-                    cache->remove_url_filter =
-                        ap_add_output_filter_handle(cache_remove_url_filter_handle,
-                                cache, r, r->connection);
+                    cache->remove_url_filter = ap_add_output_filter_handle(
+                            cache_remove_url_filter_handle, cache, r,
+                            r->connection);
+
                 }
                 else {
                     ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv,
@@ -347,11 +381,6 @@ static int cache_handler(request_rec *r)
     ap_filter_rec_t *cache_save_handle;
     cache_server_conf *conf;
 
-    /* Delay initialization until we know we are handling a GET */
-    if (r->method_number != M_GET) {
-        return DECLINED;
-    }
-
     conf = (cache_server_conf *) ap_get_module_config(r->server->module_config,
                                                       &cache_module);
 
@@ -374,6 +403,47 @@ static int cache_handler(request_rec *r)
 
     /* save away the possible providers */
     cache->providers = providers;
+
+    /*
+     * Are we allowed to serve cached info at all?
+     */
+    if (!ap_cache_check_no_store(cache, r)) {
+        return DECLINED;
+    }
+
+    /* Are we PUT/POST/DELETE? If so, prepare to invalidate the cached entities.
+     */
+    switch (r->method_number) {
+    case M_PUT:
+    case M_POST:
+    case M_DELETE:
+    {
+
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, APR_SUCCESS, r, APLOGNO(02463)
+                "PUT/POST/DELETE: Adding CACHE_INVALIDATE filter for %s",
+                r->uri);
+
+        /* Add cache_invalidate filter to this request to force a
+         * cache entry to be invalidated if the response is
+         * ultimately successful (2xx).
+         */
+        ap_add_output_filter_handle(
+                cache_invalidate_filter_handle, cache, r,
+                r->connection);
+
+        return DECLINED;
+    }
+    case M_GET: {
+        break;
+    }
+    default : {
+
+        ap_log_rerror(
+                APLOG_MARK, APLOG_DEBUG, APR_SUCCESS, r, APLOGNO(02464) "cache: Method '%s' not cacheable by mod_cache, ignoring: %s", r->method, r->uri);
+
+        return DECLINED;
+    }
+    }
 
     /*
      * Try to serve this request from the cache.
@@ -455,9 +525,10 @@ static int cache_handler(request_rec *r)
                  * is available later during running the filter may be
                  * different due to an internal redirect.
                  */
-                cache->remove_url_filter =
-                    ap_add_output_filter_handle(cache_remove_url_filter_handle,
-                            cache, r, r->connection);
+                cache->remove_url_filter
+                        = ap_add_output_filter_handle(
+                                cache_remove_url_filter_handle, cache, r,
+                                r->connection);
 
             }
             else {
@@ -665,7 +736,7 @@ static int cache_save_store(ap_filter_t *f, apr_bucket_brigade *in,
                  */
                 ap_log_rerror(APLOG_MARK, APLOG_WARNING, rv, f->r, APLOGNO(00766)
                         "cache: Cache provider's store_body returned an "
-                        "empty brigade, but didn't consume all of the"
+                        "empty brigade, but didn't consume all of the "
                         "input brigade, standing down to prevent a spin");
                 ap_remove_output_filter(f);
 
@@ -680,6 +751,22 @@ static int cache_save_store(ap_filter_t *f, apr_bucket_brigade *in,
     }
 
     return rv;
+}
+
+/**
+ * Sanity check for 304 Not Modified responses, as per RFC2616 Section 10.3.5.
+ */
+static const char *cache_header_cmp(apr_pool_t *pool, apr_table_t *left,
+        apr_table_t *right, const char *key)
+{
+    const char *h1, *h2;
+
+    if ((h1 = cache_table_getm(pool, left, key))
+            && (h2 = cache_table_getm(pool, right, key)) && (strcmp(h1, h2))) {
+        return apr_pstrcat(pool, "contradiction: 304 Not Modified, but ", key,
+                " modified", NULL);
+    }
+    return NULL;
 }
 
 /*
@@ -715,7 +802,7 @@ static apr_status_t cache_save_filter(ap_filter_t *f, apr_bucket_brigade *in)
     apr_time_t exp, date, lastmod, now;
     apr_off_t size = -1;
     cache_info *info = NULL;
-    char *reason;
+    const char *reason;
     apr_pool_t *p;
     apr_bucket *e;
     apr_table_t *headers;
@@ -857,12 +944,12 @@ static apr_status_t cache_save_filter(ap_filter_t *f, apr_bucket_brigade *in)
     if (etag == NULL) {
         etag = apr_table_get(r->headers_out, "Etag");
     }
-    cc_out = apr_table_get(r->err_headers_out, "Cache-Control");
-    pragma = apr_table_get(r->err_headers_out, "Pragma");
+    cc_out = cache_table_getm(r->pool, r->err_headers_out, "Cache-Control");
+    pragma = cache_table_getm(r->pool, r->err_headers_out, "Pragma");
     headers = r->err_headers_out;
     if (!cc_out && !pragma) {
-        cc_out = apr_table_get(r->headers_out, "Cache-Control");
-        pragma = apr_table_get(r->headers_out, "Pragma");
+        cc_out = cache_table_getm(r->pool, r->headers_out, "Cache-Control");
+        pragma = cache_table_getm(r->pool, r->headers_out, "Pragma");
         headers = r->headers_out;
     }
 
@@ -871,8 +958,10 @@ static apr_status_t cache_save_filter(ap_filter_t *f, apr_bucket_brigade *in)
      */
     if (r->status == HTTP_NOT_MODIFIED && cache->stale_handle && !cc_out
             && !pragma) {
-        cc_out = apr_table_get(cache->stale_handle->resp_hdrs, "Cache-Control");
-        pragma = apr_table_get(cache->stale_handle->resp_hdrs, "Pragma");
+        cc_out = cache_table_getm(r->pool, cache->stale_handle->resp_hdrs,
+                "Cache-Control");
+        pragma = cache_table_getm(r->pool, cache->stale_handle->resp_hdrs,
+                "Pragma");
     }
 
     /* Parse the cache control header */
@@ -1000,78 +1089,117 @@ static apr_status_t cache_save_filter(ap_filter_t *f, apr_bucket_brigade *in)
         /* or we've been asked not to cache it above */
         reason = "r->no_cache present";
     }
+    else if (cache->stale_handle
+            && APR_DATE_BAD
+                    != (date = apr_date_parse_http(
+                            apr_table_get(r->headers_out, "Date")))
+            && date < cache->stale_handle->cache_obj->info.date) {
+
+        /**
+         * 13.12 Cache Replacement:
+         *
+         * Note: a new response that has an older Date header value than
+         * existing cached responses is not cacheable.
+         */
+        reason = "updated entity is older than cached entity";
+
+        /* while this response is not cacheable, the previous response still is */
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, APLOGNO(00770)
+                "cache: Removing CACHE_REMOVE_URL filter.");
+        ap_remove_output_filter(cache->remove_url_filter);
+    }
+    else if (r->status == HTTP_NOT_MODIFIED && cache->stale_handle) {
+        apr_table_t *left = cache->stale_handle->resp_hdrs;
+        apr_table_t *right = r->headers_out;
+
+        /* and lastly, contradiction checks for revalidated responses
+         * as per RFC2616 Section 10.3.5
+         */
+        if (((reason = cache_header_cmp(r->pool, left, right, "Allow")))
+                || ((reason = cache_header_cmp(r->pool, left, right,
+                        "Content-Encoding")))
+                || ((reason = cache_header_cmp(r->pool, left, right,
+                        "Content-Language")))
+                || ((reason = cache_header_cmp(r->pool, left, right,
+                        "Content-Length")))
+                || ((reason = cache_header_cmp(r->pool, left, right,
+                        "Content-Location")))
+                || ((reason = cache_header_cmp(r->pool, left, right,
+                        "Content-MD5")))
+                || ((reason = cache_header_cmp(r->pool, left, right,
+                        "Content-Range")))
+                || ((reason = cache_header_cmp(r->pool, left, right,
+                        "Content-Type")))
+                || ((reason = cache_header_cmp(r->pool, left, right, "Expires")))
+                || ((reason = cache_header_cmp(r->pool, left, right, "ETag")))
+                || ((reason = cache_header_cmp(r->pool, left, right,
+                        "Last-Modified")))) {
+            /* contradiction: 304 Not Modified, but entity header modified */
+        }
+    }
+
+    /**
+     * Enforce RFC2616 Section 10.3.5, just in case. We caught any
+     * inconsistencies above.
+     *
+     * If the conditional GET used a strong cache validator (see section
+     * 13.3.3), the response SHOULD NOT include other entity-headers.
+     * Otherwise (i.e., the conditional GET used a weak validator), the
+     * response MUST NOT include other entity-headers; this prevents
+     * inconsistencies between cached entity-bodies and updated headers.
+     */
+    if (r->status == HTTP_NOT_MODIFIED) {
+        apr_table_unset(r->headers_out, "Allow");
+        apr_table_unset(r->headers_out, "Content-Encoding");
+        apr_table_unset(r->headers_out, "Content-Language");
+        apr_table_unset(r->headers_out, "Content-Length");
+        apr_table_unset(r->headers_out, "Content-MD5");
+        apr_table_unset(r->headers_out, "Content-Range");
+        apr_table_unset(r->headers_out, "Content-Type");
+        apr_table_unset(r->headers_out, "Last-Modified");
+    }
 
     /* Hold the phone. Some servers might allow us to cache a 2xx, but
-     * then make their 304 responses non cacheable. This leaves us in a
-     * sticky position. If the 304 is in answer to our own conditional
-     * request, we cannot send this 304 back to the client because the
-     * client isn't expecting it. Instead, our only option is to respect
-     * the answer to the question we asked (has it changed, answer was
-     * no) and return the cached item to the client, and then respect
-     * the uncacheable nature of this 304 by allowing the remove_url
-     * filter to kick in and remove the cached entity.
+     * then make their 304 responses non cacheable. RFC2616 says this:
+     *
+     * If a 304 response indicates an entity not currently cached, then
+     * the cache MUST disregard the response and repeat the request
+     * without the conditional.
+     *
+     * A 304 response with contradictory headers is technically a
+     * different entity, to be safe, we remove the entity from the cache.
      */
-    if (reason && r->status == HTTP_NOT_MODIFIED &&
-             cache->stale_handle) {
-        apr_bucket_brigade *bb;
-        apr_bucket *bkt;
-        int status;
+    if (reason && r->status == HTTP_NOT_MODIFIED && cache->stale_handle) {
 
-        cache->handle = cache->stale_handle;
-        info = &cache->handle->cache_obj->info;
+        ap_log_rerror(
+                APLOG_MARK, APLOG_INFO, 0, r, APLOGNO() "cache: %s responded with an uncacheable 304, retrying the request. Reason: %s", r->unparsed_uri, reason);
 
-        /* Load in the saved status and clear the status line. */
-        r->status = info->status;
-        r->status_line = NULL;
-
-        bb = apr_brigade_create(r->pool, r->connection->bucket_alloc);
-
-        r->headers_in = cache->stale_headers;
-        status = ap_meets_conditions(r);
-        if (status != OK) {
-            r->status = status;
-
-            bkt = apr_bucket_flush_create(bb->bucket_alloc);
-            APR_BRIGADE_INSERT_TAIL(bb, bkt);
-        }
-        else {
-            /* RFC 2616 10.3.5 states that entity headers are not supposed
-             * to be in the 304 response.  Therefore, we need to combine the
-             * response headers with the cached headers *before* we update
-             * the cached headers.
-             *
-             * However, before doing that, we need to first merge in
-             * err_headers_out and we also need to strip any hop-by-hop
-             * headers that might have snuck in.
-             */
-            r->headers_out = ap_cache_cacheable_headers_out(r);
-
-            /* Merge in our cached headers.  However, keep any updated values. */
-            cache_accept_headers(cache->handle, r, 1);
-
-            cache->provider->recall_body(cache->handle, r->pool, bb);
-
-            bkt = apr_bucket_eos_create(bb->bucket_alloc);
-            APR_BRIGADE_INSERT_TAIL(bb, bkt);
-        }
-
-        cache->block_response = 1;
-
-        /* we've got a cache conditional hit! tell anyone who cares */
-        cache_run_cache_status(
-                cache->handle,
-                r,
-                r->headers_out,
-                AP_CACHE_REVALIDATE,
-                apr_psprintf(
-                        r->pool,
-                        "conditional cache hit: 304 was uncacheable though (%s); entity removed",
+        /* we've got a cache conditional miss! tell anyone who cares */
+        cache_run_cache_status(cache->handle, r, r->headers_out, AP_CACHE_MISS,
+                apr_psprintf(r->pool,
+                        "conditional cache miss: 304 was uncacheable, entity removed: %s",
                         reason));
+
+        /* remove the cached entity immediately, we might cache it again */
+        ap_remove_output_filter(cache->remove_url_filter);
+        cache_remove_url(cache, r);
 
         /* let someone else attempt to cache */
         cache_remove_lock(conf, cache, r, NULL);
 
-        return ap_pass_brigade(f->next, bb);
+        /* remove this filter from the chain */
+        ap_remove_output_filter(f);
+
+        /* retry without the conditionals */
+        apr_table_unset(r->headers_in, "If-Match");
+        apr_table_unset(r->headers_in, "If-Modified-Since");
+        apr_table_unset(r->headers_in, "If-None-Match");
+        apr_table_unset(r->headers_in, "If-Range");
+        apr_table_unset(r->headers_in, "If-Unmodified-Since");
+
+        ap_internal_redirect(r->uri, r);
+
+        return APR_SUCCESS;
     }
 
     if (reason) {
@@ -1186,7 +1314,7 @@ static apr_status_t cache_save_filter(ap_filter_t *f, apr_bucket_brigade *in)
     if (rv != OK) {
         /* we've got a cache miss! tell anyone who cares */
         cache_run_cache_status(cache->handle, r, r->headers_out, AP_CACHE_MISS,
-                "cache miss: create_entity failed");
+                "cache miss: cache unwilling to store response");
 
         /* Caching layer declined the opportunity to cache the response */
         ap_remove_output_filter(f);
@@ -1303,9 +1431,6 @@ static apr_status_t cache_save_filter(ap_filter_t *f, apr_bucket_brigade *in)
 
     /* We found a stale entry which wasn't really stale. */
     if (cache->stale_handle) {
-        /* Load in the saved status and clear the status line. */
-        r->status = info->status;
-        r->status_line = NULL;
 
         /* RFC 2616 10.3.5 states that entity headers are not supposed
          * to be in the 304 response.  Therefore, we need to combine the
@@ -1319,7 +1444,9 @@ static apr_status_t cache_save_filter(ap_filter_t *f, apr_bucket_brigade *in)
         r->headers_out = ap_cache_cacheable_headers_out(r);
 
         /* Merge in our cached headers.  However, keep any updated values. */
-        cache_accept_headers(cache->handle, r, 1);
+        /* take output, overlay on top of cached */
+        cache_accept_headers(cache->handle, r, r->headers_out,
+                cache->handle->resp_hdrs, 1);
     }
 
     /* Write away header information to cache. It is possible that we are
@@ -1341,6 +1468,10 @@ static apr_status_t cache_save_filter(ap_filter_t *f, apr_bucket_brigade *in)
         apr_bucket_brigade *bb;
         apr_bucket *bkt;
         int status;
+
+        /* Load in the saved status and clear the status line. */
+        r->status = info->status;
+        r->status_line = NULL;
 
         /* We're just saving response headers, so we are done. Commit
          * the response at this point, unless there was a previous error.
@@ -1483,6 +1614,70 @@ static apr_status_t cache_remove_url_filter(ap_filter_t *f,
 }
 
 /*
+ * CACHE_INVALIDATE filter
+ * -----------------------
+ *
+ * This filter gets added in the quick handler should a PUT, POST or DELETE
+ * method be detected. If the response is successful, we must invalidate any
+ * cached entity as per RFC2616 section 13.10.
+ *
+ * CACHE_INVALIDATE has to be a protocol filter to ensure that is run even if
+ * the response is a canned error message, which removes the content filters
+ * from the chain.
+ *
+ * CACHE_INVALIDATE expects cache request rec within its context because the
+ * request this filter runs on can be different from the one whose cache entry
+ * should be removed, due to internal redirects.
+ */
+static apr_status_t cache_invalidate_filter(ap_filter_t *f,
+                                            apr_bucket_brigade *in)
+{
+    request_rec *r = f->r;
+    cache_request_rec *cache;
+
+    /* Setup cache_request_rec */
+    cache = (cache_request_rec *) f->ctx;
+
+    if (!cache) {
+        /* user likely configured CACHE_INVALIDATE manually; they should really
+         * use mod_cache configuration to do that. So:
+         * 1. Remove ourselves
+         * 2. Do nothing and bail out
+         */
+        ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, APLOGNO(02465)
+                "cache: CACHE_INVALIDATE enabled unexpectedly: %s", r->uri);
+    }
+    else {
+
+        if (r->status > 299) {
+
+            ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, APLOGNO(02466)
+                    "cache: response status to '%s' method is %d (>299), not invalidating cached entity: %s", r->method, r->status, r->uri);
+
+        }
+        else {
+
+            ap_log_rerror(APLOG_MARK, APLOG_DEBUG, APR_SUCCESS, r, APLOGNO(02467)
+                    "cache: Invalidating all cached entities in response to '%s' request for %s",
+                    r->method, r->uri);
+
+            cache_invalidate(cache, r);
+
+            /* we've got a cache invalidate! tell everyone who cares */
+            cache_run_cache_status(cache->handle, r, r->headers_out,
+                    AP_CACHE_INVALIDATE, apr_psprintf(r->pool,
+                            "cache invalidated by %s", r->method));
+
+        }
+
+    }
+
+    /* remove ourselves */
+    ap_remove_output_filter(f);
+    return ap_pass_brigade(f->next, in);
+}
+
+/*
  * CACHE filter
  * ------------
  *
@@ -1579,11 +1774,11 @@ static int cache_status(cache_handle_t *h, request_rec *r,
         x_cache = conf->x_cache;
     }
     if (x_cache) {
-        apr_table_setn(headers, "X-Cache",
-                apr_psprintf(r->pool, "%s from %s",
-                        status == AP_CACHE_HIT ? "HIT" : status
-                                == AP_CACHE_REVALIDATE ? "REVALIDATE" : "MISS",
-                        r->server->server_hostname));
+        apr_table_setn(headers, "X-Cache", apr_psprintf(r->pool, "%s from %s",
+                status == AP_CACHE_HIT ? "HIT"
+                        : status == AP_CACHE_REVALIDATE ? "REVALIDATE" : status
+                                == AP_CACHE_INVALIDATE ? "INVALIDATE" : "MISS",
+                r->server->server_hostname));
     }
 
     if (dconf && dconf->x_cache_detail_set) {
@@ -1640,7 +1835,8 @@ static void cache_insert_error_filter(request_rec *r)
 
         if (cache->stale_handle && cache->save_filter
                 && !cache->stale_handle->cache_obj->info.control.must_revalidate
-                && !cache->stale_handle->cache_obj->info.control.proxy_revalidate) {
+                && !cache->stale_handle->cache_obj->info.control.proxy_revalidate
+                && !cache->stale_handle->cache_obj->info.control.s_maxage) {
             const char *warn_head;
             cache_server_conf
                     *conf =
@@ -1773,7 +1969,7 @@ static void *merge_dir_config(apr_pool_t *p, void *basev, void *addv) {
 
 static void * create_cache_config(apr_pool_t *p, server_rec *s)
 {
-    const char *tmppath;
+    const char *tmppath = NULL;
     cache_server_conf *ps = apr_pcalloc(p, sizeof(cache_server_conf));
 
     /* array of URL prefixes for which caching is enabled */
@@ -2068,7 +2264,7 @@ static const char *add_cache_disable(cmd_parms *parms, void *dummy,
                                                   &cache_module);
 
     if (parms->path) {
-        if (!strcmp(url, "on")) {
+        if (!strcasecmp(url, "on")) {
             dconf->disable = 1;
             dconf->disable_set = 1;
             return NULL;
@@ -2452,6 +2648,11 @@ static void register_hooks(apr_pool_t *p)
     cache_remove_url_filter_handle =
         ap_register_output_filter("CACHE_REMOVE_URL",
                                   cache_remove_url_filter,
+                                  NULL,
+                                  AP_FTYPE_PROTOCOL);
+    cache_invalidate_filter_handle =
+        ap_register_output_filter("CACHE_INVALIDATE",
+                                  cache_invalidate_filter,
                                   NULL,
                                   AP_FTYPE_PROTOCOL);
     ap_hook_post_config(cache_post_config, NULL, NULL, APR_HOOK_REALLY_FIRST);

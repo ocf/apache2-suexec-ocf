@@ -199,6 +199,7 @@ Server on HPUX</a></li>
 <li><a href="mod/mod_buffer.html">Apache Module mod_buffer</a></li>
 <li><a href="mod/mod_cache.html">Apache Module mod_cache</a></li>
 <li><a href="mod/mod_cache_disk.html">Apache Module mod_cache_disk</a></li>
+<li><a href="mod/mod_cache_socache.html">Apache Module mod_cache_socache</a></li>
 <li><a href="mod/mod_cern_meta.html">Apache Module mod_cern_meta</a></li>
 <li><a href="mod/mod_cgi.html">Apache Module mod_cgi</a></li>
 <li><a href="mod/mod_cgid.html">Apache Module mod_cgid</a></li>
@@ -237,6 +238,7 @@ Server on HPUX</a></li>
 <li><a href="mod/mod_log_forensic.html">Apache Module mod_log_forensic</a></li>
 <li><a href="mod/mod_logio.html">Apache Module mod_logio</a></li>
 <li><a href="mod/mod_lua.html">Apache Module mod_lua</a></li>
+<li><a href="mod/mod_macro.html">Apache Module mod_macro</a></li>
 <li><a href="mod/mod_mime.html">Apache Module mod_mime</a></li>
 <li><a href="mod/mod_mime_magic.html">Apache Module mod_mime_magic</a></li>
 <li><a href="mod/mod_negotiation.html">Apache Module mod_negotiation</a></li>
@@ -253,6 +255,7 @@ Server on HPUX</a></li>
 <li><a href="mod/mod_proxy_html.html">Apache Module mod_proxy_html</a></li>
 <li><a href="mod/mod_proxy_http.html">Apache Module mod_proxy_http</a></li>
 <li><a href="mod/mod_proxy_scgi.html">Apache Module mod_proxy_scgi</a></li>
+<li><a href="mod/mod_proxy_wstunnel.html">Apache Module mod_proxy_wstunnel</a></li>
 <li><a href="mod/mod_ratelimit.html">Apache Module mod_ratelimit</a></li>
 <li><a href="mod/mod_reflector.html">Apache Module mod_reflector</a></li>
 <li><a href="mod/mod_remoteip.html">Apache Module mod_remoteip</a></li>

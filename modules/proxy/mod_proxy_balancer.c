@@ -649,6 +649,17 @@ static int proxy_balancer_post_request(proxy_worker *worker,
         }
     }
 
+    if (balancer->failontimeout
+        && (apr_table_get(r->notes, "proxy_timedout")) != NULL) {
+        ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, APLOGNO(02460)
+                      "%s: Forcing worker (%s) into error state "
+                      "due to timeout and 'failonstatus' parameter being set",
+                       balancer->s->name, worker->s->name);
+        worker->s->status |= PROXY_WORKER_IN_ERROR;
+        worker->s->error_time = apr_time_now();
+
+    }
+
     if ((rv = PROXY_THREAD_UNLOCK(balancer)) != APR_SUCCESS) {
         ap_log_rerror(APLOG_MARK, APLOG_ERR, rv, r, APLOGNO(01175)
                       "%s: Unlock failed for post_request", balancer->s->name);
@@ -769,9 +780,9 @@ static int balancer_post_config(apr_pool_t *pconf, apr_pool_t *plog,
             continue;
         }
         if (conf->bal_persist) {
-            type = AP_SLOTMEM_TYPE_PREGRAB | AP_SLOTMEM_TYPE_PERSIST;
+            type = AP_SLOTMEM_TYPE_PERSIST;
         } else {
-            type = AP_SLOTMEM_TYPE_PREGRAB;
+            type = 0;
         }
         if (conf->balancers->nelts) {
             conf->max_balancers = conf->balancers->nelts + conf->bgrowth;
@@ -1160,7 +1171,7 @@ static int balancer_handler(request_rec *r)
             (val = apr_table_get(params, "b_nwrkr"))) {
             char *ret;
             proxy_worker *nworker;
-            nworker = ap_proxy_get_worker(conf->pool, bsel, conf, val);
+            nworker = ap_proxy_get_worker(r->pool, bsel, conf, val);
             if (!nworker && storage->num_free_slots(bsel->wslot)) {
                 if ((rv = PROXY_GLOBAL_LOCK(bsel)) != APR_SUCCESS) {
                     ap_log_rerror(APLOG_MARK, APLOG_ERR, rv, r, APLOGNO(01194)
@@ -1675,8 +1686,9 @@ static void ap_proxy_balancer_register_hook(apr_pool_t *p)
      * initializes
      */
     static const char *const aszPred[] = { "mpm_winnt.c", "mod_slotmem_shm.c", NULL};
+    static const char *const aszPred2[] = { "mod_proxy.c", NULL};
      /* manager handler */
-    ap_hook_post_config(balancer_post_config, NULL, NULL, APR_HOOK_MIDDLE);
+    ap_hook_post_config(balancer_post_config, aszPred2, NULL, APR_HOOK_MIDDLE);
     ap_hook_pre_config(balancer_pre_config, NULL, NULL, APR_HOOK_MIDDLE);
     ap_hook_handler(balancer_handler, NULL, NULL, APR_HOOK_FIRST);
     ap_hook_child_init(balancer_child_init, aszPred, NULL, APR_HOOK_MIDDLE);

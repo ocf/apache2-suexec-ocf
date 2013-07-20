@@ -1,5 +1,272 @@
                                                          -*- coding: utf-8 -*-
 
+Changes with Apache 2.4.6
+
+  *) Revert a broken fix for PR54948 that was applied to 2.4.5 (which was
+     not released) and found post-2.4.5 tagging.
+
+Changes with Apache 2.4.5
+
+  *) SECURITY: CVE-2013-1896 (cve.mitre.org)
+     mod_dav: Sending a MERGE request against a URI handled by mod_dav_svn with
+     the source href (sent as part of the request body as XML) pointing to a
+     URI that is not configured for DAV will trigger a segfault. [Ben Reser
+     <ben reser.org>]
+
+  *) SECURITY: CVE-2013-2249 (cve.mitre.org)
+     mod_session_dbd: Make sure that dirty flag is respected when saving
+     sessions, and ensure the session ID is changed each time the session
+     changes. This changes the format of the updatesession SQL statement.
+     Existing configurations must be changed.
+     [Takashi Sato <takashi tks.st>, Graham Leggett]
+
+  *) mpm_event: Check that AsyncRequestWorkerFactor is not negative. PR 54254.
+     [Jackie Zhang <jackie qq zhang gmail com>]
+
+  *) mod_proxy: Ensure we don't attempt to amend a table we are iterating
+     through, ensuring that all headers listed by Connection are removed.
+     [Graham Leggett, Co-Advisor <coad measurement-factory.com>]
+
+  *) mod_proxy_http: Make the proxy-interim-response environment variable
+     effective by formally overriding origin server behaviour. [Graham
+     Leggett, Co-Advisor <coad measurement-factory.com>]
+
+  *) mod_proxy: Fix seg-faults when using the global pool on threaded
+     MPMs [Thomas Eckert <thomas.r.w.eckert gmail.com>, Graham Leggett,
+     Jim Jagielski]
+
+  *) mod_deflate: Remove assumptions as to when an EOS bucket might arrive.
+     Gracefully step aside if the body size is zero. [Graham Leggett]
+
+  *) mod_ssl: Fix possible truncation of OCSP responses when reading from the
+     server.  [Joe Orton]
+
+  *) core: Support the SINGLE_LISTEN_UNSERIALIZED_ACCEPT optimization
+     on Linux kernel versions 3.x and above.  PR 55121.  [Bradley Heilbrun
+     <apache heilbrun.org>]
+
+  *) mod_cache_socache: Make sure the CacheSocacheMaxSize directive is merged
+     correctly. [Jens Låås <jelaas gmail.com>]
+
+  *) rotatelogs: add -n number-of-files option to roate through a number
+     of fixed-name logfiles. [Eric Covener]
+
+  *) mod_proxy: Support web-socket tunnels via mod_proxy_wstunnel.
+     [Jim Jagielski]
+
+  *) mod_cache_socache: Use the name of the socache implementation when performing
+     a lookup rather than using the raw arguments. [Martin Ksellmann
+     <martin@ksellmann.de>]
+
+  *) core: Add dirwalk_stat hook.  [Jeff Trawick]
+
+  *) core: Add post_perdir_config hook.
+     [Steinar Gunderson <sgunderson bigfoot.com>]
+
+  *) proxy_util: NULL terminate the right buffer in 'send_http_connect'.
+     [Christophe Jaillet]
+
+  *) mod_remoteip: close file in error path. [Christophe Jaillet]
+
+  *) core: make the "default" parameter of the "ErrorDocument" option case
+     insensitive. PR 54419 [Tianyin Xu <tixu cs ucsd edu>]
+
+  *) mod_proxy_html: make the "ProxyHTMLFixups" options case insensitive.
+     PR 54420 [Tianyin Xu <tixu cs ucsd edu>]
+
+  *) mod_cache: Make option "CacheDisable" in mod_cache case insensitive.
+     PR 54462 [Tianyin Xu <tixu cs ucsd edu>]
+
+  *) mod_cache: If a 304 response indicates an entity not currently cached, then
+     the cache MUST disregard the response and repeat the request without the
+     conditional. [Graham Leggett, Co-Advisor <coad measurement-factory.com>]
+
+  *) mod_cache: Ensure that we don't attempt to replace a cached response
+     with an older response as per RFC2616 13.12. [Graham Leggett, Co-Advisor
+     <coad measurement-factory.com>]
+
+  *) core, mod_cache: Ensure RFC2616 compliance in ap_meets_conditions()
+     with weak validation combined with If-Range and Range headers. Break
+     out explicit conditional header checks to be useable elsewhere in the
+     server. Ensure weak validation RFC compliance in the byteranges filter.
+     Ensure RFC validation compliance when serving cached entities. PR 16142
+     [Graham Leggett, Co-Advisor <coad measurement-factory.com>]
+
+  *) core: Add the ability to do explicit matching on weak and strong ETags
+     as per RFC2616 Section 13.3.3. [Graham Leggett, Co-Advisor
+     <coad measurement-factory.com>]
+
+  *) mod_cache: Ensure that updated responses to HEAD requests don't get
+     mistakenly paired with a previously cached body. Ensure that any existing
+     body is removed when a HEAD request is cached. [Graham Leggett,
+     Co-Advisor <coad measurement-factory.com>]
+
+  *) mod_cache: Honour Cache-Control: no-store in a request. [Graham Leggett]
+
+  *) mod_cache: Make sure that contradictory entity headers present in a 304
+     Not Modified response are caught and cause the entity to be removed.
+     [Graham Leggett]
+
+  *) mod_cache: Make sure Vary processing handles multivalued Vary headers and
+     multivalued headers referred to via Vary. [Graham Leggett]
+
+  *) mod_cache: When serving from cache, only the last header of a multivalued
+     header was taken into account. Fixed. Ensure that Warning headers are
+     correctly handled as per RFC2616. [Graham Leggett]
+
+  *) mod_cache: Ignore response headers specified by no-cache=header and
+     private=header as specified by RFC2616 14.9.1 What is Cacheable. Ensure
+     that these headers are still processed when multiple Cache-Control
+     headers are present in the response. PR 54706 [Graham Leggett,
+     Yann Ylavic <ylavic.dev gmail.com>]
+
+  *) mod_cache: Invalidate cached entities in response to RFC2616 Section
+     13.10 Invalidation After Updates or Deletions. PR 15868 [Graham
+     Leggett]
+
+  *) mod_dav: Improve error handling in dav_method_put(), add new
+     dav_join_error() function.  PR 54145.  [Ben Reser <ben reser.org>]
+
+  *) mod_dav: Do not fail PROPPATCH when prop namespace is not known.
+     PR 52559 [Diego Santa Cruz <diego.santaCruz spinetix.com>]
+
+  *) mod_dav: When a PROPPATCH attempts to remove a non-existent dead
+     property on a resource for which there is no dead property in the same
+     namespace httpd segfaults. PR 52559 [Diego Santa Cruz
+     <diego.santaCruz spinetix.com>]
+
+  *) mod_dav: Sending an If or If-Match header with an invalid ETag doesn't
+     result in a 412 Precondition Failed for a COPY operation. PR54610
+     [Timothy Wood <tjw omnigroup.com>]
+
+  *) mod_dav: Make sure that when we prepare an If URL for Etag comparison,
+     we compare unencoded paths. PR 53910 [Timothy Wood <tjw omnigroup.com>]
+
+  *) 'AuthGroupFile' and 'AuthUserFile' do not accept anymore the optional
+     'standard' keyword . It was unused and not documented.
+     PR54463 [Tianyin Xu <tixu cs.ucsd.edu> and Christophe Jaillet]
+
+  *) core: Do not over allocate memory within 'ap_rgetline_core' for
+     the common case. [Christophe Jaillet]
+
+  *) core: speed up (for common cases) and reduce memory usage of
+     ap_escape_logitem(). This should save 70-100 bytes in the request
+     pool for a default config. [Christophe Jaillet]
+
+  *) mod_dav: Ensure URI is correctly uriencoded on return. PR 54611
+     [Timothy Wood <tjw omnigroup.com>]
+
+  *) mod_proxy: Reject invalid values for Max-Forwards. [Graham Leggett,
+     Co-Advisor <coad measurement-factory.com>]
+
+  *) mod_cache: RFC2616 14.9.3 The s-maxage directive also implies the
+     semantics of the proxy-revalidate directive. [Graham Leggett]
+
+  *) mod_ssl: add support for subjectAltName-based host name checking
+     in proxy mode (SSLProxyCheckPeerName). PR 54030. [Kaspar Brand]
+
+  *) core: Use the proper macro for HTTP/1.1. [Graham Leggett]
+
+  *) event MPM: Provide error handling for ThreadStackSize. PR 54311
+     [Tianyin Xu <tixu cs.ucsd.edu>, Christophe Jaillet]
+
+  *) mod_dav: Do not segfault on PROPFIND with a zero length DBM.
+     PR 52559 [Diego Santa Cruz <diego.santaCruz spinetix.com>]
+
+  *) core: Improve error message where client's request-line exceeds
+     LimitRequestLine. PR 54384 [Christophe Jaillet]
+
+  *) mod_macro: New module that provides macros within configuration files.
+     [Fabien Coelho]
+
+  *) mod_cache_socache: New cache implementation backed by mod_socache
+     that replaces mod_mem_cache known from httpd 2.2. [Graham
+     Leggett]
+
+  *) htpasswd: Add -v option to verify a password. [Stefan Fritsch]
+
+  *) mod_proxy: Add BalancerInherit and ProxyPassInherit to control
+     whether Proxy Balancers and Workers are inherited by vhosts
+     (default is On). [Jim Jagielski]
+
+  *) mod_authnz_ldap: Allow using exec: calls to obtain LDAP bind
+     password.  [Daniel Ruggeri]
+
+  *) Added balancer parameter failontimeout to allow server admin
+     to configure an IO timeout as an error in the balancer.
+     [Daniel Ruggeri]
+
+  *) mod_auth_digest: Fix crashes if shm initialization failed. [Stefan
+     Fritsch]
+
+  *) htpasswd, htdbm: Fix password generation. PR 54735. [Stefan Fritsch]
+
+  *) core: Add workaround for gcc bug on sparc/64bit. PR 52900.
+     [Stefan Fritsch]
+
+  *) mod_setenvif: Fix crash in case SetEnvif and SetEnvIfExpr are used
+     together. PR 54881. [Ruediger Pluem]
+
+  *) htdigest: Fix buffer overflow when reading digest password file
+     with very long lines. PR 54893. [Rainer Jung]
+
+  *) ap_expr: Add the ability to base64 encode and base64 decode
+     strings and to generate their SHA1 and MD5 hash.
+     [Graham Leggett, Stefan Fritsch]
+
+  *) mod_log_config: Fix crash when logging request end time for a failed
+     request.  PR 54828 [Rainer Jung]
+
+  *) mod_ssl: Catch missing, mismatched or encrypted client cert/key pairs
+     with SSLProxyMachineCertificateFile/Path directives. PR 52212, PR 54698.
+     [Keith Burdis <keith burdis.org>, Joe Orton, Kaspar Brand]
+
+  *) mod_ssl: Quiet FIPS mode weak keys disabled and FIPS not selected emits
+     in the error log to debug level.  [William Rowe]
+
+  *) mod_cache_disk: CacheMinFileSize and CacheMaxFileSize were always
+     using compiled in defaults of 1000000/1 respectively. [Eric Covener]
+
+  *) mod_lbmethod_heartbeat, mod_heartmonitor: Respect DefaultRuntimeDir/
+     DEFAULT_REL_RUNTIMEDIR for the heartbeat storage file.  [Jeff Trawick]
+
+  *) mod_include: Use new ap_expr for 'elif', like 'if', 
+     if legacy parser is not specified.  PR 54548 [Tom Donovan]
+
+  *) mod_lua: Add some new functions: r:htpassword(), r:mkdir(), r:mkrdir(),
+     r:rmdir(), r:touch(), r:get_direntries(), r.date_parse_rfc().
+     [Guenter Knauf]
+
+  *) mod_lua: Add multipart form data handling. [Daniel Gruno]
+
+  *) mod_lua: If a LuaMapHandler doesn't return any value, log a warning
+     and treat it as apache2.OK. [Eric Covener]
+
+  *) mod_lua: Add bindings for apr_dbd/mod_dbd database access
+     [Daniel Gruno]
+
+  *) mod_lua: Add LuaInputFilter/LuaOutputFilter for creating content
+     filters in Lua [Daniel Gruno]
+
+  *) mod_lua: Allow scripts handled by the lua-script handler to return
+     a status code to the client (such as a 302 or a 500) [Daniel Gruno]
+
+  *) mod_lua: Decline handling 'lua-script' if the file doesn't exist,
+     rather than throwing an internal server error. [Daniel Gruno]
+
+  *) mod_lua: Add functions r:flush and r:sendfile as well as additional
+     request information to the request_rec structure. [Daniel Gruno]
+
+  *) mod_lua: Add a server scope for Lua states, which creates a pool of
+     states with managable minimum and maximum size. [Daniel Gruno]
+
+  *) mod_lua: Add new directive, LuaMapHandler, for dynamically mapping
+     URIs to Lua scripts and functions using regular expressions.
+     [Daniel Gruno]
+
+  *) mod_lua: Add new directive LuaCodeCache for controlling in-memory
+     caching of lua scripts. [Daniel Gruno]
+
 Changes with Apache 2.4.4
 
   *) SECURITY: CVE-2012-3499 (cve.mitre.org)
@@ -13,19 +280,16 @@ Changes with Apache 2.4.4
 
   *) mod_dir: Add support for the value 'disabled' in FallbackResource.
      [Vincent Deffontaines]
-     
+
   *) mod_proxy_connect: Don't keepalive the connection to the client if the
      backend closes the connection. PR 54474. [Pavel Mateja <pavel netsafe cz>]
 
   *) mod_lua: Add bindings for mod_dbd/apr_dbd database access.
      [Daniel Gruno]
-     
+
   *) mod_proxy: Allow for persistence of local changes made via the
      balancer-manager between graceful/normal restarts and power
      cycles. [Jim Jagielski]
-
-  *) mod_status: Print out list of times since a Vhost was last used.
-     [Jim Jagielski]
 
   *) mod_proxy: Fix startup crash with mis-defined balancers.
      PR 52402. [Jim Jagielski]
@@ -65,7 +329,7 @@ Changes with Apache 2.4.4
 
   *) ab: Support socket timeout (-s timeout).
      [Guido Serra <zeph fsfe org>]
-  
+
   *) httxt2dbm: Correct length computation for the 'value' stored in the
      DBM file. PR 47650 [jon buckybox com]
 
@@ -76,7 +340,7 @@ Changes with Apache 2.4.4
      at virtual host context or in Directory/Files/Location/If sections to
      work properly in If sections that are not in a Directory/Files/Location.
      [Stefan Fritsch]
- 
+
   *) mod_xml2enc: Fix problems with charset conversion altering the
      Content-Length. [Micha Lenk <micha lenk info>]
 
@@ -527,7 +791,7 @@ Changes with Apache 2.4.0
 
   *) SECURITY: CVE-2012-0031 (cve.mitre.org)
      Fix scoreboard issue which could allow an unprivileged child process
-     could cause the parent to crash at shutdown rather than terminate
+     to cause the parent to crash at shutdown rather than terminate
      cleanly.  [Joe Orton]
 
   *) mod_ssl: Fix compilation with xlc on AIX. PR 52394. [Stefan Fritsch]

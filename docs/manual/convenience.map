@@ -106,7 +106,9 @@ authzdbmtype	mod/mod_authz_dbm.html#authzdbmtype
 authzprovideralias	mod/mod_authz_core.html#authzprovideralias
 authzsendforbiddenonfailure	mod/mod_authz_core.html#authzsendforbiddenonfailure
 balancergrowth	mod/mod_proxy.html#balancergrowth
+balancerinherit	mod/mod_proxy.html#balancerinherit
 balancermember	mod/mod_proxy.html#balancermember
+balancerpersist	mod/mod_proxy.html#balancerpersist
 browsermatch	mod/mod_setenvif.html#browsermatch
 browsermatchnocase	mod/mod_setenvif.html#browsermatchnocase
 bufferedlogs	mod/mod_log_config.html#bufferedlogs
@@ -138,6 +140,12 @@ cachequickhandler	mod/mod_cache.html#cachequickhandler
 cachereadsize	mod/mod_cache_disk.html#cachereadsize
 cachereadtime	mod/mod_cache_disk.html#cachereadtime
 cacheroot	mod/mod_cache_disk.html#cacheroot
+cachesocache	mod/mod_cache_socache.html#cachesocache
+cachesocachemaxsize	mod/mod_cache_socache.html#cachesocachemaxsize
+cachesocachemaxtime	mod/mod_cache_socache.html#cachesocachemaxtime
+cachesocachemintime	mod/mod_cache_socache.html#cachesocachemintime
+cachesocachereadsize	mod/mod_cache_socache.html#cachesocachereadsize
+cachesocachereadtime	mod/mod_cache_socache.html#cachesocachereadtime
 cachestaleonerror	mod/mod_cache.html#cachestaleonerror
 cachestoreexpired	mod/mod_cache.html#cachestoreexpired
 cachestorenostore	mod/mod_cache.html#cachestorenostore
@@ -294,6 +302,7 @@ logformat	mod/mod_log_config.html#logformat
 loglevel	mod/core.html#loglevel
 logmessage	mod/mod_log_debug.html#logmessage
 luaauthzprovider	mod/mod_lua.html#luaauthzprovider
+luacodecache	mod/mod_lua.html#luacodecache
 luahookaccesschecker	mod/mod_lua.html#luahookaccesschecker
 luahookauthchecker	mod/mod_lua.html#luahookauthchecker
 luahookcheckuserid	mod/mod_lua.html#luahookcheckuserid
@@ -303,11 +312,15 @@ luahookmaptostorage	mod/mod_lua.html#luahookmaptostorage
 luahooktranslatename	mod/mod_lua.html#luahooktranslatename
 luahooktypechecker	mod/mod_lua.html#luahooktypechecker
 luainherit	mod/mod_lua.html#luainherit
+luainputfilter	mod/mod_lua.html#luainputfilter
+luamaphandler	mod/mod_lua.html#luamaphandler
+luaoutputfilter	mod/mod_lua.html#luaoutputfilter
 luapackagecpath	mod/mod_lua.html#luapackagecpath
 luapackagepath	mod/mod_lua.html#luapackagepath
 luaquickhandler	mod/mod_lua.html#luaquickhandler
 luaroot	mod/mod_lua.html#luaroot
 luascope	mod/mod_lua.html#luascope
+macro	mod/mod_macro.html#macro
 maxconnectionsperchild	mod/mpm_common.html#maxconnectionsperchild
 maxkeepaliverequests	mod/core.html#maxkeepaliverequests
 maxmemfree	mod/mpm_common.html#maxmemfree
@@ -369,6 +382,7 @@ proxyiobuffersize	mod/mod_proxy.html#proxyiobuffersize
 proxymatch	mod/mod_proxy.html#proxymatch
 proxymaxforwards	mod/mod_proxy.html#proxymaxforwards
 proxypass	mod/mod_proxy.html#proxypass
+proxypassinherit	mod/mod_proxy.html#proxypassinherit
 proxypassinterpolateenv	mod/mod_proxy.html#proxypassinterpolateenv
 proxypassmatch	mod/mod_proxy.html#proxypassmatch
 proxypassreverse	mod/mod_proxy.html#proxypassreverse
@@ -511,6 +525,7 @@ sslproxycarevocationfile	mod/mod_ssl.html#sslproxycarevocationfile
 sslproxycarevocationpath	mod/mod_ssl.html#sslproxycarevocationpath
 sslproxycheckpeercn	mod/mod_ssl.html#sslproxycheckpeercn
 sslproxycheckpeerexpire	mod/mod_ssl.html#sslproxycheckpeerexpire
+sslproxycheckpeername	mod/mod_ssl.html#sslproxycheckpeername
 sslproxyciphersuite	mod/mod_ssl.html#sslproxyciphersuite
 sslproxyengine	mod/mod_ssl.html#sslproxyengine
 sslproxymachinecertificatechainfile	mod/mod_ssl.html#sslproxymachinecertificatechainfile
@@ -555,7 +570,9 @@ traceenable	mod/core.html#traceenable
 transferlog	mod/mod_log_config.html#transferlog
 typesconfig	mod/mod_mime.html#typesconfig
 undefine	mod/core.html#undefine
+undefmacro	mod/mod_macro.html#undefmacro
 unsetenv	mod/mod_env.html#unsetenv
+use	mod/mod_macro.html#use
 usecanonicalname	mod/core.html#usecanonicalname
 usecanonicalphysicalport	mod/core.html#usecanonicalphysicalport
 user	mod/mod_unixd.html#user
