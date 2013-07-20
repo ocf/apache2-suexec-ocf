@@ -7,11 +7,12 @@ apache2 (2.4.4-7) unstable; urgency=low
     on dpkg's arguments supplied in $1, $2 etc. This clashes with function
     arguments supplied to to sh sub-function. Allow manual override in such
     cases.
-  * Mention that the dh_apache2 conditional must be present in postrm too (Closes: #716694)
+  * Mention that the dh_apache2 conditional must be present in postrm too
+    (Closes: #716694)
   * Fix "dh_apache2 ignores alternative httpd on conf files" by correctly
     checking the supplied arguments, we were off by one (Closes: #717299).
-  * CVE-2013-1896: Add patch provided by Marc Deslauriers to fix a denial of service via MERGE
-    request (Closes: #717272)
+  * CVE-2013-1896: Add patch provided by Marc Deslauriers to fix a denial of
+    service via MERGE request (Closes: #717272)
   * Reinstall index.html also on upgrades as it is removed during upgrades.
 
   [ Stefan Fritsch ]
