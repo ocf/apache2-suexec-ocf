@@ -383,7 +383,7 @@ foreach my $package ((@{$dh{DOPACKAGES}}))
 			elsif($type eq "conf")
 			{
 
-				if ($#arguments > 0)
+				if ($#arguments >= 0)
 				{
 					$PACKAGE_TYPE{'dependency_line'} .= " | " . join("", @arguments);
 				}
