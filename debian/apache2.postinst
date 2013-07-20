@@ -261,7 +261,7 @@ install_default_site()
 # scriptlet move there too?
 install_default_files()
 {
-	if is_fresh_install $@ ; then
+	if is_fresh_install $@ || we_are_upgrading_from_wheezy $@ ; then
 		if [ ! -e /var/www/index.html  -a \
 			! -h /var/www/index.html  -a \
 			! -e /var/www/index.cgi   -a \

@@ -12,13 +12,14 @@ apache2 (2.4.4-7) unstable; urgency=low
     checking the supplied arguments, we were off by one (Closes: #717299).
   * CVE-2013-1896: Add patch provided by Marc Deslauriers to fix a denial of service via MERGE
     request (Closes: #717272)
+  * Reinstall index.html also on upgrades as it is removed during upgrades.
 
   [ Stefan Fritsch ]
   * Don't fail package upgrade or removal just because the configuration is in
     an inconsistent state (Closes: #716921, #717343).
   * Improve error output of init script.
 
- -- Arno Töll <arno@debian.org>  Sat, 20 Jul 2013 13:26:50 +0200
+ -- Arno Töll <arno@debian.org>  Sat, 20 Jul 2013 13:50:41 +0200
 
 apache2 (2.4.4-6) unstable; urgency=low
 
