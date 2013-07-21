@@ -16,3 +16,4 @@ build_suexec-custom.patch
 add-itk-to-build-system.patch
 itk-fix-htaccess-reads-for-persistent-connections.patch
 itk-rerun-configure.patch
+fix_CHANGES
