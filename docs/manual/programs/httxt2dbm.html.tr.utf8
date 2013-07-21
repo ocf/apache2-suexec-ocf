@@ -28,6 +28,9 @@
 
     <p><code><strong>httxt2dbm</strong></code>, <code class="directive"><a href="../mod/mod_rewrite.html#rewritemap">RewriteMap</a></code> ile kullanmak için düz metin
     dosyalardan DBM dosyaları üretir.</p>
+
+    <p>Çıktı dosyası mevcutsa dosya kırpılmaz. Yeni anahtarlar eklenir,
+    mevcutlar da güncellenir.</p>
 </div>
 <div id="quickview"><ul id="toc"><li><img alt="" src="../images/down.gif" /> <a href="#synopsis">Kullanım</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#options">Seçenekler</a></li>

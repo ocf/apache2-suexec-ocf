@@ -599,7 +599,8 @@ AP_DECLARE(const char *) ap_add_module(module *m, apr_pool_t *p,
             len -= slen;
         }
 
-        ap_module_short_names[m->module_index] = strdup(sym_name);
+        ap_module_short_names[m->module_index] = ap_malloc(len + 1);
+        memcpy(ap_module_short_names[m->module_index], sym_name, len);
         ap_module_short_names[m->module_index][len] = '\0';
         merger_func_cache[m->module_index] = m->merge_dir_config;
     }
@@ -623,8 +624,9 @@ AP_DECLARE(const char *) ap_add_module(module *m, apr_pool_t *p,
 
     /* We cannot fix the string in-place, because it's const */
     if (m->name[strlen(m->name)-1] == ')') {
-        char *tmp = strdup(m->name); /* FIXME: memory leak, albeit a small one */
-        tmp[strlen(tmp)-1] = '\0';
+        char *tmp = ap_malloc(strlen(m->name)); /* FIXME: memory leak, albeit a small one */
+        memcpy(tmp, m->name, strlen(m->name)-1);
+        tmp[strlen(m->name)-1] = '\0';
         m->name = tmp;
     }
 #endif /*_OSD_POSIX*/
@@ -1796,9 +1798,8 @@ AP_DECLARE(const char *) ap_process_resource_config(server_rec *s,
 
     rv = ap_pcfg_openfile(&cfp, p, fname);
     if (rv != APR_SUCCESS) {
-        char errmsg[120];
-        return apr_psprintf(p, "Could not open configuration file %s: %s",
-                            fname, apr_strerror(rv, errmsg, sizeof errmsg));
+        return apr_psprintf(p, "Could not open configuration file %s: %pm",
+                            fname, &rv);
     }
 
     parms.config_file = cfp;
@@ -1850,9 +1851,8 @@ static const char *process_resource_config_nofnmatch(server_rec *s,
          */
         rv = apr_dir_open(&dirp, path, ptemp);
         if (rv != APR_SUCCESS) {
-            char errmsg[120];
-            return apr_psprintf(p, "Could not open config directory %s: %s",
-                                path, apr_strerror(rv, errmsg, sizeof errmsg));
+            return apr_psprintf(p, "Could not open config directory %s: %pm",
+                                path, &rv);
         }
 
         candidates = apr_array_make(ptemp, 1, sizeof(fnames));
@@ -1937,9 +1937,8 @@ static const char *process_resource_config_fnmatch(server_rec *s,
      */
     rv = apr_dir_open(&dirp, path, ptemp);
     if (rv != APR_SUCCESS) {
-        char errmsg[120];
-        return apr_psprintf(p, "Could not open config directory %s: %s",
-                            path, apr_strerror(rv, errmsg, sizeof errmsg));
+        return apr_psprintf(p, "Could not open config directory %s: %pm",
+                            path, &rv);
     }
 
     candidates = apr_array_make(ptemp, 1, sizeof(fnames));

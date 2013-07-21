@@ -14,32 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "apr.h"
-#include "apr_tables.h"
 
 #include "mod_lua.h"
 #include "lua_apr.h"
 
-/**
- * make a userdata out of a C pointer, and vice versa
- * instead of using lightuserdata
- */
-#ifndef lua_boxpointer
-#define lua_boxpointer(L,u) (*(void **)(lua_newuserdata(L, sizeof(void *))) = (u))
-#define lua_unboxpointer(L,i)   (*(void **)(lua_touserdata(L, i)))
-#endif
-
-
-AP_LUA_DECLARE(apr_table_t*) ap_lua_check_apr_table(lua_State *L, int index)
+apr_table_t *ap_lua_check_apr_table(lua_State *L, int index)
 {
     apr_table_t *t;
     luaL_checkudata(L, index, "Apr.Table");
-    t = (apr_table_t *) lua_unboxpointer(L, index);
+    t = lua_unboxpointer(L, index);
     return t;
 }
 
 
-AP_LUA_DECLARE(void) ap_lua_push_apr_table(lua_State *L, apr_table_t *t)
+void ap_lua_push_apr_table(lua_State *L, apr_table_t *t)
 {
     lua_boxpointer(L, t);
     luaL_getmetatable(L, "Apr.Table");
@@ -48,9 +36,9 @@ AP_LUA_DECLARE(void) ap_lua_push_apr_table(lua_State *L, apr_table_t *t)
 
 static int lua_table_set(lua_State *L)
 {
-    apr_table_t *t = ap_lua_check_apr_table(L, 1);
-    const char *key = luaL_checkstring(L, 2);
-    const char *val = luaL_checkstring(L, 3);
+    apr_table_t    *t = ap_lua_check_apr_table(L, 1);
+    const char     *key = luaL_checkstring(L, 2);
+    const char     *val = luaL_checkstring(L, 3);
 
     apr_table_set(t, key, val);
     return 0;
@@ -58,9 +46,9 @@ static int lua_table_set(lua_State *L)
 
 static int lua_table_get(lua_State *L)
 {
-    apr_table_t *t = ap_lua_check_apr_table(L, 1);
-    const char *key = luaL_checkstring(L, 2);
-    const char *val = apr_table_get(t, key);
+    apr_table_t    *t = ap_lua_check_apr_table(L, 1);
+    const char     *key = luaL_checkstring(L, 2);
+    const char     *val = apr_table_get(t, key);
     lua_pushstring(L, val);
     return 1;
 }
@@ -72,7 +60,7 @@ static const luaL_Reg lua_table_methods[] = {
 };
 
 
-AP_LUA_DECLARE(int) ap_lua_init(lua_State *L, apr_pool_t *p)
+int ap_lua_init(lua_State *L, apr_pool_t *p)
 {
     luaL_newmetatable(L, "Apr.Table");
     luaL_register(L, "apr_table", lua_table_methods);
@@ -88,3 +76,6 @@ AP_LUA_DECLARE(int) ap_lua_init(lua_State *L, apr_pool_t *p)
 
     return 0;
 }
+
+
+

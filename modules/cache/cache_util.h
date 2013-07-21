@@ -99,6 +99,7 @@ extern "C" {
 #define CACHE_LOCKNAME_KEY "mod_cache-lockname"
 #define CACHE_LOCKFILE_KEY "mod_cache-lockfile"
 #define CACHE_CTX_KEY "mod_cache-ctx"
+#define CACHE_SEPARATOR ",   "
 
 /**
  * cache_util.c
@@ -238,7 +239,16 @@ typedef struct {
  * @param r request_rec
  * @return 0 ==> cache object may not be served, 1 ==> cache object may be served
  */
-CACHE_DECLARE(int) ap_cache_check_allowed(cache_request_rec *cache, request_rec *r);
+int ap_cache_check_no_cache(cache_request_rec *cache, request_rec *r);
+
+/**
+ * Check the whether the request allows a cached object to be stored as per RFC2616
+ * section 14.9.2 (What May be Stored by Caches)
+ * @param cache cache_request_rec
+ * @param r request_rec
+ * @return 0 ==> cache object may not be served, 1 ==> cache object may be served
+ */
+int ap_cache_check_no_store(cache_request_rec *cache, request_rec *r);
 
 /**
  * Check the freshness of the cache object per RFC2616 section 13.2 (Expiration Model)
@@ -291,6 +301,25 @@ apr_status_t cache_remove_lock(cache_server_conf *conf,
 
 cache_provider_list *cache_get_providers(request_rec *r,
         cache_server_conf *conf, apr_uri_t uri);
+
+/**
+ * Get a value from a table, where the table may contain multiple
+ * values for a given key.
+ *
+ * When the table contains a single value, that value is returned
+ * unchanged.
+ *
+ * When the table contains two or more values for a key, all values
+ * for the key are returned, separated by commas.
+ */
+const char *cache_table_getm(apr_pool_t *p, const apr_table_t *t,
+        const char *key);
+
+/**
+ * String tokenizer that ignores separator characters within quoted strings
+ * and escaped characters, as per RFC2616 section 2.2.
+ */
+char *cache_strqtok(char *str, const char *sep, char **last);
 
 #ifdef __cplusplus
 }

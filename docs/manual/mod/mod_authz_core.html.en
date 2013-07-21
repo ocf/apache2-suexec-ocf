@@ -245,7 +245,7 @@ SetEnvIf User-Agent ^KnockKnock/2\.0 let_me_in
   decisions on arbitrary expressions.</p>
 
     <pre class="prettyprint lang-config">
-        Require expr %{TIME_HOUR} -ge 9 &amp;&amp; %{TIME_HOUR} -le 17 
+        Require expr "%{TIME_HOUR} -ge 9 &amp;&amp; %{TIME_HOUR} -le 17"
     </pre>
 
 
@@ -515,8 +515,7 @@ Require group admin
 
 <h3>See also</h3>
 <ul>
-<li><a href="../howto/auth.html">Authentication, Authorization,
-    and Access Control</a></li>
+<li><a href="../howto/access.html">Access control howto</a></li>
 <li><a href="#logic">Authorization Containers</a></li>
 <li><code class="module"><a href="../mod/mod_authn_core.html">mod_authn_core</a></code></li>
 <li><code class="module"><a href="../mod/mod_authz_host.html">mod_authz_host</a></code></li>

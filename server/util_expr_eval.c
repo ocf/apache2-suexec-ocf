@@ -25,9 +25,12 @@
 #include "http_request.h"
 #include "ap_provider.h"
 #include "util_expr_private.h"
+#include "util_md5.h"
 
 #include "apr_lib.h"
 #include "apr_fnmatch.h"
+#include "apr_base64.h"
+#include "apr_sha1.h"
 
 #include <limits.h>     /* for INT_MAX */
 
@@ -1019,6 +1022,43 @@ static const char *escape_func(ap_expr_eval_ctx_t *ctx, const void *data,
     return ap_escape_uri(ctx->p, arg);
 }
 
+static const char *base64_func(ap_expr_eval_ctx_t *ctx, const void *data,
+                               const char *arg)
+{
+    return ap_pbase64encode(ctx->p, (char *)arg);
+}
+
+static const char *unbase64_func(ap_expr_eval_ctx_t *ctx, const void *data,
+                               const char *arg)
+{
+    return ap_pbase64decode(ctx->p, arg);
+}
+
+static const char *sha1_func(ap_expr_eval_ctx_t *ctx, const void *data,
+                               const char *arg)
+{
+    apr_sha1_ctx_t context;
+    apr_byte_t sha1[APR_SHA1_DIGESTSIZE];
+    char *out;
+
+    out = apr_palloc(ctx->p, APR_SHA1_DIGESTSIZE*2+1);
+
+    apr_sha1_init(&context);
+    apr_sha1_update(&context, arg, strlen(arg));
+    apr_sha1_final(sha1, &context);
+
+    ap_bin2hex(sha1, APR_SHA1_DIGESTSIZE, out);
+
+    return out;
+}
+
+static const char *md5_func(ap_expr_eval_ctx_t *ctx, const void *data,
+                               const char *arg)
+{
+	return ap_md5(ctx->p, (const unsigned char *)arg);
+}
+
+
 #define MAX_FILE_SIZE 10*1024*1024
 static const char *file_func(ap_expr_eval_ctx_t *ctx, const void *data,
                              char *arg)
@@ -1575,9 +1615,12 @@ static const struct expr_provider_single string_func_providers[] = {
     { unescape_func,        "unescape",       NULL, 0 },
     { file_func,            "file",           NULL, 1 },
     { filesize_func,        "filesize",       NULL, 1 },
+    { base64_func,          "base64",         NULL, 0 },
+    { unbase64_func,        "unbase64",       NULL, 0 },
+    { sha1_func,            "sha1",           NULL, 0 },
+    { md5_func,             "md5",            NULL, 0 },
     { NULL, NULL, NULL}
 };
-/* XXX: base64 encode/decode ? */
 
 static const struct expr_provider_single unary_op_providers[] = {
     { op_nz,        "n", NULL,             0 },

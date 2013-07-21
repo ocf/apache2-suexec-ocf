@@ -91,7 +91,7 @@ static apr_status_t unixd_set_shm_perms(const char *fname)
 {
 #ifdef AP_NEED_SET_MUTEX_PERMS
 #if APR_USE_SHMEM_SHMGET || APR_USE_SHMEM_SHMGET_ANON
-    struct shmid_ds shmbuf;
+    struct shmid_ds shmbuf = { { 0 } };
     key_t shmkey;
     int shmid;
 
@@ -647,7 +647,7 @@ static apr_status_t slotmem_fgrab(ap_slotmem_instance_t *slot, unsigned int id)
     }
 
     if (id >= slot->desc.num) {
-        ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, ap_server_conf, APLOGNO(02236)
+        ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, ap_server_conf, APLOGNO(02397)
                      "slotmem(%s) fgrab failed. Num %u/num_free %u",
                      slot->name, slotmem_num_slots(slot),
                      slotmem_num_free_slots(slot));

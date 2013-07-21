@@ -36,6 +36,9 @@ APR_DECLARE_OPTIONAL_FN(char *, ssl_var_lookup,
 #define MAX(x,y) ((x) >= (y) ? (x) : (y))
 #endif
 
+static const char * const proxy_id = "proxy";
+apr_global_mutex_t *proxy_mutex = NULL;
+
 /*
  * A Web proxy module. Stages:
  *
@@ -382,6 +385,14 @@ static const char *set_balancer_param(proxy_server_conf *conf,
             status = apr_strtok(NULL, ", ", &tok_state);
         }
 
+    }
+    else if (!strcasecmp(key, "failontimeout")) {
+        if (!strcasecmp(val, "on"))
+            balancer->failontimeout = 1;
+        else if (!strcasecmp(val, "off"))
+            balancer->failontimeout = 0;
+        else
+            return "failontimeout must be On|Off";
     }
     else if (!strcasecmp(key, "nonce")) {
         if (!strcasecmp(val, "None")) {
@@ -871,7 +882,7 @@ static int proxy_handler(request_rec *r)
     int i, rc, access_status;
     int direct_connect = 0;
     const char *str;
-    long maxfwd;
+    apr_int64_t maxfwd;
     proxy_balancer *balancer = NULL;
     proxy_worker *worker = NULL;
     int attempts = 0, max_attempts = 0;
@@ -883,8 +894,14 @@ static int proxy_handler(request_rec *r)
 
     /* handle max-forwards / OPTIONS / TRACE */
     if ((str = apr_table_get(r->headers_in, "Max-Forwards"))) {
-        maxfwd = strtol(str, NULL, 10);
-        if (maxfwd < 1) {
+        char *end;
+        maxfwd = apr_strtoi64(str, &end, 10);
+        if (maxfwd < 0 || maxfwd == APR_INT64_MAX || *end) {
+            return ap_proxyerror(r, HTTP_BAD_REQUEST,
+                    apr_psprintf(r->pool,
+                            "Max-Forwards value '%s' could not be parsed", str));
+        }
+        else if (maxfwd == 0) {
             switch (r->method_number) {
             case M_TRACE: {
                 int access_status;
@@ -905,7 +922,7 @@ static int proxy_handler(request_rec *r)
                 return OK;
             }
             default: {
-                return ap_proxyerror(r, HTTP_BAD_GATEWAY,
+                return ap_proxyerror(r, HTTP_BAD_REQUEST,
                                      "Max-Forwards has reached zero - proxy loop?");
             }
             }
@@ -918,7 +935,7 @@ static int proxy_handler(request_rec *r)
     }
     if (maxfwd >= 0) {
         apr_table_setn(r->headers_in, "Max-Forwards",
-                       apr_psprintf(r->pool, "%ld", maxfwd));
+                       apr_psprintf(r->pool, "%" APR_INT64_T_FMT, maxfwd));
     }
 
     if (r->method_number == M_TRACE) {
@@ -1160,6 +1177,10 @@ static void * create_proxy_config(apr_pool_t *p, server_rec *s)
     ps->req = 0;
     ps->max_balancers = 0;
     ps->bal_persist = 0;
+    ps->inherit = 1;
+    ps->inherit_set = 0;
+    ps->ppinherit = 1;
+    ps->ppinherit_set = 0;
     ps->bgrowth = 5;
     ps->bgrowth_set = 0;
     ps->req_set = 0;
@@ -1175,7 +1196,7 @@ static void * create_proxy_config(apr_pool_t *p, server_rec *s)
     ps->badopt_set = 0;
     ps->source_address = NULL;
     ps->source_address_set = 0;
-    ps->pool = p;
+    apr_pool_create_ex(&ps->pool, p, NULL, NULL);
 
     return ps;
 }
@@ -1186,13 +1207,30 @@ static void * merge_proxy_config(apr_pool_t *p, void *basev, void *overridesv)
     proxy_server_conf *base = (proxy_server_conf *) basev;
     proxy_server_conf *overrides = (proxy_server_conf *) overridesv;
 
-    ps->proxies = apr_array_append(p, base->proxies, overrides->proxies);
+    ps->inherit = (overrides->inherit_set == 0) ? base->inherit : overrides->inherit;
+    ps->inherit_set = overrides->inherit_set || base->inherit_set;
+
+    ps->ppinherit = (overrides->ppinherit_set == 0) ? base->ppinherit : overrides->ppinherit;
+    ps->ppinherit_set = overrides->ppinherit_set || base->ppinherit_set;
+
+    if (ps->ppinherit) {
+        ps->proxies = apr_array_append(p, base->proxies, overrides->proxies);
+    }
+    else {
+        ps->proxies = overrides->proxies;
+    }
     ps->sec_proxy = apr_array_append(p, base->sec_proxy, overrides->sec_proxy);
     ps->aliases = apr_array_append(p, base->aliases, overrides->aliases);
     ps->noproxies = apr_array_append(p, base->noproxies, overrides->noproxies);
     ps->dirconn = apr_array_append(p, base->dirconn, overrides->dirconn);
-    ps->workers = apr_array_append(p, base->workers, overrides->workers);
-    ps->balancers = apr_array_append(p, base->balancers, overrides->balancers);
+    if (ps->inherit || ps->ppinherit) {
+        ps->workers = apr_array_append(p, base->workers, overrides->workers);
+        ps->balancers = apr_array_append(p, base->balancers, overrides->balancers);
+    }
+    else {
+        ps->workers = overrides->workers;
+        ps->balancers = overrides->balancers;
+    }
     ps->forward = overrides->forward ? overrides->forward : base->forward;
     ps->reverse = overrides->reverse ? overrides->reverse : base->reverse;
 
@@ -1220,7 +1258,7 @@ static void * merge_proxy_config(apr_pool_t *p, void *basev, void *overridesv)
     ps->proxy_status_set = overrides->proxy_status_set || base->proxy_status_set;
     ps->source_address = (overrides->source_address_set == 0) ? base->source_address : overrides->source_address;
     ps->source_address_set = overrides->source_address_set || base->source_address_set;
-    ps->pool = p;
+    ps->pool = base->pool;
     return ps;
 }
 static const char *set_source_address(cmd_parms *parms, void *dummy,
@@ -1890,6 +1928,26 @@ static const char *set_persist(cmd_parms *parms, void *dummy, int flag)
     return NULL;
 }
 
+static const char *set_inherit(cmd_parms *parms, void *dummy, int flag)
+{
+    proxy_server_conf *psf =
+    ap_get_module_config(parms->server->module_config, &proxy_module);
+
+    psf->inherit = flag;
+    psf->inherit_set = 1;
+    return NULL;
+}
+
+static const char *set_ppinherit(cmd_parms *parms, void *dummy, int flag)
+{
+    proxy_server_conf *psf =
+    ap_get_module_config(parms->server->module_config, &proxy_module);
+
+    psf->ppinherit = flag;
+    psf->ppinherit_set = 1;
+    return NULL;
+}
+
 static const char *add_member(cmd_parms *cmd, void *dummy, const char *arg)
 {
     server_rec *s = cmd->server;
@@ -2279,6 +2337,12 @@ static const command_rec proxy_cmds[] =
      "Number of additional Balancers that can be added post-config"),
     AP_INIT_FLAG("BalancerPersist", set_persist, NULL, RSRC_CONF,
      "on if the balancer should persist changes on reboot/restart made via the Balancer Manager"),
+    AP_INIT_FLAG("BalancerInherit", set_inherit, NULL, RSRC_CONF,
+     "on if this server should inherit Balancers and Workers defined in the main server "
+     "(Setting to off recommended if using the Balancer Manager)"),
+    AP_INIT_FLAG("ProxyPassInherit", set_ppinherit, NULL, RSRC_CONF,
+     "on if this server should inherit all ProxyPass directives defined in the main server "
+     "(Setting to off recommended if using the Balancer Manager)"),
     AP_INIT_TAKE1("ProxyStatus", set_status_opt, NULL, RSRC_CONF,
      "Configure Status: proxy status to one of: on | off | full"),
     AP_INIT_RAW_ARGS("ProxySet", set_proxy_param, NULL, RSRC_CONF|ACCESS_CONF,
@@ -2341,6 +2405,13 @@ PROXY_DECLARE(const char *) ap_proxy_ssl_val(apr_pool_t *p, server_rec *s,
 static int proxy_post_config(apr_pool_t *pconf, apr_pool_t *plog,
                              apr_pool_t *ptemp, server_rec *s)
 {
+    apr_status_t rv = ap_global_mutex_create(&proxy_mutex, NULL,
+            proxy_id, NULL, s, pconf, 0);
+    if (rv != APR_SUCCESS) {
+        ap_log_perror(APLOG_MARK, APLOG_CRIT, rv, plog, APLOGNO(02478)
+        "failed to create %s mutex", proxy_id);
+        return rv;
+    }
 
     proxy_ssl_enable = APR_RETRIEVE_OPTIONAL_FN(ssl_proxy_enable);
     proxy_ssl_disable = APR_RETRIEVE_OPTIONAL_FN(ssl_engine_disable);
@@ -2443,6 +2514,15 @@ static void child_init(apr_pool_t *p, server_rec *s)
 {
     proxy_worker *reverse = NULL;
 
+    apr_status_t rv = apr_global_mutex_child_init(&proxy_mutex,
+                                      apr_global_mutex_lockfile(proxy_mutex),
+                                      p);
+    if (rv != APR_SUCCESS) {
+        ap_log_error(APLOG_MARK, APLOG_CRIT, rv, s, APLOGNO(02479)
+                     "could not init proxy_mutex in child");
+        exit(1); /* Ugly, but what else? */
+    }
+
     /* TODO */
     while (s) {
         void *sconf = s->module_config;
@@ -2500,11 +2580,19 @@ static void child_init(apr_pool_t *p, server_rec *s)
 
 /*
  * This routine is called before the server processes the configuration
- * files.  There is no return value.
+ * files.
  */
 static int proxy_pre_config(apr_pool_t *pconf, apr_pool_t *plog,
                             apr_pool_t *ptemp)
 {
+    apr_status_t rv = ap_mutex_register(pconf, proxy_id, NULL,
+            APR_LOCK_DEFAULT, 0);
+    if (rv != APR_SUCCESS) {
+        ap_log_perror(APLOG_MARK, APLOG_CRIT, rv, plog, APLOGNO(02480)
+                "failed to register %s mutex", proxy_id);
+        return 500; /* An HTTP status would be a misnomer! */
+    }
+
     APR_OPTIONAL_HOOK(ap, status_hook, proxy_status_hook, NULL, NULL,
                       APR_HOOK_MIDDLE);
     /* Reset workers count on gracefull restart */

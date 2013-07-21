@@ -239,6 +239,11 @@
       tant qu'options supplémentaires à la commande <code>libtool
       --mode=link</code>. Vous pouvez l'utiliser pour ajouter des
       options locales spécifiques à l'éditeur de liens.</dd>
+      
+      <dt><code>-p</code></dt>
+      <dd>Avec cette option, apxs effectue l'édition de liens avec les
+      bibliothèques apr/apr-util. Elle permet de compiler les programmes
+      helper qui utilisent les bibliothèques apr/apr-util.</dd>
       </dl>
     
 

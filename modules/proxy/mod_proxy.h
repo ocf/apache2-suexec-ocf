@@ -164,7 +164,7 @@ typedef struct {
         status_full
     } proxy_status;             /* Status display options */
     apr_sockaddr_t *source_address;
-    apr_global_mutex_t  *mutex; /* global lock (needed??) */
+    apr_global_mutex_t  *mutex; /* global lock, for pool, etc */
     ap_slotmem_instance_t *bslot;  /* balancers shm data - runtime */
     ap_slotmem_provider_t *storage;
 
@@ -179,6 +179,10 @@ typedef struct {
     unsigned int source_address_set:1;
     unsigned int bgrowth_set:1;
     unsigned int bal_persist:1;
+    unsigned int inherit:1;
+    unsigned int inherit_set:1;
+    unsigned int ppinherit:1;
+    unsigned int ppinherit_set:1;
 } proxy_server_conf;
 
 
@@ -446,6 +450,7 @@ struct proxy_balancer {
     proxy_server_conf *sconf;
     void            *context;    /* general purpose storage */
     proxy_balancer_shared *s;    /* Shared data */
+    int failontimeout;           /* Whether to mark a member in Err if IO timeout occurs */
 };
 
 struct proxy_balancer_method {
@@ -914,6 +919,56 @@ PROXY_DECLARE(apr_status_t) ap_proxy_sync_balancer(proxy_balancer *b,
 PROXY_DECLARE(int) ap_proxy_trans_match(request_rec *r,
                                         struct proxy_alias *ent,
                                         proxy_dir_conf *dconf);
+
+/**
+ * Create a HTTP request header brigade,  old_cl_val and old_te_val as required.
+ * @parama p              pool
+ * @param header_brigade  header brigade to use/fill
+ * @param r               request
+ * @param p_conn          proxy connection rec
+ * @param worker          selected worker
+ * @param conf            per-server proxy config
+ * @param uri             uri
+ * @param url             url
+ * @param server_portstr  port as string
+ * @param old_cl_val      stored old content-len val
+ * @param old_te_val      stored old TE val
+ * @return                OK or HTTP_EXPECTATION_FAILED
+ */
+PROXY_DECLARE(int) ap_proxy_create_hdrbrgd(apr_pool_t *p,
+                                           apr_bucket_brigade *header_brigade,
+                                           request_rec *r,
+                                           proxy_conn_rec *p_conn,
+                                           proxy_worker *worker,
+                                           proxy_server_conf *conf,
+                                           apr_uri_t *uri,
+                                           char *url, char *server_portstr,
+                                           char **old_cl_val,
+                                           char **old_te_val);
+
+/**
+ * @param bucket_alloc  bucket allocator
+ * @param r             request
+ * @param p_conn        proxy connection
+ * @param origin        connection rec of origin
+ * @param  bb           brigade to send to origin
+ * @param  flush        flush
+ * @return              status (OK)
+ */
+PROXY_DECLARE(int) ap_proxy_pass_brigade(apr_bucket_alloc_t *bucket_alloc,
+                                         request_rec *r, proxy_conn_rec *p_conn,
+                                         conn_rec *origin, apr_bucket_brigade *bb,
+                                         int flush);
+
+/**
+ * Clear the headers referenced by the Connection header from the given
+ * table, and remove the Connection header.
+ * @param r request
+ * @param headers table of headers to clear
+ * @return 1 if "close" was present, 0 otherwise.
+ */
+APR_DECLARE_OPTIONAL_FN(int, ap_proxy_clear_connection,
+        (request_rec *r, apr_table_t *headers));
 
 #define PROXY_LBMETHOD "proxylbmethod"
 

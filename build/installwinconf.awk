@@ -47,12 +47,12 @@ BEGIN {
     }
 
     print "Installing Apache HTTP Server 2.x with" >tstfl;
-    print " DomainName =    " domainname >tstfl;
-    print " ServerName =    " servername >tstfl;
-    print " ServerAdmin =   " serveradmin >tstfl;
-    print " ServerPort =    " serverport >tstfl;
+    print " DomainName    = " domainname >tstfl;
+    print " ServerName    = " servername >tstfl;
+    print " ServerAdmin   = " serveradmin >tstfl;
+    print " ServerPort    = " serverport >tstfl;
     print " ServerSslPort = " serversslport >tstfl;
-    print " ServerRoot =    " serverroot >tstfl;
+    print " ServerRoot    = " serverroot >tstfl;
 
     filelist["httpd.conf"] = "httpd.conf.in";
     filelist["httpd-autoindex.conf"] = "httpd-autoindex.conf.in";
@@ -99,6 +99,7 @@ BEGIN {
           print "LoadModule asis_module modules/mod_asis.so" > dstfl;
           print "LoadModule auth_basic_module modules/mod_auth_basic.so" > dstfl;
           print "#LoadModule auth_digest_module modules/mod_auth_digest.so" > dstfl;
+          print "#LoadModule auth_form_module modules/mod_auth_form.so" > dstfl;
           print "#LoadModule authn_anon_module modules/mod_authn_anon.so" > dstfl;
           print "LoadModule authn_core_module modules/mod_authn_core.so" > dstfl;
           print "#LoadModule authn_dbd_module modules/mod_authn_dbd.so" > dstfl;
@@ -117,6 +118,7 @@ BEGIN {
           print "#LoadModule buffer_module modules/mod_buffer.so" > dstfl;
           print "#LoadModule cache_module modules/mod_cache.so" > dstfl;
           print "#LoadModule cache_disk_module modules/mod_cache_disk.so" > dstfl;
+          print "#LoadModule cache_socache_module modules/mod_cache_socache.so" > dstfl;
           print "#LoadModule cern_meta_module modules/mod_cern_meta.so" > dstfl;
           print "LoadModule cgi_module modules/mod_cgi.so" > dstfl;
           print "#LoadModule charset_lite_module modules/mod_charset_lite.so" > dstfl;
@@ -151,6 +153,7 @@ BEGIN {
           print "#LoadModule log_debug_module modules/mod_log_debug.so" > dstfl;
           print "#LoadModule log_forensic_module modules/mod_log_forensic.so" > dstfl;
           print "#LoadModule lua_module modules/mod_lua.so" > dstfl;
+          print "#LoadModule macro_module modules/mod_macro.so" > dstfl;
           print "LoadModule mime_module modules/mod_mime.so" > dstfl;
           print "#LoadModule mime_magic_module modules/mod_mime_magic.so" > dstfl;
           print "LoadModule negotiation_module modules/mod_negotiation.so" > dstfl;
@@ -164,6 +167,7 @@ BEGIN {
           print "#LoadModule proxy_html_module modules/mod_proxy_html.so" > dstfl;
           print "#LoadModule proxy_http_module modules/mod_proxy_http.so" > dstfl;
           print "#LoadModule proxy_scgi_module modules/mod_proxy_scgi.so" > dstfl;
+          print "#LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so" > dstfl;
           print "#LoadModule ratelimit_module modules/mod_ratelimit.so" > dstfl;
           print "#LoadModule reflector_module modules/mod_reflector.so" > dstfl;
           print "#LoadModule remoteip_module modules/mod_remoteip.so" > dstfl;

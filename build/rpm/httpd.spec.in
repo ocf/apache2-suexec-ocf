@@ -13,7 +13,7 @@ License: Apache License, Version 2.0
 Group: System Environment/Daemons
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: autoconf, perl, pkgconfig, findutils
-BuildRequires: zlib-devel, libselinux-devel
+BuildRequires: zlib-devel, libselinux-devel, libuuid-devel
 BuildRequires: apr-devel >= 1.4.0, apr-util-devel >= 1.4.0, pcre-devel >= 5.0
 Requires: initscripts >= 8.36, /etc/mime.types
 Obsoletes: httpd-suexec
@@ -332,6 +332,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/mod_bucketeer.so
 %{_libdir}/httpd/modules/mod_buffer.so
 %{_libdir}/httpd/modules/mod_cache_disk.so
+%{_libdir}/httpd/modules/mod_cache_socache.so
 %{_libdir}/httpd/modules/mod_cache.so
 %{_libdir}/httpd/modules/mod_case_filter.so
 %{_libdir}/httpd/modules/mod_case_filter_in.so
@@ -365,6 +366,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/mod_log_debug.so
 %{_libdir}/httpd/modules/mod_log_forensic.so
 %{_libdir}/httpd/modules/mod_logio.so
+%{_libdir}/httpd/modules/mod_macro.so
 %{_libdir}/httpd/modules/mod_mime_magic.so
 %{_libdir}/httpd/modules/mod_mime.so
 %{_libdir}/httpd/modules/mod_mpm_event.so

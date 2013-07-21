@@ -93,6 +93,7 @@
 <div id="quickview"><h3 class="directives">Directives</h3>
 <ul id="toc">
 <li><img alt="" src="../images/down.gif" /> <a href="#balancergrowth">BalancerGrowth</a></li>
+<li><img alt="" src="../images/down.gif" /> <a href="#balancerinherit">BalancerInherit</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#balancermember">BalancerMember</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#balancerpersist">BalancerPersist</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#noproxy">NoProxy</a></li>
@@ -106,6 +107,7 @@
 <li><img alt="" src="../images/down.gif" /> <a href="#proxymatch">&lt;ProxyMatch&gt;</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#proxymaxforwards">ProxyMaxForwards</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#proxypass">ProxyPass</a></li>
+<li><img alt="" src="../images/down.gif" /> <a href="#proxypassinherit">ProxyPassInherit</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#proxypassinterpolateenv">ProxyPassInterpolateEnv</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#proxypassmatch">ProxyPassMatch</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#proxypassreverse">ProxyPassReverse</a></li>
@@ -387,7 +389,7 @@ ProxyPass /examples http://backend.example.com/examples timeout=10
       tout en masquant sa véritable identité. Ceci représente un danger
       non seulement pour votre réseau, mais aussi pour l'Internet au
       sens large. Dans le cas de la mise en oeuvre d'un mandataire
-      inverse (en définissant la directive <code class="directive"><a href="#proxypass">ProxyPass</a></code> à "off"), le contrôle
+      inverse (en utilisant la directive <code class="directive"><a href="#proxypass">ProxyPass</a></code> avec <code>ProxyRequests Off</code>), le contrôle
       d'accès est moins critique car les clients ne peuvent contacter
       que les serveurs que vous avez spécifiés.</p>
 
@@ -542,6 +544,31 @@ serveur HTTP Apache</td></tr>
 
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
+<div class="directive-section"><h2><a name="BalancerInherit" id="BalancerInherit">BalancerInherit</a> <a name="balancerinherit" id="balancerinherit">Directive</a></h2>
+<table class="directive">
+<tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Héritage des membres du groupes de répartition de
+    charge du mandataire définis au niveau du serveur principal</td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>BalancerInherit On|Off</code></td></tr>
+<tr><th><a href="directive-dict.html#Default">Défaut:</a></th><td><code>BalancerInherit On</code></td></tr>
+<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration du serveur, serveur virtuel</td></tr>
+<tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Extension</td></tr>
+<tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_proxy</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>Disponible à partir de la version 2.5.0 du serveur
+    HTTP Apache.</td></tr>
+</table>
+        <p>Cette directive permet d'attribuer au serveur virtuel courant
+	l'héritage des membres de groupes de répartition de charge
+	définis au niveau du serveur
+	principal. Elle ne doit pas être activée si vous
+	utilisez la fonctionnalité de modifications dynamiques du
+	gestionnaire de répartition de charge (Balancer Manager) pour
+	éviter des problèmes et des comportements inattendus.</p>
+        <p>Les définitions au niveau du serveur principal constituent
+	les définitions par défaut au niveau des serveurs virtuels.</p>
+	
+    
+</div>
+<div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
 <div class="directive-section"><h2><a name="BalancerMember" id="BalancerMember">BalancerMember</a> <a name="balancermember" id="balancermember">Directive</a></h2>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Ajoute un membre à un groupe de répartition de
@@ -565,6 +592,11 @@ charge</td></tr>
     dèjà dans la directive de conteneur <code>&lt;Proxy
     <var>balancer://</var>...&gt;</code>. Il correspond à l'URL d'un
     répartiteur de charge défini par une directive <code class="directive"><a href="#proxypass">ProxyPass</a></code>.</p>
+    <p>La partie chemin de l'URL du répartiteur dans toute directive de
+    conteneur <code>&lt;Proxy <var>balancer://</var>...&gt;</code> est
+    ignorée.</p>
+    <p>En particulier, le slash de fin de l'URL d'un
+    <code>BalancerMember</code> doit être supprimé.</p>
 
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
@@ -942,8 +974,11 @@ données</td></tr>
 
     <p>Dans la plupart des cas, il n'y a aucune raison de modifier cette
     valeur.</p>
+
     <p>Si elle est utilisée avec AJP, cette directive permet de définir
-    la taille maximale du paquet AJP en octets. Si vous ne conservez pas
+    la taille maximale du paquet AJP en octets. Si la valeur spécifiée
+    est supérieure à 65536, elle est corrigée et prend la valeur 65536.
+    Si vous ne conservez pas
     la valeur par défaut, vous devez aussi modifier l'attribut
     <code>packetSize</code> de votre connecteur AJP du côté de Tomcat !
     L'attribut <code>packetSize</code> n'est disponible que dans Tomcat
@@ -1029,6 +1064,9 @@ l'espace d'URLs du serveur local</td></tr>
     <dfn>passerelle</dfn>. L'argument <var>chemin</var> est le nom d'un
     chemin virtuel local ; <var>url</var> est une URL partielle pour le
     serveur distant et ne doit pas contenir de chaîne d'arguments.</p>
+
+    <div class="note"><strong>Note : </strong>Cette directive ne peut pas être
+    utilisée dans un contexte de niveau répertoire.</div>
 
     <div class="warning">En général, la directive <code class="directive"><a href="#proxyrequests">ProxyRequests</a></code> doit être définie à
     <strong>off</strong> lorsqu'on utilise la directive
@@ -1344,7 +1382,7 @@ ProxyPass /mirror/foo http://backend.example.com
 
     <p>Si l'URL de la directive Proxy débute par
     <code>balancer://</code> (par exemple:
-    <code>balancer://cluster/</code>, toute information relative au
+    <code>balancer://cluster</code>, toute information relative au
     chemin est ignorée), alors un serveur cible virtuel ne communiquant pas
     réellement avec le serveur d'arrière-plan sera créé. Celui-ci sera
     en fait responsable de la gestion de plusieurs serveurs cibles "réels". Dans
@@ -1426,7 +1464,15 @@ ProxyPass /mirror/foo http://backend.example.com
 	dans la liste. La récupération du worker s'effectue comme dans
 	le cas des autres erreurs de worker.
     </td></tr>
-
+    <tr><td>failontimeout</td>
+        <td>Off</td>
+        <td>Si ce paramètre est défini à "On", un délai d'attente
+	dépassé en entrée/sortie après envoi d'une requête au serveur
+	d'arrière-plan va mettre le processus en état d'erreur. La
+	sortie de cet état d'erreur se passe de la même façon que pour
+	les autres erreurs.
+	Disponible à partir de la version 2.4.5 du serveur HTTP Apache.
+    </td></tr>
     <tr><td>nonce</td>
         <td>&lt;auto&gt;</td>
         <td>Le nombre à usage unique de protection utilisé dans la page
@@ -1464,10 +1510,10 @@ ProxyPass /mirror/foo http://backend.example.com
 ProxyPass /special-area http://special.example.com smax=5 max=10
 ProxyPass / balancer://mycluster/ stickysession=JSESSIONID|jsessionid nofailover=On
 &lt;Proxy balancer://mycluster&gt;
-    BalancerMember ajp://1.2.3.4:8009/
-    BalancerMember ajp://1.2.3.5:8009/ loadfactor=20
+    BalancerMember ajp://1.2.3.4:8009
+    BalancerMember ajp://1.2.3.5:8009 loadfactor=20
     # Less powerful server, don't send as many requests there,
-    BalancerMember ajp://1.2.3.6:8009/ loadfactor=5
+    BalancerMember ajp://1.2.3.6:8009 loadfactor=5
 &lt;/Proxy&gt;
     </pre>
 
@@ -1477,10 +1523,10 @@ ProxyPass / balancer://mycluster/ stickysession=JSESSIONID|jsessionid nofailover
     <pre class="prettyprint lang-config">
 ProxyPass / balancer://hotcluster/ 
 &lt;Proxy balancer://hotcluster&gt;
-    BalancerMember ajp://1.2.3.4:8009/ loadfactor=1
-    BalancerMember ajp://1.2.3.5:8009/ loadfactor=2
+    BalancerMember ajp://1.2.3.4:8009 loadfactor=1
+    BalancerMember ajp://1.2.3.5:8009 loadfactor=2
     # The server below is on hot standby
-    BalancerMember ajp://1.2.3.6:8009/ status=+H
+    BalancerMember ajp://1.2.3.6:8009 status=+H
     ProxySet lbmethod=bytraffic
 &lt;/Proxy&gt;
     </pre>
@@ -1529,6 +1575,31 @@ ProxyPass / balancer://hotcluster/
     <code>[P]</code>.</p>
 
 
+</div>
+<div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
+<div class="directive-section"><h2><a name="ProxyPassInherit" id="ProxyPassInherit">ProxyPassInherit</a> <a name="proxypassinherit" id="proxypassinherit">Directive</a></h2>
+<table class="directive">
+<tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Héritage des directives ProxyPass définies au niveau du
+serveur principal</td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>ProxyPassInherit On|Off</code></td></tr>
+<tr><th><a href="directive-dict.html#Default">Défaut:</a></th><td><code>ProxyPassInherit On</code></td></tr>
+<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration du serveur, serveur virtuel</td></tr>
+<tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Extension</td></tr>
+<tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_proxy</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>Disponible à partir de la version 2.5.0 du serveur
+HTTP Apache.</td></tr>
+</table>
+        <p>Cette directive permet à un serveur virtuel d'hériter des
+	directives <code class="directive"><a href="#proxypass">ProxyPass</a></code> définies
+	au niveau du serveur principal. Si vous utilisez la fonctionnalité de
+	modifications dynamiques du Balancer Manager, cette directive peut
+	causer des problèmes et des comportements inattendus et doit donc
+	être désactivée.</p>
+        <p>Les valeurs définies au niveau du serveur principal
+	constituent les valeurs par défaut pour tous les serveurs virtuels.</p>
+        <p>La désactivation de ProxyPassInherit désactive aussi la
+	directive <code class="directive"><a href="#balancerinherit">BalancerInherit</a></code>.</p>
+    
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
 <div class="directive-section"><h2><a name="ProxyPassInterpolateEnv" id="ProxyPassInterpolateEnv">ProxyPassInterpolateEnv</a> <a name="proxypassinterpolateenv" id="proxypassinterpolateenv">Directive</a></h2>
@@ -1580,6 +1651,9 @@ du serveur local en utilisant des expressions rationnelles</td></tr>
     l'<var>url</var>, et si elle correspond, le serveur va substituer
     toute correspondance entre parenthèses dans la chaîne donnée et
     l'utiliser comme nouvelle <var>url</var>.</p>
+
+    <div class="note"><strong>Note : </strong>Cette directive ne peut pas être
+    utilisée dans un contexte de niveau répertoire.</div>
 
     <p>Supposons que le serveur local a pour adresse
     <code>http://example.com/</code> ; alors</p>
@@ -1949,8 +2023,8 @@ du serveur HTTP Apache.</td></tr>
 
     <div class="example"><pre class="prettyprint lang-config">
 &lt;Proxy balancer://hotcluster&gt;
-    BalancerMember http://www2.example.com:8080/ loadfactor=1
-    BalancerMember http://www3.example.com:8080/ loadfactor=2
+    BalancerMember http://www2.example.com:8080 loadfactor=1
+    BalancerMember http://www3.example.com:8080 loadfactor=2
     ProxySet lbmethod=bytraffic
 &lt;/Proxy&gt;
       </pre>

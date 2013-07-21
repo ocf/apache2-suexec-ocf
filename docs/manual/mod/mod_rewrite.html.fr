@@ -351,7 +351,11 @@ la réécriture soit effectuée
 		  au moment où on y fait référence. Dans le cas
 		  contraire, et en particulier dans le cas d'un serveur
 		  virtuel, <code>REQUEST_FILENAME</code> contient la
-		  valeur de <code>REQUEST_URI</code>.</dd>
+		  valeur de <code>REQUEST_URI</code>. En fonction de la
+		  valeur de la directive <code class="directive"><a href="../mod/core.html#acceptpathinfo">AcceptPathInfo</a></code>, le serveur
+		  peut n'utiliser que certains éléments de tête du
+		  <code>REQUEST_URI</code> pour déterminer à quel
+		  fichier correspond la requête.</dd>
 
                   <dt><code>HTTPS</code></dt>
 
@@ -445,7 +449,7 @@ la réécriture soit effectuée
 	</li>
 
         <li>A des fins de référence avant, on peut utiliser,
-	<code>%{LA-U:variable}</code>, qui
+	<a id="LA-U" name="LA-U"><code>%{LA-U:variable}</code></a>, qui
 	permet d'effectuer une sous-requête interne à base d'URL, afin
 	de déterminer la valeur finale de <em>variable</em>. Ceci permet
 	d'accéder à la valeur d'une variable pour la réécriture inconnue
@@ -776,8 +780,9 @@ moteur de réécriture</td></tr>
       mettra pas à jour les variables d'environnement
       <code>SCRIPT_URx</code>.</p>
 
-      <p>Pour désactiver le module, il vaut mieux utiliser cette
-      directive que commenter toutes les directives <code class="directive"><a href="#rewriterule">RewriteRule</a></code> !</p>
+      <p>Plutôt que de commenter toutes les directives <code class="directive"><a href="#rewriterule">RewriteRule</a></code>, il est préférable
+      d'utiliser cette directive si l'on souhaite désactiver les
+      règles de réécriture dans un contexte particulier.</p>
 
       <p>Notez que les  hôtes virtuels n'héritent pas des
       configurations de réécriture. Ceci implique que vous devez
@@ -1298,7 +1303,7 @@ substitution !
         <td>Arrête le processus de réécriture immédiatement et n'applique
 	plus aucune règle. Prêtez une attention particulière aux mises
 	en garde concernant les contextes de niveau répertoire et
-	.htaccess (voir aussi le drapeau END). <em><a href="../rewrite/flags.html#flag_l">détails ...</a></em></td>
+	.htaccess (voir aussi le drapeau END). <em><a href="../rewrite/flags.html#flag_end">détails ...</a></em></td>
     </tr>
     <tr>
         <td>next|N</td>

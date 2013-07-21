@@ -333,7 +333,11 @@ Alias /myapp /opt/myapp-1.2.3
                   been determined by the server at the time
                   <code>REQUEST_FILENAME</code> is referenced. Otherwise,
                   such as when used in virtual host context, the same
-                  value as <code>REQUEST_URI</code>.</dd>
+                  value as <code>REQUEST_URI</code>.  Depending on the value of 
+                  <code class="directive"><a href="../mod/core.html#acceptpathinfo">AcceptPathInfo</a></code>, the
+                  server may have only used some leading components of the 
+                  <code>REQUEST_URI</code> to map the request to a file.
+                  </dd>
 
                   <dt><code>HTTPS</code></dt>
 
@@ -416,7 +420,8 @@ Alias /myapp /opt/myapp-1.2.3
         so that certain conditions might not be evaluated at all.</p></li>
 
         <li>
-        <code>%{LA-U:variable}</code> can be used for look-aheads which perform
+        <a id="LA-U" name="LA-U"><code>%{LA-U:variable}</code></a> 
+        can be used for look-aheads which perform
         an internal (URL-based) sub-request to determine the final
         value of <em>variable</em>. This can be used to access
         variable for rewriting which is not available at the current
@@ -726,8 +731,8 @@ RewriteRule  ^/$                 /homepage.std.html  [L]
       all. It does not even update the <code>SCRIPT_URx</code>
       environment variables.</p>
 
-      <p>Use this directive to disable the module instead of
-      commenting out all the <code class="directive"><a href="#rewriterule">RewriteRule</a></code> directives!</p>
+      <p>Use this directive to disable rules in a particular contact,
+      rather than commenting out all the <code class="directive"><a href="#rewriterule">RewriteRule</a></code> directives.</p>
 
       <p>Note that rewrite configurations are not
       inherited by virtual hosts. This means that you need to have a
@@ -1192,7 +1197,7 @@ cannot use <code>$N</code> in the substitution string!
         <td>last|L</td>
         <td>Stop the rewriting process immediately and don't apply any
         more rules. Especially note caveats for per-directory and
-        .htaccess context (see also the END flag). <em><a href="../rewrite/flags.html#flag_l">details ...</a></em></td>
+        .htaccess context (see also the END flag). <em><a href="../rewrite/flags.html#flag_end">details ...</a></em></td>
     </tr>
     <tr>
         <td>next|N</td>

@@ -1388,7 +1388,7 @@ AP_DECLARE(char *) ap_ht_time(apr_pool_t *p, apr_time_t t, const char *fmt, int 
    char **) */
 
 /**
- * Get the characters until the first occurance of a specified character
+ * Get the characters until the first occurrence of a specified character
  * @param p The pool to allocate memory from
  * @param line The string to get the characters from
  * @param stop The character to stop at
@@ -1397,7 +1397,7 @@ AP_DECLARE(char *) ap_ht_time(apr_pool_t *p, apr_time_t t, const char *fmt, int 
 AP_DECLARE(char *) ap_getword(apr_pool_t *p, const char **line, char stop);
 
 /**
- * Get the characters until the first occurance of a specified character
+ * Get the characters until the first occurrence of a specified character
  * @param p The pool to allocate memory from
  * @param line The string to get the characters from
  * @param stop The character to stop at
@@ -1426,22 +1426,22 @@ AP_DECLARE(char *) ap_getword_white(apr_pool_t *p, const char **line);
 AP_DECLARE(char *) ap_getword_white_nc(apr_pool_t *p, char **line);
 
 /**
- * Get all characters from the first occurance of @a stop to the first "\0"
+ * Get all characters from the first occurrence of @a stop to the first "\0"
  * @param p The pool to allocate memory from
  * @param line The line to traverse
  * @param stop The character to start at
- * @return A copy of all caracters after the first occurance of the specified
+ * @return A copy of all characters after the first occurrence of the specified
  *         character
  */
 AP_DECLARE(char *) ap_getword_nulls(apr_pool_t *p, const char **line,
                                     char stop);
 
 /**
- * Get all characters from the first occurance of @a stop to the first "\0"
+ * Get all characters from the first occurrence of @a stop to the first "\0"
  * @param p The pool to allocate memory from
  * @param line The line to traverse
  * @param stop The character to start at
- * @return A copy of all caracters after the first occurance of the specified
+ * @return A copy of all characters after the first occurrence of the specified
  *         character
  * @note The same as ap_getword_nulls(), except it doesn't use const char **.
  */
@@ -1508,6 +1508,24 @@ AP_DECLARE(char *) ap_get_list_item(apr_pool_t *p, const char **field);
  * @return 1 if found, 0 if not found.
  */
 AP_DECLARE(int) ap_find_list_item(apr_pool_t *p, const char *line, const char *tok);
+
+/**
+ * Do a weak ETag comparison within an HTTP field value list.
+ * @param p The pool to allocate from
+ * @param line The field value list to search
+ * @param tok The token to search for
+ * @return 1 if found, 0 if not found.
+ */
+AP_DECLARE(int) ap_find_etag_weak(apr_pool_t *p, const char *line, const char *tok);
+
+/**
+ * Do a strong ETag comparison within an HTTP field value list.
+ * @param p The pool to allocate from
+ * @param line The field value list to search
+ * @param tok The token to search for
+ * @return 1 if found, 0 if not found.
+ */
+AP_DECLARE(int) ap_find_etag_strong(apr_pool_t *p, const char *line, const char *tok);
 
 /**
  * Retrieve a token, spacing over it and adjusting the pointer to
@@ -1853,7 +1871,7 @@ AP_DECLARE(char *) ap_pregsub(apr_pool_t *p, const char *input,
  * @param nmatch the nmatch returned from ap_pregex
  * @param pmatch the pmatch array returned from ap_pregex
  * @param maxlen the maximum string length to return, 0 for unlimited
- * @return The substituted string, or NULL on error
+ * @return APR_SUCCESS if successful, APR_ENOMEM or other error code otherwise.
  */
 AP_DECLARE(apr_status_t) ap_pregsub_ex(apr_pool_t *p, char **result,
                                        const char *input, const char *source,
@@ -2093,12 +2111,6 @@ extern int raise_sigstop_flags;
  */
 AP_DECLARE(const char *) ap_psignature(const char *prefix, request_rec *r);
 
-/** strtoul does not exist on sunos4. */
-#ifdef strtoul
-#undef strtoul
-#endif
-#define strtoul strtoul_is_not_a_portable_function_use_strtol_instead
-
   /* The C library has functions that allow const to be silently dropped ...
      these macros detect the drop in maintainer mode, but use the native
      methods for normal builds
@@ -2217,6 +2229,18 @@ AP_DECLARE(void) ap_get_loadavg(ap_loadavg_t *ld);
  *        string will be NUL-terminated.
  */
 AP_DECLARE(void) ap_bin2hex(const void *src, apr_size_t srclen, char *dest);
+
+/**
+ * Short function to execute a command and return the first line of
+ * output minus \r \n. Useful for "obscuring" passwords via exec calls
+ * @param p the pool to allocate from
+ * @param cmd the command to execute
+ * @param argv the arguments to pass to the cmd
+ * @return ptr to characters or NULL on any error
+ */
+AP_DECLARE(char *) ap_get_exec_line(apr_pool_t *p,
+                                    const char *cmd,
+                                    const char * const *argv);
 
 #define AP_NORESTART APR_OS_START_USEERR + 1
 

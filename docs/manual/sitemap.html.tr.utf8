@@ -195,6 +195,7 @@ Windows ile Apache Kullanımı</a></li>
 <li><a href="mod/mod_buffer.html">Apache Modülü mod_buffer</a></li>
 <li><a href="mod/mod_cache.html">Apache Modülü mod_cache</a></li>
 <li><a href="mod/mod_cache_disk.html">Apache Modülü mod_cache_disk</a></li>
+<li><a href="mod/mod_cache_socache.html">Apache Modülü mod_cache_socache</a></li>
 <li><a href="mod/mod_cern_meta.html">Apache Modülü mod_cern_meta</a></li>
 <li><a href="mod/mod_cgi.html">Apache Modülü mod_cgi</a></li>
 <li><a href="mod/mod_cgid.html">Apache Modülü mod_cgid</a></li>
@@ -233,6 +234,7 @@ Windows ile Apache Kullanımı</a></li>
 <li><a href="mod/mod_log_forensic.html">Apache Modülü mod_log_forensic</a></li>
 <li><a href="mod/mod_logio.html">Apache Modülü mod_logio</a></li>
 <li><a href="mod/mod_lua.html">Apache Modülü mod_lua</a></li>
+<li><a href="mod/mod_macro.html">Apache Modülü mod_macro</a></li>
 <li><a href="mod/mod_mime.html">Apache Modülü mod_mime</a></li>
 <li><a href="mod/mod_mime_magic.html">Apache Modülü mod_mime_magic</a></li>
 <li><a href="mod/mod_negotiation.html">Apache Modülü mod_negotiation</a></li>
@@ -249,6 +251,7 @@ Windows ile Apache Kullanımı</a></li>
 <li><a href="mod/mod_proxy_html.html">Apache Modülü mod_proxy_html</a></li>
 <li><a href="mod/mod_proxy_http.html">Apache Modülü mod_proxy_http</a></li>
 <li><a href="mod/mod_proxy_scgi.html">Apache Modülü mod_proxy_scgi</a></li>
+<li><a href="mod/mod_proxy_wstunnel.html">Apache Modülü mod_proxy_wstunnel</a></li>
 <li><a href="mod/mod_ratelimit.html">Apache Modülü mod_ratelimit</a></li>
 <li><a href="mod/mod_reflector.html">Apache Modülü mod_reflector</a></li>
 <li><a href="mod/mod_remoteip.html">Apache Modülü mod_remoteip</a></li>
