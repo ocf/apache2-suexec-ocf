@@ -1,18 +1,18 @@
 # the analogon of running autoheader; autoconf, which is a pain to clean up
 --- a/configure
 +++ b/configure
-@@ -1970,8 +1970,8 @@
-   --with-lua=PATH         Path to the Lua 5.1 prefix
-   --with-ssl=PATH         OpenSSL installation directory
-   --with-mpm=MPM          Choose the process model for Apache to use by
--                          default. MPM={event|worker|prefork|winnt} This will
--                          be statically linked as the only available MPM
+@@ -1983,6 +1983,10 @@
+                           default. MPM={event|worker|prefork|winnt} This will
+                           be statically linked as the only available MPM
+                           unless --enable-mpms-shared is also specified.
++  --with-mpm=MPM          Choose the process model for Apache to use by
 +                          default. MPM={event|worker|prefork|winnt|itk} This
 +                          will be statically linked as the only available MPM
-                           unless --enable-mpms-shared is also specified.
++                          unless --enable-mpms-shared is also specified.
    --with-module=module-type:module-file
                            Enable module-file in the modules/<module-type>
-@@ -25426,6 +25426,27 @@
+                           directory.
+@@ -25865,6 +25869,27 @@
  
  fi
  
@@ -40,10 +40,109 @@
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking if mpmt_os2 MPM supports this platform" >&5
  $as_echo_n "checking if mpmt_os2 MPM supports this platform... " >&6; }
  case $host in
-@@ -27011,6 +27032,53 @@
-     else
-         as_fn_error $? "MPM $i is not supported on this platform." "$LINENO" 5
-     fi
+@@ -27480,6 +27505,182 @@
+ 
+ 
+ 
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking which MPM to use by default" >&5
++$as_echo_n "checking which MPM to use by default... " >&6; }
++
++# Check whether --with-mpm was given.
++if test "${with_mpm+set}" = set; then :
++  withval=$with_mpm;
++    default_mpm=$withval
++    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $withval" >&5
++$as_echo "$withval" >&6; };
++
++else
++
++                if ap_mpm_is_supported "winnt"; then
++        default_mpm=winnt
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: winnt" >&5
++$as_echo "winnt" >&6; }
++    elif ap_mpm_is_supported "mpmt_os2"; then
++        default_mpm=mpmt_os2
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: mpmt_os2" >&5
++$as_echo "mpmt_os2" >&6; }
++    elif ap_mpm_is_supported "event"; then
++        default_mpm=event
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: event" >&5
++$as_echo "event" >&6; }
++    elif ap_mpm_is_supported "worker"; then
++        default_mpm=worker
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: worker - event is not supported" >&5
++$as_echo "worker - event is not supported" >&6; }
++    else
++        default_mpm=prefork
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: prefork - event and worker are not supported" >&5
++$as_echo "prefork - event and worker are not supported" >&6; }
++    fi
++
++fi
++
++
++
++    if ap_mpm_is_enabled $default_mpm; then
++        :
++    else
++        eval "ap_enabled_mpm_$default_mpm=yes"
++        ap_enabled_mpms="$ap_enabled_mpms $default_mpm "
++    fi
++
++
++# Check whether --enable-mpms-shared was given.
++if test "${enable_mpms_shared+set}" = set; then :
++  enableval=$enable_mpms_shared;
++    if test "$enableval" = "no"; then
++        mpm_build=static
++    else
++        mpm_build=shared
++        if test "$enableval" = "yes"; then
++            enableval=$default_mpm
++        fi
++        for i in $enableval; do
++            if test "$i" = "all"; then
++                for j in $ap_supported_shared_mpms; do
++                    eval "enable_mpm_$j=shared"
++
++    if ap_mpm_is_enabled $j; then
++        :
++    else
++        eval "ap_enabled_mpm_$j=yes"
++        ap_enabled_mpms="$ap_enabled_mpms $j "
++    fi
++
++                done
++            else
++                i=`echo $i | sed 's/-/_/g'`
++                if ap_mpm_supports_shared $i; then
++                    eval "enable_mpm_$i=shared"
++
++    if ap_mpm_is_enabled $i; then
++        :
++    else
++        eval "ap_enabled_mpm_$i=yes"
++        ap_enabled_mpms="$ap_enabled_mpms $i "
++    fi
++
++                else
++                    as_fn_error $? "MPM $i does not support dynamic loading." "$LINENO" 5
++                fi
++            fi
++        done
++    fi
++
++else
++  mpm_build=static
++fi
++
++
++for i in $ap_enabled_mpms; do
++    if ap_mpm_is_supported $i; then
++        :
++    else
++        as_fn_error $? "MPM $i is not supported on this platform." "$LINENO" 5
++    fi
 +    if test "$i" = "itk" ; then
 +        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cap_init in -lcap" >&5
 +$as_echo_n "checking for cap_init in -lcap... " >&6; }
@@ -91,10 +190,40 @@
 +fi
 +
 +    fi
- done
++done
++
++if test $mpm_build = "shared"; then
++    eval "tmp=\$enable_mpm_$default_mpm"
++    if test "$tmp" != "shared"; then
++        as_fn_error $? "The default MPM ($default_mpm) must be included in --enable-mpms-shared.  Use --with-mpm to change the default MPM." "$LINENO" 5
++    fi
++fi
++
++
++  APACHE_FAST_OUTPUT_FILES="$APACHE_FAST_OUTPUT_FILES server/mpm/Makefile"
++
++
++if test $mpm_build = "shared"; then
++    MPM_LIB=""
++else
++    MPM_LIB=server/mpm/$default_mpm/lib${default_mpm}.la
++    MODLIST="$MODLIST mpm_${default_mpm}"
++fi
++
++MPM_SUBDIRS=$ap_enabled_mpms
++
++  APACHE_VAR_SUBST="$APACHE_VAR_SUBST MPM_SUBDIRS"
++
++
++
++  APACHE_VAR_SUBST="$APACHE_VAR_SUBST MPM_LIB"
++
++
++
  
- if test $mpm_build = "shared"; then
-@@ -27131,6 +27199,77 @@
+ 
+   APACHE_VAR_SUBST="$APACHE_VAR_SUBST MOD_MPM_EVENT_LDADD"
+@@ -27570,6 +27771,77 @@
  
  
  
@@ -172,7 +301,7 @@
      if ap_mpm_is_enabled prefork; then
          if test -z ""; then
              objects="prefork.lo"
-@@ -27372,6 +27511,7 @@
+@@ -27811,6 +28083,7 @@
  
  if ap_mpm_is_enabled "worker" \
     || ap_mpm_is_enabled "event" \
@@ -180,6 +309,378 @@
     || ap_mpm_is_enabled "prefork"; then
      unixd_mods_enable=yes
  else
+@@ -30038,6 +30311,371 @@
+ 
+ 
+ 
++
++
++  current_dir=arch/unix
++  modpath_current=modules/arch/unix
++  modpath_static=
++  modpath_shared=
++  for var in CFLAGS CXXFLAGS CPPFLAGS LDFLAGS LIBS INCLUDES; do
++    eval MOD_$var=
++  done
++  test -d arch/unix || $srcdir/build/mkdir.sh $modpath_current
++  > $modpath_current/modules.mk
++
++
++if ap_mpm_is_enabled "worker" \
++   || ap_mpm_is_enabled "event" \
++   || ap_mpm_is_enabled "prefork"; then
++    unixd_mods_enable=yes
++else
++    unixd_mods_enable=no
++fi
++
++
++  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable mod_unixd" >&5
++$as_echo_n "checking whether to enable mod_unixd... " >&6; }
++    # Check whether --enable-unixd was given.
++if test "${enable_unixd+set}" = set; then :
++  enableval=$enable_unixd; force_unixd=$enableval
++else
++  enable_unixd=$unixd_mods_enable
++fi
++
++    _apmod_extra_msg=""
++        case "$enable_unixd" in
++    yes|static|shared)
++      _apmod_required="yes"
++      ;;
++    *)
++      case "$module_selection" in
++      reallyall|all|most)
++        _apmod_required="no"
++        ;;
++      *)
++        _apmod_required="yes"
++        ;;
++      esac
++  esac
++  if test "$enable_unixd" = "static"; then
++    enable_unixd=static
++  elif test "$enable_unixd" = "yes"; then
++    enable_unixd=$module_default
++  elif test "$enable_unixd" = "most"; then
++    if test "$module_selection" = "most" -o "$module_selection" = "all" -o \
++            "$module_selection" = "reallyall"
++    then
++      enable_unixd=$module_default
++    elif test "$module_selection" = "few" -o "$module_selection" = "none"; then
++      enable_unixd=no
++    fi
++    _apmod_extra_msg=" ($module_selection)"
++  elif test "$enable_unixd" = "maybe-all"; then
++    if test "$module_selection" = "all" -o "$module_selection" = "reallyall"
++    then
++      enable_unixd=$module_default
++      _apmod_extra_msg=" ($module_selection)"
++    else
++      enable_unixd=no
++    fi
++  elif test "$enable_unixd" = "no" -a "$module_selection" = "reallyall" -a \
++            "$force_unixd" != "no" ; then
++      enable_unixd=$module_default
++      _apmod_extra_msg=" ($module_selection)"
++  fi
++  if test "$enable_unixd" != "no"; then
++            :
++  fi
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_unixd$_apmod_extra_msg" >&5
++$as_echo "$enable_unixd$_apmod_extra_msg" >&6; }
++  if test "$enable_unixd" != "no"; then
++    case "$enable_unixd" in
++    static*)
++      MODLIST="$MODLIST unixd"
++      if test "unixd" = "so"; then
++          sharedobjs=yes
++      fi
++      shared="";;
++    *)
++      enable_unixd=`echo $enable_unixd|sed 's/shared,*//'`
++      sharedobjs=yes
++      shared=yes
++      DSO_MODULES="$DSO_MODULES unixd"
++      if test "$unixd_mods_enable" = "yes" ; then
++        ENABLED_DSO_MODULES="${ENABLED_DSO_MODULES},unixd"
++      fi
++      ;;
++    esac
++
++
++  if test -z ""; then
++    objects="mod_unixd.lo"
++  else
++    objects=""
++  fi
++
++  if test -z "$module_standalone"; then
++    if test -z "$shared"; then
++      # The filename of a convenience library must have a "lib" prefix:
++      libname="libmod_unixd.la"
++      BUILTIN_LIBS="$BUILTIN_LIBS $modpath_current/$libname"
++      modpath_static="$modpath_static $libname"
++      cat >>$modpath_current/modules.mk<<EOF
++$libname: $objects
++	\$(MOD_LINK) $objects \$(MOD_UNIXD_LDADD)
++EOF
++      if test ! -z "\$(MOD_UNIXD_LDADD)"; then
++
++  if test "x$AP_LIBS" = "x"; then
++    test "x$silent" != "xyes" && echo "  setting AP_LIBS to \"\$(MOD_UNIXD_LDADD)\""
++    AP_LIBS="\$(MOD_UNIXD_LDADD)"
++  else
++    apr_addto_bugger="\$(MOD_UNIXD_LDADD)"
++    for i in $apr_addto_bugger; do
++      apr_addto_duplicate="0"
++      for j in $AP_LIBS; do
++        if test "x$i" = "x$j"; then
++          apr_addto_duplicate="1"
++          break
++        fi
++      done
++      if test $apr_addto_duplicate = "0"; then
++        test "x$silent" != "xyes" && echo "  adding \"$i\" to AP_LIBS"
++        AP_LIBS="$AP_LIBS $i"
++      fi
++    done
++  fi
++
++      fi
++    else
++      apache_need_shared=yes
++      libname="mod_unixd.la"
++      shobjects=`echo $objects | sed 's/\.lo/.slo/g'`
++      modpath_shared="$modpath_shared $libname"
++      cat >>$modpath_current/modules.mk<<EOF
++$libname: $shobjects
++	\$(SH_LINK) -rpath \$(libexecdir) -module -avoid-version  $objects \$(MOD_UNIXD_LDADD)
++EOF
++    fi
++  fi
++
++
++  APACHE_VAR_SUBST="$APACHE_VAR_SUBST MOD_UNIXD_LDADD"
++
++
++
++  fi
++
++
++  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable mod_privileges" >&5
++$as_echo_n "checking whether to enable mod_privileges... " >&6; }
++    # Check whether --enable-privileges was given.
++if test "${enable_privileges+set}" = set; then :
++  enableval=$enable_privileges; force_privileges=$enableval
++else
++  enable_privileges=no
++fi
++
++    _apmod_extra_msg=""
++        case "$enable_privileges" in
++    yes|static|shared)
++      _apmod_required="yes"
++      ;;
++    *)
++      case "$module_selection" in
++      reallyall|all|most)
++        _apmod_required="no"
++        ;;
++      *)
++        _apmod_required="yes"
++        ;;
++      esac
++  esac
++  if test "$enable_privileges" = "static"; then
++    enable_privileges=static
++  elif test "$enable_privileges" = "yes"; then
++    enable_privileges=$module_default
++  elif test "$enable_privileges" = "most"; then
++    if test "$module_selection" = "most" -o "$module_selection" = "all" -o \
++            "$module_selection" = "reallyall"
++    then
++      enable_privileges=$module_default
++    elif test "$module_selection" = "few" -o "$module_selection" = "none"; then
++      enable_privileges=no
++    fi
++    _apmod_extra_msg=" ($module_selection)"
++  elif test "$enable_privileges" = "maybe-all"; then
++    if test "$module_selection" = "all" -o "$module_selection" = "reallyall"
++    then
++      enable_privileges=$module_default
++      _apmod_extra_msg=" ($module_selection)"
++    else
++      enable_privileges=no
++    fi
++  elif test "$enable_privileges" = "no" -a "$module_selection" = "reallyall" -a \
++            "$force_privileges" != "no" ; then
++      enable_privileges=$module_default
++      _apmod_extra_msg=" ($module_selection)"
++  fi
++  if test "$enable_privileges" != "no"; then
++            { $as_echo "$as_me:${as_lineno-$LINENO}: result: checking dependencies" >&5
++$as_echo "checking dependencies" >&6; }
++            :
++
++  for ac_header in priv.h
++do :
++  ac_fn_c_check_header_mongrel "$LINENO" "priv.h" "ac_cv_header_priv_h" "$ac_includes_default"
++if test "x$ac_cv_header_priv_h" = xyes; then :
++  cat >>confdefs.h <<_ACEOF
++#define HAVE_PRIV_H 1
++_ACEOF
++ ap_HAVE_PRIV_H="yes"
++else
++  ap_HAVE_PRIV_H="no"
++fi
++
++done
++
++  if test $ap_HAVE_PRIV_H = "no"; then
++    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Your system does not support privileges." >&5
++$as_echo "$as_me: WARNING: Your system does not support privileges." >&2;}
++    enable_privileges="no"
++  fi
++
++            :
++            { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable mod_privileges" >&5
++$as_echo_n "checking whether to enable mod_privileges... " >&6; }
++            if test "$enable_privileges" = "no"; then
++              if test "$_apmod_required" = "no"; then
++                _apmod_extra_msg=" (disabled)"
++              else
++                as_fn_error $? "mod_privileges has been requested but can not be built due to prerequisite failures" "$LINENO" 5
++              fi
++            fi
++  fi
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_privileges$_apmod_extra_msg" >&5
++$as_echo "$enable_privileges$_apmod_extra_msg" >&6; }
++  if test "$enable_privileges" != "no"; then
++    case "$enable_privileges" in
++    static*)
++      MODLIST="$MODLIST privileges"
++      if test "privileges" = "so"; then
++          sharedobjs=yes
++      fi
++      shared="";;
++    *)
++      enable_privileges=`echo $enable_privileges|sed 's/shared,*//'`
++      sharedobjs=yes
++      shared=yes
++      DSO_MODULES="$DSO_MODULES privileges"
++      if test "no" = "yes" ; then
++        ENABLED_DSO_MODULES="${ENABLED_DSO_MODULES},privileges"
++      fi
++      ;;
++    esac
++
++
++  if test -z ""; then
++    objects="mod_privileges.lo"
++  else
++    objects=""
++  fi
++
++  if test -z "$module_standalone"; then
++    if test -z "$shared"; then
++      # The filename of a convenience library must have a "lib" prefix:
++      libname="libmod_privileges.la"
++      BUILTIN_LIBS="$BUILTIN_LIBS $modpath_current/$libname"
++      modpath_static="$modpath_static $libname"
++      cat >>$modpath_current/modules.mk<<EOF
++$libname: $objects
++	\$(MOD_LINK) $objects \$(MOD_PRIVILEGES_LDADD)
++EOF
++      if test ! -z "\$(MOD_PRIVILEGES_LDADD)"; then
++
++  if test "x$AP_LIBS" = "x"; then
++    test "x$silent" != "xyes" && echo "  setting AP_LIBS to \"\$(MOD_PRIVILEGES_LDADD)\""
++    AP_LIBS="\$(MOD_PRIVILEGES_LDADD)"
++  else
++    apr_addto_bugger="\$(MOD_PRIVILEGES_LDADD)"
++    for i in $apr_addto_bugger; do
++      apr_addto_duplicate="0"
++      for j in $AP_LIBS; do
++        if test "x$i" = "x$j"; then
++          apr_addto_duplicate="1"
++          break
++        fi
++      done
++      if test $apr_addto_duplicate = "0"; then
++        test "x$silent" != "xyes" && echo "  adding \"$i\" to AP_LIBS"
++        AP_LIBS="$AP_LIBS $i"
++      fi
++    done
++  fi
++
++      fi
++    else
++      apache_need_shared=yes
++      libname="mod_privileges.la"
++      shobjects=`echo $objects | sed 's/\.lo/.slo/g'`
++      modpath_shared="$modpath_shared $libname"
++      cat >>$modpath_current/modules.mk<<EOF
++$libname: $shobjects
++	\$(SH_LINK) -rpath \$(libexecdir) -module -avoid-version  $objects \$(MOD_PRIVILEGES_LDADD)
++EOF
++    fi
++  fi
++
++
++  APACHE_VAR_SUBST="$APACHE_VAR_SUBST MOD_PRIVILEGES_LDADD"
++
++
++
++  fi
++
++
++
++  if test "x$INCLUDES" = "x"; then
++    test "x$silent" != "xyes" && echo "  setting INCLUDES to \"-I\$(top_srcdir)/$modpath_current\""
++    INCLUDES="-I\$(top_srcdir)/$modpath_current"
++  else
++    apr_addto_bugger="-I\$(top_srcdir)/$modpath_current"
++    for i in $apr_addto_bugger; do
++      apr_addto_duplicate="0"
++      for j in $INCLUDES; do
++        if test "x$i" = "x$j"; then
++          apr_addto_duplicate="1"
++          break
++        fi
++      done
++      if test $apr_addto_duplicate = "0"; then
++        test "x$silent" != "xyes" && echo "  adding \"$i\" to INCLUDES"
++        INCLUDES="$INCLUDES $i"
++      fi
++    done
++  fi
++
++
++
++  echo "DISTCLEAN_TARGETS = modules.mk" >> $modpath_current/modules.mk
++  echo "static = $modpath_static" >> $modpath_current/modules.mk
++  echo "shared = $modpath_shared" >> $modpath_current/modules.mk
++  for var in CFLAGS CXXFLAGS CPPFLAGS LDFLAGS LIBS INCLUDES; do
++    if eval val=\"\$MOD_$var\"; test -n "$val"; then
++      echo "MOD_$var = $val" >> $modpath_current/modules.mk
++    fi
++  done
++  if test ! -z "$modpath_static" -o ! -z "$modpath_shared"; then
++    MODULE_DIRS="$MODULE_DIRS $current_dir"
++  else
++    MODULE_CLEANDIRS="$MODULE_CLEANDIRS $current_dir"
++  fi
++
++  APACHE_FAST_OUTPUT_FILES="$APACHE_FAST_OUTPUT_FILES $modpath_current/Makefile"
++
++
++
++
+ 
+     if ap_mpm_is_enabled mpmt_os2; then
+         if test -z "mpmt_os2.lo mpmt_os2_child.lo"; then
 --- a/include/ap_config_auto.h.in
 +++ b/include/ap_config_auto.h.in
 @@ -103,6 +103,9 @@
@@ -192,3 +693,87 @@
  /* Define to 1 if you have the <limits.h> header file. */
  #undef HAVE_LIMITS_H
  
+--- a/build/ltmain.sh
++++ b/build/ltmain.sh
+@@ -70,7 +70,7 @@
+ #         compiler:		$LTCC
+ #         compiler flags:		$LTCFLAGS
+ #         linker:		$LD (gnu? $with_gnu_ld)
+-#         $progname:	(GNU libtool) 2.4.2
++#         $progname:	(GNU libtool) 2.4.2 Debian-2.4.2-1.3
+ #         automake:	$automake_version
+ #         autoconf:	$autoconf_version
+ #
+@@ -80,7 +80,7 @@
+ 
+ PROGRAM=libtool
+ PACKAGE=libtool
+-VERSION=2.4.2
++VERSION="2.4.2 Debian-2.4.2-1.3"
+ TIMESTAMP=""
+ package_revision=1.3337
+ 
+@@ -5851,10 +5851,9 @@
+       # -tp=*                Portland pgcc target processor selection
+       # --sysroot=*          for sysroot support
+       # -O*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
+-      # -stdlib=*            select c++ std lib with clang
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+-      -O*|-flto*|-fwhopr*|-fuse-linker-plugin|-stdlib=*)
++      -O*|-flto*|-fwhopr*|-fuse-linker-plugin)
+         func_quote_for_eval "$arg"
+ 	arg="$func_quote_for_eval_result"
+         func_append compile_command " $arg"
+@@ -6125,7 +6124,10 @@
+ 	case $pass in
+ 	dlopen) libs="$dlfiles" ;;
+ 	dlpreopen) libs="$dlprefiles" ;;
+-	link) libs="$deplibs %DEPLIBS% $dependency_libs" ;;
++	link)
++	  libs="$deplibs %DEPLIBS%"
++	  test "X$link_all_deplibs" != Xno && libs="$libs $dependency_libs"
++	  ;;
+ 	esac
+       fi
+       if test "$linkmode,$pass" = "lib,dlpreopen"; then
+@@ -6445,19 +6447,19 @@
+ 	    # It is a libtool convenience library, so add in its objects.
+ 	    func_append convenience " $ladir/$objdir/$old_library"
+ 	    func_append old_convenience " $ladir/$objdir/$old_library"
++	    tmp_libs=
++	    for deplib in $dependency_libs; do
++	      deplibs="$deplib $deplibs"
++	      if $opt_preserve_dup_deps ; then
++		case "$tmp_libs " in
++		*" $deplib "*) func_append specialdeplibs " $deplib" ;;
++		esac
++	      fi
++	      func_append tmp_libs " $deplib"
++	    done
+ 	  elif test "$linkmode" != prog && test "$linkmode" != lib; then
+ 	    func_fatal_error "\`$lib' is not a convenience library"
+ 	  fi
+-	  tmp_libs=
+-	  for deplib in $dependency_libs; do
+-	    deplibs="$deplib $deplibs"
+-	    if $opt_preserve_dup_deps ; then
+-	      case "$tmp_libs " in
+-	      *" $deplib "*) func_append specialdeplibs " $deplib" ;;
+-	      esac
+-	    fi
+-	    func_append tmp_libs " $deplib"
+-	  done
+ 	  continue
+ 	fi # $pass = conv
+ 
+@@ -7350,6 +7352,9 @@
+ 	    revision="$number_minor"
+ 	    lt_irix_increment=no
+ 	    ;;
++	  *)
++	    func_fatal_configuration "$modename: unknown library version type \`$version_type'"
++	    ;;
+ 	  esac
+ 	  ;;
+ 	no)
