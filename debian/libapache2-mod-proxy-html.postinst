@@ -25,7 +25,7 @@ case "$1" in
                         RET=0
                         rmdir /usr/share/doc/libapache2-mod-proxy-html > /dev/null 2>&1|| RET=$?
                         if [ $RET = 0 ] ; then
-                                ln -s /usr/share/doc/apache2 /usr/share/doc/libapache2-mod-proxy-html
+                                ln -s /usr/share/doc/apache2-doc /usr/share/doc/libapache2-mod-proxy-html
                         fi
                 fi
         fi

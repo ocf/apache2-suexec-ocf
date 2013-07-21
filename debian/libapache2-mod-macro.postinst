@@ -25,7 +25,7 @@ case "$1" in
                         RET=0
                         rmdir /usr/share/doc/libapache2-mod-macro > /dev/null 2>&1|| RET=$?
                         if [ $RET = 0 ] ; then
-                                ln -s /usr/share/doc/apache2 /usr/share/doc/libapache2-mod-macro
+                                ln -s /usr/share/doc/apache2-bin /usr/share/doc/libapache2-mod-macro
                         fi
                 fi
         fi
