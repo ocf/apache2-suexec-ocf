@@ -19,12 +19,14 @@
 a2ensite, a2dissite \- enable or disable an apache2 site / virtual host
 .SH SYNOPSIS
 .B a2ensite
-[ [\-q|\-\-quiet]
-.IR site ]
+[\-q|\-\-quiet] [\-m|\-\-maintmode] [
+.IR site
+]
 .PP
 .B a2dissite
-[ [\-q|\-\-quiet]
-.IR site ]
+[\-q|\-\-quiet] [\-m|\-\-maintmode] [\-p|\-\-purge] [
+.IR site
+]
 .SH DESCRIPTION
 This manual page documents briefly the
 .B a2ensite
@@ -85,7 +87,11 @@ Directory with links to the files in
 .B sites-available
 for enabled sites.
 .SH "SEE ALSO"
-.BR apache2ctl (8).
+.BR apache2ctl (8),
+.BR a2enmod (8),
+.BR a2dismod (8),
+.BR a2enconf (8),
+.BR a2disconf (8).
 .SH AUTHOR
 This manual page was written by Stefan Fritsch <sf@debian.org> (based on the a2enmod manual
 page by Daniel Stone <daniel@sfarc.net>) for the Debian GNU/Linux distribution.

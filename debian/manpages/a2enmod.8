@@ -19,12 +19,14 @@
 a2enmod, a2dismod \- enable or disable an apache2 module
 .SH SYNOPSIS
 .B a2enmod
-[ [\-q|\-\-quiet]
-.IR module ]
+[\-q|\-\-quiet] [\-m|\-\-maintmode] [
+.IR module
+]
 .PP
 .B a2dismod
-[ [\-q|\-\-quiet]
-.IR module ]
+[\-q|\-\-quiet] [\-f|\-\-force] [\-m|\-\-maintmode] [\-p|\-\-purge] [
+.IR module
+]
 .SH DESCRIPTION
 This manual page documents briefly the
 .B a2enmod
@@ -51,6 +53,9 @@ directives in the .conf file as directives into the main server context of
 .TP
 .B \-q, \-\-quiet
 Don't show informative messages.
+.TP
+.B \-f, \-\-force
+When disabling a module, also cascade disables all modules that depends on it.
 .TP
 .B \-m, \-\-maintmode
 Enables the maintainer mode, that is the program invocation is effectuated
@@ -91,7 +96,9 @@ for enabled modules.
 .SH "SEE ALSO"
 .BR apache2ctl (8),
 .BR a2enconf (8),
-.BR a2disconf (8).
+.BR a2disconf (8),
+.BR a2ensite (8),
+.BR a2dissite (8).
 .SH AUTHOR
 This manual page was written by Daniel Stone <daniel@sfarc.net> for the Debian
 GNU/Linux distribution, as it is a Debian-specific script with the package.
