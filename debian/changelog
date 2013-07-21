@@ -3,6 +3,14 @@ apache2 (2.4.6-1) UNRELEASED; urgency=low
   New upstream release:
   * CVE-2013-1896: mod_dav: Fix a denial of service via MERGE request
     (Closes: #717272)
+  * New modules mod_cache_socache, mod_proxy_wstunnel.
+  * mod_ssl: Add support for subjectAltName-based host name checking in proxy
+    mode (SSLProxyCheckPeerName).
+  * mod_lua: Many new functions.
+  * mod_auth_basic: Add a generic mechanism to fake basic authentication
+    using the ap_expr parser (AuthBasicFake).
+  * mod_proxy: New BalancerInherit and ProxyPassInherit options.
+  * mod_authnz_ldap: Allow using exec: calls to obtain LDAP bind password.
 
   [ Arno Töll ]
   * Document our security model in our NEWS file and highlight we do not allow
