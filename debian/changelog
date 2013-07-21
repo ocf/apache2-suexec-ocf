@@ -1,6 +1,4 @@
-apache2 (2.4.6-1) UNRELEASED; urgency=low
-
-TODO XXX add macro.load, add mod_macro transitional package XXX TODO
+apache2 (2.4.6-1) unstable; urgency=low
 
   New upstream release:
   * CVE-2013-1896: mod_dav: Fix a denial of service via MERGE request
@@ -26,6 +24,8 @@ TODO XXX add macro.load, add mod_macro transitional package XXX TODO
   * Fix "dh_apache2 ignores alternative httpd on conf files" by correctly
     checking the supplied arguments, we were off by one (Closes: #717299).
   * Reinstall index.html also on upgrades as it is removed during upgrades.
+  * Add mod_macro transitional package as it was promoted to core and does not
+    exist as individual package anymore (Closes: #706962)
 
   [ Stefan Fritsch ]
   * Don't fail package upgrade or removal just because the configuration is in
@@ -33,7 +33,7 @@ TODO XXX add macro.load, add mod_macro transitional package XXX TODO
   * Improve error output of init script.
   * Fix broken dependency information in several *.load files.
 
- -- Arno Töll <arno@debian.org>  Sat, 20 Jul 2013 13:50:41 +0200
+ -- Arno Töll <arno@debian.org>  Sun, 21 Jul 2013 18:44:42 +0200
 
 apache2 (2.4.4-6) unstable; urgency=low
 
