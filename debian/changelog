@@ -29,6 +29,7 @@ apache2 (2.4.6-1) UNRELEASED; urgency=low
   * Don't fail package upgrade or removal just because the configuration is in
     an inconsistent state (Closes: #716921, #717343).
   * Improve error output of init script.
+  * Fix broken dependency information in several *.load files.
 
  -- Arno Töll <arno@debian.org>  Sat, 20 Jul 2013 13:50:41 +0200
 
