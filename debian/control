@@ -52,9 +52,9 @@ Provides: ${apache2:API}, httpd, httpd-cgi
 Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom
 Replaces: apache2.2-bin (<< 2.3~), apache2.2-common, apache2-mpm-prefork (<< 2.3~),
  apache2-mpm-itk (<< 2.3~), apache2-mpm-worker (<< 2.3~), apache2-mpm-event (<< 2.3~),
- libapache2-mod-proxy-html (<< 1:2.4.4-2), libapache2-mod-macro (<< 1:2.4.6-1)
+ libapache2-mod-proxy-html (<< 1:2.4.4-2~), libapache2-mod-macro (<< 1:2.4.6-1~)
 Conflicts: apache2.2-bin (<< 2.3~), apache2.2-common
-Breaks: libapache2-mod-proxy-html (<< 1:2.4.4-2), libapache2-mod-macro (<< 1:2.4.6-1)
+Breaks: libapache2-mod-proxy-html (<< 1:2.4.4-2~), libapache2-mod-macro (<< 1:2.4.6-1~)
 Description: Apache HTTP Server (binary files and modules)
  The Apache Software Foundation's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
