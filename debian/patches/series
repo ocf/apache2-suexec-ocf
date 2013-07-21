@@ -14,9 +14,5 @@ build_suexec-custom.patch
 #suexec-custom.patch
 # some changes to the core needed for itk:
 add-itk-to-build-system.patch
-itk-hook-just-after-merging-perdir-config.patch
 itk-fix-htaccess-reads-for-persistent-connections.patch
 itk-rerun-configure.patch
-upstream-fixes
-allow-strtoul.patch
-CVE-2013-1896.patch
