@@ -1,5 +1,7 @@
 apache2 (2.4.6-1) UNRELEASED; urgency=low
 
+TODO XXX add macro.load, add mod_macro transitional package XXX TODO
+
   New upstream release:
   * CVE-2013-1896: mod_dav: Fix a denial of service via MERGE request
     (Closes: #717272)
