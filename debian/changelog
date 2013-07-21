@@ -29,7 +29,7 @@ apache2 (2.4.6-1) unstable; urgency=low
 
   [ Stefan Fritsch ]
   * Don't fail package upgrade or removal just because the configuration is in
-    an inconsistent state (Closes: #716921, #717343).
+    an inconsistent state (Closes: #716921, #717343, LP: #1202653).
   * Improve error output of init script.
   * Fix broken dependency information in several *.load files.
   * Add mod_authn_core as dependency of the mod_auth_* modules.
