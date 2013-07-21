@@ -1,4 +1,9 @@
 # the analogon of running autoheader; autoconf, which is a pain to clean up
+#
+# To refresh this,
+# - unpack apr+apr-util in srclib/apr{,-util}
+# - run 'fakeroot debian/rules server/mpm/itk/.stamp'
+# - run 'buildconf'
 --- a/configure
 +++ b/configure
 @@ -1983,6 +1983,10 @@
