@@ -32,6 +32,8 @@ apache2 (2.4.6-1) unstable; urgency=low
     an inconsistent state (Closes: #716921, #717343).
   * Improve error output of init script.
   * Fix broken dependency information in several *.load files.
+  * Add mod_authn_core as dependency of the mod_auth_* modules.
+    (Closes: #717448)
 
  -- Arno Töll <arno@debian.org>  Sun, 21 Jul 2013 18:44:42 +0200
 
