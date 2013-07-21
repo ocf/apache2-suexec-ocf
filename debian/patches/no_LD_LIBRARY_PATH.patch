@@ -2,10 +2,8 @@ Description: Remove LD_LIBRARY_PATH from envvars-std
 Forwarded: no
 Author: Adam Conrad <adconrad@0c3.net>
 Last-Update: 2012-04-15
-Index: apache2/support/envvars-std.in
-===================================================================
---- apache2.orig/support/envvars-std.in
-+++ apache2/support/envvars-std.in
+--- a/support/envvars-std.in
++++ b/support/envvars-std.in
 @@ -18,11 +18,4 @@
  #
  # This file is generated from envvars-std.in
