@@ -1,4 +1,8 @@
-apache2 (2.4.4-7) unstable; urgency=low
+apache2 (2.4.6-1) UNRELEASED; urgency=low
+
+  New upstream release:
+  * CVE-2013-1896: mod_dav: Fix a denial of service via MERGE request
+    (Closes: #717272)
 
   [ Arno Töll ]
   * Document our security model in our NEWS file and highlight we do not allow
@@ -11,8 +15,6 @@ apache2 (2.4.4-7) unstable; urgency=low
     (Closes: #716694)
   * Fix "dh_apache2 ignores alternative httpd on conf files" by correctly
     checking the supplied arguments, we were off by one (Closes: #717299).
-  * CVE-2013-1896: Add patch provided by Marc Deslauriers to fix a denial of
-    service via MERGE request (Closes: #717272)
   * Reinstall index.html also on upgrades as it is removed during upgrades.
 
   [ Stefan Fritsch ]
