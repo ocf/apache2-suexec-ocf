@@ -1,4 +1,4 @@
-apache2 (2.4.4-7) unstable; urgency=low
+apache2 (2.4.1-1) unstable; urgency=low
 
   This package introduces a new major release of the Apache HTTP server. It is
   likely the site configuration needs changes to work with this release.
