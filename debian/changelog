@@ -1,6 +1,8 @@
 apache2 (2.4.6-2) UNRELEASED; urgency=low
 
   * Fix watch file
+  * Don't pass --silent to libtool, allowing blhc to check the compiler
+    options in the build logs.
 
  -- Stefan Fritsch <sf@debian.org>  Mon, 22 Jul 2013 21:06:25 +0200
 

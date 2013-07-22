@@ -14,6 +14,7 @@ API = $(shell perl -ne 'print $$1 if m/define\s+MODULE_MAGIC_NUMBER_MAJOR\s+?(.*
 AP2_CFLAGS = -pipe $(shell dpkg-buildflags --get CFLAGS)
 AP2_LDFLAGS = -Wl,--as-needed $(shell dpkg-buildflags --get LDFLAGS)
 AP2_CPPFLAGS = -DPLATFORM='\"$(LSB_RELEASE)\"' $(shell dpkg-buildflags --get CPPFLAGS)
+AP2_LTFLAGS = --no-silent
 
 
 support/suexec-custom.c: support/suexec.c debian/patches/suexec-custom.patch
@@ -95,7 +96,7 @@ override_dh_auto_configure: generate-maintainer-scripts prebuild-checks server/m
 		--enable-mods-shared="all cgi" \
 		--enable-mods-static="unixd logio watchdog version" \
 		CFLAGS="$(AP2_CFLAGS)" CPPFLAGS="$(AP2_CPPFLAGS)" LDFLAGS="$(AP2_LDFLAGS)" \
-		$(AP2_EXTRAFLAGS)
+		LTFLAGS="$(AP2_LTFLAGS)"
 
 
 ifeq ($(DEB_HOST_ARCH_OS),linux)
