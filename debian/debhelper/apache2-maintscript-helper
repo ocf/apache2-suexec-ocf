@@ -105,7 +105,7 @@ else
 	fi
 
 	case "$APACHE2_MAINTSCRIPT_METHOD" in
-		install|upgrade|abort-upgrade|configure|abort-remove|abort-remove|abort-deconfigure|remove|failed-upgrade|purge|disappear|abort-install)
+		install|upgrade|abort-upgrade|configure|abort-remove|abort-remove|abort-deconfigure|remove|failed-upgrade|purge|disappear|abort-install|triggered)
 			# yay - recognized script
 		;;
 		*)

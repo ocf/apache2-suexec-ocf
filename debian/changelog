@@ -1,10 +1,15 @@
-apache2 (2.4.6-2) UNRELEASED; urgency=low
+apache2 (2.4.6-2) unstable; urgency=low
 
+  [ Stefan Fritsch ]
   * Fix watch file
   * Don't pass --silent to libtool, allowing blhc to check the compiler
     options in the build logs.
 
- -- Stefan Fritsch <sf@debian.org>  Mon, 22 Jul 2013 21:06:25 +0200
+  [ Arno Töll ]
+  * Allow third party packages to use triggers if they use them in a
+    maintainer script invoking apache2-maintscript-helper (Closes: #717610)
+
+ -- Arno Töll <arno@debian.org>  Tue, 23 Jul 2013 13:25:30 +0200
 
 apache2 (2.4.6-1) unstable; urgency=low
 
