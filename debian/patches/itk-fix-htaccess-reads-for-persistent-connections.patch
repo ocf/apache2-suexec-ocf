@@ -6,7 +6,18 @@ the same connection.
 
 --- a/server/config.c
 +++ b/server/config.c
-@@ -69,6 +69,8 @@
+@@ -52,6 +52,10 @@
+ #include "util_varbuf.h"
+ #include "mpm_common.h"
+ 
++#include "http_connection.h"
++#include <unistd.h>
++#include <sys/types.h>
++
+ #define APLOG_UNSET   (APLOG_NO_MODULE - 1)
+ /* we know core's module_index is 0 */
+ #undef APLOG_MODULE_INDEX
+@@ -69,6 +73,8 @@
  
  AP_DECLARE_DATA ap_directive_t *ap_conftree = NULL;
  
@@ -15,7 +26,7 @@ the same connection.
  APR_HOOK_STRUCT(
             APR_HOOK_LINK(header_parser)
             APR_HOOK_LINK(pre_config)
-@@ -2138,6 +2140,32 @@
+@@ -2138,6 +2144,32 @@
          else {
              if (!APR_STATUS_IS_ENOENT(status)
                  && !APR_STATUS_IS_ENOTDIR(status)) {
