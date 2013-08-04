@@ -3,6 +3,7 @@ apache2 (2.4.6-3) UNRELEASED; urgency=low
   * Fix 'implicit declaration' compiler warnings.
   * Fix module dependencies in lbmethod_*.load files. Closes: #717910
     LP: #1205314
+  * Mark apache2-data as Multi-Arch: foreign. Closes: #718387
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 23 Jul 2013 21:24:07 +0200
 
