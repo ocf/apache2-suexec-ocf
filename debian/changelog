@@ -7,6 +7,7 @@ apache2 (2.4.6-3) UNRELEASED; urgency=low
   * Backport open_htaccess hook from upstream 2.4.x branch to allow
     building mpm-itk as separate package.
   * Improve comment for LogLevel in apache2.conf. Closes: #718677
+  * Fix comment in ports.conf. Closes: #718650
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 23 Jul 2013 21:24:07 +0200
 
