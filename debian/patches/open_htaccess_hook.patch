@@ -1,0 +1,150 @@
+# Commit r1507680 from upstream branches/2.4.x
+# 
+# Author: Jim Jagielski <jim@apache.org>
+# Date:   Sat Jul 27 16:15:28 2013 +0000
+# 
+#     Merge r1389339, r1498880 from trunk:
+#     
+#     add pre_htaccess hook; in conjunction with earlier dirwalk_stat
+#     and post_perdir_config hooks, this should allow mpm-itk to be
+#     used without patches to httpd core
+#     
+#     
+#     
+#     Replace pre_htaccess hook with more flexible open_htaccess hook
+#     
+#     Submitted by: trawick, sf
+#     Reviewed/backported by: jim
+# 
+--- a/include/ap_mmn.h
++++ b/include/ap_mmn.h
+@@ -418,6 +418,7 @@
+  *                         ap_proxy_pass_brigade()
+  * 20120211.22 (2.4.5-dev) No longer prevent usage of strtoul()
+  * 20120211.23 (2.4.5-dev) Add ap_proxy_clear_connection()
++ * 20120211.24 (2.4.7-dev) add open_htaccess hook.
+  */
+ 
+ #define MODULE_MAGIC_COOKIE 0x41503234UL /* "AP24" */
+@@ -425,7 +426,7 @@
+ #ifndef MODULE_MAGIC_NUMBER_MAJOR
+ #define MODULE_MAGIC_NUMBER_MAJOR 20120211
+ #endif
+-#define MODULE_MAGIC_NUMBER_MINOR 23                   /* 0...n */
++#define MODULE_MAGIC_NUMBER_MINOR 24                   /* 0...n */
+ 
+ /**
+  * Determine if the server's current MODULE_MAGIC_NUMBER is at least a
+--- a/include/http_config.h
++++ b/include/http_config.h
+@@ -1322,6 +1322,31 @@
+ AP_DECLARE_HOOK(void,optional_fn_retrieve,(void))
+ 
+ /**
++ * Allow modules to open htaccess files or perform operations before doing so
++ * @param r The current request
++ * @param dir_name The directory for which the htaccess file should be opened
++ * @param access_name The filename  for which the htaccess file should be opened
++ * @param conffile Where the pointer to the opened ap_configfile_t must be
++ *        stored
++ * @param full_name Where the full file name of the htaccess file must be
++ *        stored.
++ * @return APR_SUCCESS on success,
++ *         APR_ENOENT or APR_ENOTDIR if no htaccess file exists,
++ *         AP_DECLINED to let later modules do the opening,
++ *         any other error code on error.
++ */
++AP_DECLARE_HOOK(apr_status_t,open_htaccess,
++                (request_rec *r, const char *dir_name, const char *access_name,
++                 ap_configfile_t **conffile, const char **full_name))
++
++/**
++ * Core internal function, use ap_run_open_htaccess() instead.
++ */
++apr_status_t ap_open_htaccess(request_rec *r, const char *dir_name,
++        const char *access_name, ap_configfile_t **conffile,
++        const char **full_name);
++
++/**
+  * A generic pool cleanup that will reset a pointer to NULL. For use with
+  * apr_pool_cleanup_register.
+  * @param data The address of the pointer
+--- a/server/config.c
++++ b/server/config.c
+@@ -80,6 +80,7 @@
+            APR_HOOK_LINK(quick_handler)
+            APR_HOOK_LINK(optional_fn_retrieve)
+            APR_HOOK_LINK(test_config)
++           APR_HOOK_LINK(open_htaccess)
+ )
+ 
+ AP_IMPLEMENT_HOOK_RUN_ALL(int, header_parser,
+@@ -171,6 +172,12 @@
+ AP_IMPLEMENT_HOOK_RUN_FIRST(int, quick_handler, (request_rec *r, int lookup),
+                             (r, lookup), DECLINED)
+ 
++AP_IMPLEMENT_HOOK_RUN_FIRST(apr_status_t, open_htaccess,
++                            (request_rec *r, const char *dir_name, const char *access_name,
++                             ap_configfile_t **conffile, const char **full_name),
++                            (r, dir_name, access_name, conffile, full_name),
++                            AP_DECLINED)
++
+ /* hooks with no args are implemented last, after disabling APR hook probes */
+ #if defined(APR_HOOK_PROBES_ENABLED)
+ #undef APR_HOOK_PROBES_ENABLED
+@@ -2073,14 +2080,23 @@
+     return OK;
+ }
+ 
++apr_status_t ap_open_htaccess(request_rec *r, const char *dir_name,
++                              const char *access_name,
++                              ap_configfile_t **conffile,
++                              const char **full_name)
++{
++    *full_name = ap_make_full_path(r->pool, dir_name, access_name);
++    return ap_pcfg_openfile(conffile, r->pool, *full_name);
++}
++
+ AP_CORE_DECLARE(int) ap_parse_htaccess(ap_conf_vector_t **result,
+                                        request_rec *r, int override,
+                                        int override_opts, apr_table_t *override_list,
+-                                       const char *d, const char *access_name)
++                                       const char *d, const char *access_names)
+ {
+     ap_configfile_t *f = NULL;
+     cmd_parms parms;
+-    char *filename = NULL;
++    const char *filename;
+     const struct htaccess_result *cache;
+     struct htaccess_result *new;
+     ap_conf_vector_t *dc = NULL;
+@@ -2104,15 +2120,11 @@
+     parms.path = apr_pstrdup(r->pool, d);
+ 
+     /* loop through the access names and find the first one */
+-    while (access_name[0]) {
+-        /* AFAICT; there is no use of the actual 'filename' against
+-         * any canonicalization, so we will simply take the given
+-         * name, ignoring case sensitivity and aliases
+-         */
+-        filename = ap_make_full_path(r->pool, d,
+-                                     ap_getword_conf(r->pool, &access_name));
+-        status = ap_pcfg_openfile(&f, r->pool, filename);
++    while (access_names[0]) {
++        const char *access_name = ap_getword_conf(r->pool, &access_names);
+ 
++        filename = NULL;
++        status = ap_run_open_htaccess(r, d, access_name, &f, &filename);
+         if (status == APR_SUCCESS) {
+             const char *errmsg;
+             ap_directive_t *temptree = NULL;
+--- a/server/core.c
++++ b/server/core.c
+@@ -4878,6 +4878,7 @@
+     ap_hook_insert_network_bucket(core_insert_network_bucket, NULL, NULL,
+                                   APR_HOOK_REALLY_LAST);
+     ap_hook_dirwalk_stat(core_dirwalk_stat, NULL, NULL, APR_HOOK_REALLY_LAST);
++    ap_hook_open_htaccess(ap_open_htaccess, NULL, NULL, APR_HOOK_REALLY_LAST);
+     
+     /* register the core's insert_filter hook and register core-provided
+      * filters
