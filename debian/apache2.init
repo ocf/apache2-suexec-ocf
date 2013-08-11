@@ -51,7 +51,7 @@ HTCACHECLEAN_RUN=auto
 HTCACHECLEAN_MODE=daemon
 HTCACHECLEAN_SIZE=300M
 HTCACHECLEAN_DAEMON_INTERVAL=120
-HTCACHECLEAN_PATH=/var/cache/apache2$DIR_SUFFIX/mod_disk_cache
+HTCACHECLEAN_PATH=/var/cache/apache2$DIR_SUFFIX/mod_cache_disk
 HTCACHECLEAN_OPTIONS=""
 
 APACHE_HTTPD=$(. $APACHE_ENVVARS && echo $APACHE_HTTPD)
@@ -394,7 +394,7 @@ case "$1" in
 	;;
   start-htcacheclean)
 	log_daemon_msg "Starting htcacheclean"
-	start_htcachelean
+	start_htcacheclean
 	log_end_msg $?
 	exit $?
 	;;
