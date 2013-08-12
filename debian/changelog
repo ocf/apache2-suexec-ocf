@@ -9,6 +9,8 @@ apache2 (2.4.6-3) UNRELEASED; urgency=low
   * Improve comment for LogLevel in apache2.conf. Closes: #718677
   * Fix comment in ports.conf. Closes: #718650
   * Fix htcacheclean path and function name in init script. Closes: #718909
+  * Enable bindnow hardening compiler option, patch by Felix Geyer.
+    Closes: #714872
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 23 Jul 2013 21:24:07 +0200
 
