@@ -1,4 +1,4 @@
-apache2 (2.4.6-3) UNRELEASED; urgency=low
+apache2 (2.4.6-3) unstable; urgency=low
 
   * Fix 'implicit declaration' compiler warnings.
   * Fix module dependencies in lbmethod_*.load files. Closes: #717910
@@ -12,7 +12,7 @@ apache2 (2.4.6-3) UNRELEASED; urgency=low
   * Enable bindnow hardening compiler option, patch by Felix Geyer.
     Closes: #714872
 
- -- Stefan Fritsch <sf@debian.org>  Tue, 23 Jul 2013 21:24:07 +0200
+ -- Stefan Fritsch <sf@debian.org>  Mon, 12 Aug 2013 20:15:38 +0200
 
 apache2 (2.4.6-2) unstable; urgency=low
 
