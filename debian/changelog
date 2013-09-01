@@ -1,3 +1,10 @@
+apache2 (2.4.6-4) UNRELEASED; urgency=low
+
+  * Remove possiblity to override path to apache2 executable via envvars.
+    This is no longer necessary with MPMs as modules.
+
+ -- Stefan Fritsch <sf@debian.org>  Sun, 01 Sep 2013 15:09:06 +0200
+
 apache2 (2.4.6-3) unstable; urgency=low
 
   * Fix 'implicit declaration' compiler warnings.

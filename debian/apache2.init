@@ -54,11 +54,6 @@ HTCACHECLEAN_DAEMON_INTERVAL=120
 HTCACHECLEAN_PATH=/var/cache/apache2$DIR_SUFFIX/mod_cache_disk
 HTCACHECLEAN_OPTIONS=""
 
-APACHE_HTTPD=$(. $APACHE_ENVVARS && echo $APACHE_HTTPD)
-if [ -z "$APACHE_HTTPD" ] ; then
-	APACHE_HTTPD=/usr/sbin/apache2
-fi
-
 # Read configuration variable file if it is present
 if [ -f /etc/default/apache2$DIR_SUFFIX ] ; then
 	. /etc/default/apache2$DIR_SUFFIX
@@ -279,10 +274,10 @@ stop_htcacheclean() {
 
 
 # Sanity checks. They need to occur after function declarations
-[ -x $APACHE_HTTPD ] || exit 0
+[ -x $DAEMON ] || exit 0
 
-if [ ! -x $APACHE_HTTPD ] ; then
-	echo "No apache MPM package installed"
+if [ ! -x $DAEMON ] ; then
+	echo "No apache-bin package installed"
 	exit 0
 fi
 
