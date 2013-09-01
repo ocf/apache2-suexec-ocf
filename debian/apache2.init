@@ -37,7 +37,7 @@ if [ -z "$APACHE_ENVVARS" ] ; then
 fi
 export APACHE_CONFDIR APACHE_ENVVARS
 
-ENV="env -i LANG=C PATH=/usr/local/bin:/usr/bin:/bin"
+ENV="env -i LANG=C PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 if [ "$APACHE_CONFDIR" != /etc/apache2 ] ; then
 	ENV="$ENV APACHE_CONFDIR=$APACHE_CONFDIR"
 fi
@@ -71,8 +71,8 @@ fi
 
 
 # Now, set defaults:
-APACHE2CTL="$ENV /usr/sbin/apache2ctl"
-HTCACHECLEAN="$ENV /usr/sbin/htcacheclean"
+APACHE2CTL="$ENV apache2ctl"
+HTCACHECLEAN="$ENV htcacheclean"
 PIDFILE=$(. $APACHE_ENVVARS && echo $APACHE_PID_FILE)
 APACHE2_INIT_MESSAGE=""
 
@@ -258,7 +258,7 @@ check_htcacheclean() {
 
 	MODSDIR=$(. $APACHE_ENVVARS && echo $APACHE_MODS_ENABLED)
 	        [ "$HTCACHECLEAN_RUN"  = "auto" \
-	                -a -e ${MODSDIR:-$APACHE_CONFDIR/mods-enabled}/disk_cache.load ] && \
+	                -a -e ${MODSDIR:-$APACHE_CONFDIR/mods-enabled}/cache_disk.load ] && \
 	                return 0
 	return 1
 }

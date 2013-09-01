@@ -5,7 +5,7 @@
 set -e
 set -u
 
-[ -e /usr/sbin/htcacheclean ] || exit 0
+type htcacheclean > /dev/null 2>&1 || exit 0
 [ -e /etc/default/apache2 ]   || exit 0
 
 
@@ -24,7 +24,7 @@ HTCACHECLEAN_OPTIONS=""
 ( [ "$HTCACHECLEAN_RUN" = "auto" ] && \
   [ -e /etc/apache2/mods-enabled/cache_disk.load ] )  || exit 0
 
-/usr/sbin/htcacheclean  ${HTCACHECLEAN_OPTIONS}	\
-			-p${HTCACHECLEAN_PATH}	\
-			-l${HTCACHECLEAN_SIZE}
+htcacheclean ${HTCACHECLEAN_OPTIONS}	\
+		-p${HTCACHECLEAN_PATH}	\
+		-l${HTCACHECLEAN_SIZE}
 
