@@ -5,6 +5,7 @@ apache2 (2.4.6-4) UNRELEASED; urgency=low
     to disk_cache.load, missed in 2.4.6-3. Really closes: #718909
   * Remove possiblity to override path to apache2 executable via envvars.
     This is no longer necessary with MPMs as modules.
+  * Fix typo in serve-cgi-bin.conf. Closes: #723196
 
  -- Stefan Fritsch <sf@debian.org>  Sun, 01 Sep 2013 15:09:06 +0200
 
