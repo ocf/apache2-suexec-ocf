@@ -1,5 +1,6 @@
 apache2 (2.4.6-4) UNRELEASED; urgency=low
 
+  [ Stefan Fritsch ]
   * In logrotate and init script, don't hardcode path to htcacheclean.
     Instead, put sbin directories in PATH. Also fix one missed reference
     to disk_cache.load, missed in 2.4.6-3. Really closes: #718909
@@ -7,7 +8,13 @@ apache2 (2.4.6-4) UNRELEASED; urgency=low
     This is no longer necessary with MPMs as modules.
   * Fix typo in serve-cgi-bin.conf. Closes: #723196
 
- -- Stefan Fritsch <sf@debian.org>  Sun, 01 Sep 2013 15:09:06 +0200
+  [ Arno Töll ]
+  * Fix "No default site enabled after fresh install if /etc/apache2
+    exists" by using a condition in preinst which actually works as expected.
+    Thanks to Jean-Michel Vourgère for triaging the issue and providing a
+    patch(Closes: #711493).
+
+ -- Arno Töll <arno@debian.org>  Sun, 27 Oct 2013 18:40:00 +0100
 
 apache2 (2.4.6-3) unstable; urgency=low
 
