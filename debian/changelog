@@ -15,8 +15,11 @@ apache2 (2.4.6-4) UNRELEASED; urgency=low
     patch(Closes: #711493).
   * Leave a2disconf with rc=0 when purging a configuration which does not
     exist. (Closes: #718166)
+  * Explicitly express the dependency for mod_access_compat depending on
+    authn_core. Thanks Jean-Michel Vourgère for providing a patch (Closes:
+    #710412)
 
- -- Arno Töll <arno@debian.org>  Sat, 02 Nov 2013 15:33:08 +0100
+ -- Arno Töll <arno@debian.org>  Sat, 02 Nov 2013 15:51:25 +0100
 
 apache2 (2.4.6-3) unstable; urgency=low
 
