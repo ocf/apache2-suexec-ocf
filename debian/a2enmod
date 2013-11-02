@@ -166,6 +166,8 @@ sub doit {
 
         if ( $purge ) {
             switch_marker( $obj, $act, $acton );
+            # exit silently, we are purging anyway
+            return 1;
         }
 
         error("$name $acton does not exist!\n");
