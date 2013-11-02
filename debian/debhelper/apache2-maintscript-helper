@@ -328,6 +328,7 @@ apache2_switch_mpm()
 #	1 otherwise
 # Since: 2.4.1-3
 # Changes: 2.4.2-2: Added the second, optional argument
+#          2.4.6-4: Allow apache2_invoke to disable configuration in preinst/postinst
 apache2_invoke()
 {
 	local CMD=$1
@@ -398,7 +399,8 @@ apache2_invoke()
 					a2$CMD -p -f -q "$CONF" || return 1
 					apache2_msg "info" "apache2_invoke $APACHE2_MAINTSCRIPT_NAME: Purging $invoke_string $CONF"
 					APACHE2_NEED_ACTION=1
-				elif [ "$APACHE2_MAINTSCRIPT_NAME" = 'postrm' ] || [ "$APACHE2_MAINTSCRIPT_NAME" = 'prerm' ] ; then
+				elif [ "$APACHE2_MAINTSCRIPT_NAME" = 'postrm' ] || [ "$APACHE2_MAINTSCRIPT_NAME" = 'prerm' ] ||
+				    [ "$APACHE2_MAINTSCRIPT_NAME" = 'postinst' ] || [ "$APACHE2_MAINTSCRIPT_NAME" = 'preinst' ] ; then
 					if [ "$APACHE2_MAINTSCRIPT_METHOD" = "remove" ] ; then
 						a2$CMD -m -f -q "$CONF" || return 1
 						apache2_msg "info" "apache2_invoke $APACHE2_MAINTSCRIPT_NAME: Disable $invoke_string $CONF"
