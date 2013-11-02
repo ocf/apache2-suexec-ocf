@@ -19,8 +19,11 @@ apache2 (2.4.6-4) UNRELEASED; urgency=low
     authn_core. Thanks Jean-Michel Vourgère for providing a patch (Closes:
     #710412)
   * Allow "apache2_invoke disconf" in postinst/preinst (Closes: #717693)
+  * Rework the default index.html file. Instead of a blank, minimalistic page
+    give a quick start guide, since nobody seems to read our docs. This site
+    is hopefully explaining the most important questions.
 
- -- Arno Töll <arno@debian.org>  Sat, 02 Nov 2013 16:18:18 +0100
+ -- Arno Töll <arno@debian.org>  Sat, 02 Nov 2013 17:56:19 +0100
 
 apache2 (2.4.6-3) unstable; urgency=low
 
