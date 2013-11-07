@@ -107,7 +107,6 @@ case "$1" in
 	if [ -d "/etc/apache2/" ] ; then
 	    	mpm=$(dpkg-query -f '${Package}\t${Status}\n'  -W 'apache2-mpm-*' 2>/dev/null | grep "install ok" | cut -f1)
 		if [ -n "$mpm" ] ; then
-			mpm=$(echo "$mpm" | grep "install ok" | cut -f1)
 			if [ ! -f /etc/apache2/.apache2_mpm_selected ] ; then
 				echo "# automatically created during upgrade" >> /etc/apache2/.apache2_mpm_selected
 				echo "# it can be safely removed anytime" >> /etc/apache2/.apache2_mpm_selected
