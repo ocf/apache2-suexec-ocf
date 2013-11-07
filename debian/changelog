@@ -25,8 +25,16 @@ apache2 (2.4.6-4) UNRELEASED; urgency=low
   * Add a virtual provides line to the itk/worker/event/prefork transitional
     packages so that people with an unusual (unsupported) Apache setup
     can upgrade neatless in some corner cases (Closes: #728937)
+  * Drop the Apache ITK patches. The Apache ITK MPM is a standalone package
+    now and will be provided by libapache2-mpm-itk in future. The
+    apache2-mpm-itk package depends on this package from now on. Users of itk
+    are advised to consult the itk manual.
+  * Remove Steinar H. Gunderson from uploaders, he will continue to support
+    itk in his own package in future. The remaining Apache team thanks Steinar
+    for all the work in the past.
 
- -- Arno Töll <arno@debian.org>  Thu, 07 Nov 2013 14:21:10 +0100
+
+ -- Arno Töll <arno@debian.org>  Thu, 07 Nov 2013 22:46:29 +0100
 
 apache2 (2.4.6-3) unstable; urgency=low
 

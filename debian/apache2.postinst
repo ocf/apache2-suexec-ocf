@@ -173,7 +173,11 @@ enable_default_mpm()
 			;;
 
 			apache2-mpm-itk)
-				mpm="mpm_itk"
+                                # apache2-mpm-itk is installed, which is a
+                                # transitional package depending on
+                                # libapache2-mpm-itk which will enable itself
+                                # in its maintainer scripts.
+                                mpm="mpm_prefork"
 			;;
 
 			*)

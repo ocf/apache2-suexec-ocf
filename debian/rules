@@ -24,16 +24,6 @@ support/suexec-custom.c: support/suexec.c debian/patches/suexec-custom.patch
 	cp support/suexec.c support/suexec-custom.c
 	patch -p1 -i debian/patches/suexec-custom.patch
 
-server/mpm/itk/.stamp:
-	mkdir server/mpm/itk/
-	cp server/mpm/prefork/* server/mpm/itk/
-	mv server/mpm/itk/prefork.c server/mpm/itk/itk.c
-	set -ex; for p in $$(grep -v '^#' debian/patches/itk/series) ; do \
-		echo Applying $$p ... ;\
-		patch -p1 -i debian/patches/itk/$$p ;\
-	done
-	touch "$@"
-
 prebuild-checks:
 	ERRS="" ;\
 	for a in $$(find debian/config-dir/ -type f) ; do \
@@ -86,7 +76,7 @@ generate-maintainer-scripts:
 clean build build-arch build-indep binary binary-arch binary-indep: %:
 	dh $@ --parallel --with autotools_dev
 
-override_dh_auto_configure: generate-maintainer-scripts prebuild-checks server/mpm/itk/.stamp support/suexec-custom.c
+override_dh_auto_configure: generate-maintainer-scripts prebuild-checks support/suexec-custom.c
 	./configure --enable-layout=Debian --enable-so --with-program-name=apache2 \
 		--enable-suexec --with-suexec-caller=www-data \
 		--with-suexec-bin=/usr/lib/apache2/suexec --with-suexec-docroot=/var/www \
@@ -101,13 +91,6 @@ override_dh_auto_configure: generate-maintainer-scripts prebuild-checks server/m
 		CFLAGS="$(AP2_CFLAGS)" CPPFLAGS="$(AP2_CPPFLAGS)" LDFLAGS="$(AP2_LDFLAGS)" \
 		LTFLAGS="$(AP2_LTFLAGS)"
 
-
-ifeq ($(DEB_HOST_ARCH_OS),linux)
-	# XXX Hack to make mod_mpm_itk.so link against libcap until we
-	# XXX move itk to a separate package
-	echo "$(DEB_HOST_ARCH_OS): non weird arch: adding -lcap"
-	perl -p -i -e 's/(-avoid-version)/$$1 -lcap/' server/mpm/itk/modules.mk
-endif
 
 override_dh_install: clean-config-vars prepare-scripts
 	dh_install --list-missing
@@ -171,7 +154,6 @@ override_dh_builddeb:
 
 override_dh_auto_clean:
 	dh_auto_clean
-	if test -d server/mpm/itk ; then rm -r server/mpm/itk ; fi
 
 override_dh_gencontrol:
 	dh_gencontrol  -p libapache2-mod-proxy-html -- -v1:$(DEBIAN_VERSION)

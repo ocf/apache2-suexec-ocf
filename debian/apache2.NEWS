@@ -20,6 +20,11 @@ apache2 (2.4.1-1) unstable; urgency=low
   a2dismod mpm_worker
   a2enmod mpm_prefork
 
+  MPM ITK users should be advised, that ITK is not a MPM anymore. Instead, it
+  is a simple Apache module, expanding functionality of the prefork MPM. Thus,
+  users should switch to the prefork MPM and enable ITK as a module. The
+  upgrade scripts ensure this for the upgrade from Debian Wheezy.
+
   We did change the security model for Apache in our default configuration. We
   do not allow access to the file system outside /var/www and /usr/share.
   If you are running virtual hosts or scripts outside these directories, you
