@@ -22,8 +22,11 @@ apache2 (2.4.6-4) UNRELEASED; urgency=low
   * Rework the default index.html file. Instead of a blank, minimalistic page
     give a quick start guide, since nobody seems to read our docs. This site
     is hopefully explaining the most important questions.
+  * Add a virtual provides line to the itk/worker/event/prefork transitional
+    packages so that people with an unusual (unsupported) Apache setup
+    can upgrade neatless in some corner cases (Closes: #728937)
 
- -- Arno Töll <arno@debian.org>  Sat, 02 Nov 2013 17:56:19 +0100
+ -- Arno Töll <arno@debian.org>  Thu, 07 Nov 2013 14:21:10 +0100
 
 apache2 (2.4.6-3) unstable; urgency=low
 

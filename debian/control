@@ -70,6 +70,7 @@ Package: apache2-mpm-worker
 Architecture: any
 Section: oldlibs
 Priority: extra
+Provides: httpd, httpd-cgi
 Depends: ${misc:Depends}, apache2 (= ${binary:Version})
 Description: transitional worker MPM package for apache2
  This is a transitional package to apache2 for users of apache2-mpm-worker and
@@ -79,6 +80,7 @@ Package: apache2-mpm-prefork
 Architecture: any
 Section: oldlibs
 Priority: extra
+Provides: httpd, httpd-cgi
 Depends: ${misc:Depends}, apache2 (= ${binary:Version})
 Description: transitional prefork MPM package for apache2
  This is a transitional package to apache2 for users of apache2-mpm-prefork and
@@ -88,6 +90,7 @@ Package: apache2-mpm-event
 Architecture: any
 Section: oldlibs
 Priority: extra
+Provides: httpd, httpd-cgi
 Depends: ${misc:Depends}, apache2 (= ${binary:Version})
 Description: transitional event MPM package for apache2
  This is a transitional package to apache2 for users of apache2-mpm-event and
@@ -97,6 +100,7 @@ Package: apache2-mpm-itk
 Architecture: any
 Section: oldlibs
 Priority: extra
+Provides: httpd, httpd-cgi
 Depends: ${misc:Depends}, apache2 (= ${binary:Version})
 Description: transitional itk MPM package for apache2
  This is a transitional package to apache2 for users of apache2-mpm-itk and
