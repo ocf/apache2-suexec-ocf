@@ -29,6 +29,8 @@ apache2 (2.4.6-4) UNRELEASED; urgency=low
     now and will be provided by libapache2-mpm-itk in future. The
     apache2-mpm-itk package depends on this package from now on. Users of itk
     are advised to consult the itk manual.
+    This also resolves a build-system problem that caused mod_unixd to be
+    initialized twice. (LP: #1251939)
   * Remove Steinar H. Gunderson from uploaders, he will continue to support
     itk in his own package in future. The remaining Apache team thanks Steinar
     for all the work in the past.
