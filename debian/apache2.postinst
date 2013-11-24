@@ -283,7 +283,7 @@ install_default_files()
 			! -e /var/www/index.php   -a \
 			! -e /var/www/index.xhtml -a \
 			! -e /var/www/index.htm ] ; then
-				cp /usr/share/apache2/default-site/index.html /var/www/index.html
+				cp /usr/share/apache2/default-site/index.html /var/www/html/index.html
 		fi
 	fi
 }

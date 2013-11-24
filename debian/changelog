@@ -32,9 +32,11 @@ apache2 (2.4.6-4) UNRELEASED; urgency=low
   * Remove Steinar H. Gunderson from uploaders, he will continue to support
     itk in his own package in future. The remaining Apache team thanks Steinar
     for all the work in the past.
+  * Change the Default Document root directory where files are served from
+    (Closes: #730372).
 
 
- -- Arno Töll <arno@debian.org>  Thu, 07 Nov 2013 22:46:29 +0100
+ -- Arno Töll <arno@debian.org>  Sun, 24 Nov 2013 16:04:50 +0100
 
 apache2 (2.4.6-3) unstable; urgency=low
 

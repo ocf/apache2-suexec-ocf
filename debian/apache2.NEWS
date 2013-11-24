@@ -34,6 +34,14 @@ apache2 (2.4.1-1) unstable; urgency=low
   allow access to your served directory explicity in the corresponding virtual
   host, or by allowing access in apache2.conf as proposed.
 
+  Along the security model, we did also change the default Document Root, files
+  are served from. Previous releases served /var/www by default when no other
+  virtual host matched the request. Starting with this release, we changed the
+  default document root to /var/www/html, so that sensitive files from other
+  virtual hosts wich are typically put into some directory below /var/www are
+  not exposed by the default virtual host. This change further improves the out
+  of box security.
+
   Moreover, the configuration mechanism in Debian has changed. All
   configurations in sites-enabled and conf-enabled need a ".conf" suffix now.
   The latter replaces the deprecated /etc/apache2/conf.d/ directory (which is

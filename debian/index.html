@@ -224,7 +224,7 @@
                 operation of the Apache2 server after it has been installed on Debian systems.
                 If you can read this page, it means that the Apache HTTP server installed at
                 this site is working properly. You should <b>replace this file</b> (located at
-                <tt>/var/www/index.html</tt>) before continuing to operate your HTTP server.
+                <tt>/var/www/html/index.html</tt>) before continuing to operate your HTTP server.
           </p>
         </div>
         <div class="section_header">
@@ -324,9 +324,9 @@
                 document root directory in <tt>/etc/apache2/apach2.conf</tt>.
             </p>
             <p>
-                XXX: Write here where to place additional doc roots/explain the
-                /var/www issue. This needs a decision on the doc root first,
-                though.
+                The default Debian document root is <tt>/var/www/html</tt>. You
+                can make your own virtual hosts under /var/www. This is different
+                to previous releases to provide better security out of the box.
             </p>
         </div>
 
