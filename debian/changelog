@@ -36,9 +36,10 @@ apache2 (2.4.6-4) UNRELEASED; urgency=low
     for all the work in the past.
   * Change the Default Document root directory where files are served from
     (Closes: #730372).
+  * Add GPG support to our watch file. Thanks to Daniel Kahn Gillmor
+    for this suggestion and for providing a patch (Closes: #732450)
 
-
- -- Arno Töll <arno@debian.org>  Sun, 24 Nov 2013 16:04:50 +0100
+ -- Arno Töll <arno@debian.org>  Mon, 23 Dec 2013 12:36:59 +0100
 
 apache2 (2.4.6-3) unstable; urgency=low
 
