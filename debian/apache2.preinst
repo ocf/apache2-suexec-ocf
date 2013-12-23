@@ -113,8 +113,14 @@ case "$1" in
 				echo "$mpm" >> /etc/apache2/.apache2_mpm_selected
 			fi
 		fi
-	fi
 
+		if [ -n "$2" ] && dpkg --compare-versions "$2" 'lt' '2.4.7-1~' && dpkg --compare-versions "$2" 'ge' '2.4.1-1' ; then
+			CUR_MPM=$(a2query -M) || exit 1
+			if [ "$CUR_MPM" == "itk" ] ; then
+				echo "apache2-mpm-itk" >> /etc/apache2/.apache2_mpm_selected
+			fi
+		fi
+	fi
 	# 2) an apache2.2-common conffiles exists or the 2.2 apache2 package is
 	# installed
 	if [ -n "$2" ] || obsolete_conffile_exists ; then
@@ -139,3 +145,5 @@ esac
 #DEBHELPER#
 
 exit 0
+
+# vim: syntax=sh ts=4 sw=4 sts=4 sr noet

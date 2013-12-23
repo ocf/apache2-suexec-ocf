@@ -365,6 +365,26 @@ migrate_data()
 	fi
 }
 
+warn_itk_users()
+{
+	# the function below only applies to Debian Testing users. Stable users are properly upgraded
+	if [ -n "$2" ] && dpkg --compare-versions "$2" 'lt' '2.4.7-1~' && dpkg --compare-versions "$2" 'ge' '2.4.1-1' ; then
+		local mpm=""
+		[ -e /etc/apache2/.apache2_mpm_selected  ] && mpm=$(grep -v "^#" /etc/apache2/.apache2_mpm_selected | head -n1)
+		if [ "$mpm" = 'apache2-mpm-itk' ] ; then
+			echo "======================================================================="
+			echo "You appear to be using the ITK MPM. Starting with Apache2 2.4.7-1 this"
+			echo "is a separate package not bundled with Apache anymore. Moreover, it is"
+			echo "not a MPM anymore. This upgrade will switch your MPM to 'prefork'. If"
+			echo "you plan to use ITK in future, please do: "
+			echo ""
+			echo "      apt-get install libapache2-mpm-itk"
+			echo ""
+			echo "======================================================================="
+		fi
+	fi
+}
+
 #XXX: Deal with the sites-available/sites-enabled *.conf transition, e.g. rename
 #     all files which look like site configuration?
 
@@ -381,11 +401,13 @@ case "$1" in
 		install_default_site $@
 		move_httpd_conf $@
 		migrate_data $@
+		warn_itk_users $@
 
 		# post installation cleanup
 		if [ -e /etc/apache2/.apache2_mpm_selected ] ; then
 			rm -f /etc/apache2/.apache2_mpm_selected
 		fi
+
 
 	;;
 
@@ -412,3 +434,5 @@ if [ "$1" = configure ] && we_are_upgrading_from_wheezy $@ ; then
 fi
 
 exit 0
+
+# vim: syntax=sh ts=4 sw=4 sts=4 sr noet
