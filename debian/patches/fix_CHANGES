@@ -2,9 +2,9 @@
 # upstream commit r1504151
 --- a/CHANGES
 +++ b/CHANGES
-@@ -20,6 +20,11 @@
-      Existing configurations must be changed.
-      [Takashi Sato <takashi tks.st>, Graham Leggett]
+@@ -211,6 +211,11 @@
+      construct their own username and password for basic authentication based 
+      on their needs. [Graham Leggett]
  
 +  *) mod_auth_basic: Add a generic mechanism to fake basic authentication
 +     using the ap_expr parser. AuthBasicFake allows the administrator to 
