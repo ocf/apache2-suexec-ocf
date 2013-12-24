@@ -4,7 +4,7 @@
 
 Summary: Apache HTTP Server
 Name: httpd
-Version: 2.4.6
+Version: 2.4.7
 Release: 1
 URL: http://httpd.apache.org/
 Vendor: Apache Software Foundation
@@ -382,6 +382,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/mod_proxy_ftp.so
 %{_libdir}/httpd/modules/mod_proxy_http.so
 %{_libdir}/httpd/modules/mod_proxy_scgi.so
+%{_libdir}/httpd/modules/mod_proxy_wstunnel.so
 %{_libdir}/httpd/modules/mod_proxy.so
 %{_libdir}/httpd/modules/mod_ratelimit.so
 %{_libdir}/httpd/modules/mod_reflector.so
