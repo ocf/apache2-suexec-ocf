@@ -8249,6 +8249,11 @@ $as_echo "$ac_cv_gcc__Werror_format_security" >&6; }
       { $as_echo "$as_me:${as_lineno-$LINENO}: Maintainer mode setting \"LOAD_ALL_MODULES\" to $LOAD_ALL_MODULES" >&5
 $as_echo "$as_me: Maintainer mode setting \"LOAD_ALL_MODULES\" to $LOAD_ALL_MODULES" >&6;}
     fi
+    if test "x$enable_bucketeer" = "x"; then
+      enable_bucketeer=yes
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Maintainer mode setting \"enable_bucketeer\" to yes" >&5
+$as_echo "$as_me: Maintainer mode setting \"enable_bucketeer\" to yes" >&6;}
+    fi
   fi
 
 fi
@@ -24046,7 +24051,7 @@ EOF
   > $modpath_current/modules.mk
 
 
-ssl_objs="mod_ssl.lo ssl_engine_config.lo ssl_engine_dh.lo ssl_engine_init.lo ssl_engine_io.lo ssl_engine_kernel.lo ssl_engine_log.lo ssl_engine_mutex.lo ssl_engine_pphrase.lo ssl_engine_rand.lo ssl_engine_vars.lo ssl_scache.lo ssl_util_stapling.lo ssl_util.lo ssl_util_ssl.lo ssl_engine_ocsp.lo ssl_util_ocsp.lo "
+ssl_objs="mod_ssl.lo ssl_engine_config.lo ssl_engine_init.lo ssl_engine_io.lo ssl_engine_kernel.lo ssl_engine_log.lo ssl_engine_mutex.lo ssl_engine_pphrase.lo ssl_engine_rand.lo ssl_engine_vars.lo ssl_scache.lo ssl_util_stapling.lo ssl_util.lo ssl_util_ssl.lo ssl_engine_ocsp.lo ssl_util_ocsp.lo "
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable mod_ssl" >&5
 $as_echo_n "checking whether to enable mod_ssl... " >&6; }
@@ -25779,6 +25784,14 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_have_threadsafe_pollset" >&5
 $as_echo "$ac_cv_have_threadsafe_pollset" >&6; }
 
+case $APR_VERSION in
+    1.4*)
+        apr_has_skiplist=no
+        ;;
+    *)
+        apr_has_skiplist=yes
+esac
+
 case $host in
     *mingw32* | *os2-emx*)
         forking_mpms_supported=no
@@ -25849,6 +25862,9 @@ $as_echo "no - SIG_GRACEFUL cannot be used with a threaded MPM" >&6; }
 elif test $ac_cv_have_threadsafe_pollset != yes; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: no - APR_POLLSET_THREADSAFE is not supported" >&5
 $as_echo "no - APR_POLLSET_THREADSAFE is not supported" >&6; }
+elif test $apr_has_skiplist != yes; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: no - APR skiplist is not available" >&5
+$as_echo "no - APR skiplist is not available" >&6; }
 else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
@@ -27488,10 +27504,10 @@ MPM_SUBDIRS=$ap_enabled_mpms
 
 
     if ap_mpm_is_enabled event; then
-        if test -z "event.lo fdqueue.lo pod.lo"; then
+        if test -z "event.lo fdqueue.lo"; then
             objects="event.lo"
         else
-            objects="event.lo fdqueue.lo pod.lo"
+            objects="event.lo fdqueue.lo"
         fi
 
         if test -z ""; then
@@ -27715,10 +27731,10 @@ EOF
 
 
     if ap_mpm_is_enabled worker; then
-        if test -z "worker.lo fdqueue.lo pod.lo"; then
+        if test -z "worker.lo fdqueue.lo"; then
             objects="worker.lo"
         else
-            objects="worker.lo fdqueue.lo pod.lo"
+            objects="worker.lo fdqueue.lo"
         fi
 
         if test -z ""; then
