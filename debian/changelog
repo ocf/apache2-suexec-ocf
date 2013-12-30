@@ -9,6 +9,7 @@ apache2 (2.4.7-1) UNRELEASED; urgency=low
   * Remove possiblity to override path to apache2 executable via envvars.
     This is no longer necessary with MPMs as modules.
   * Fix typo in serve-cgi-bin.conf. Closes: #723196
+  * Bump Build-Depends. 2.4.7 requires apr 1.5.
 
   [ Arno Töll ]
   * Fix "No default site enabled after fresh install if /etc/apache2
