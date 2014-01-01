@@ -1,4 +1,4 @@
-apache2 (2.4.7-1) UNRELEASED; urgency=low
+apache2 (2.4.7-1) unstable; urgency=low
 
   New upstream version
 
@@ -15,7 +15,7 @@ apache2 (2.4.7-1) UNRELEASED; urgency=low
   * Fix "No default site enabled after fresh install if /etc/apache2
     exists" by using a condition in preinst which actually works as expected.
     Thanks to Jean-Michel Vourgère for triaging the issue and providing a
-    patch(Closes: #711493).
+    patch (Closes: #711493).
   * Leave a2disconf with rc=0 when purging a configuration which does not
     exist. (Closes: #718166)
   * Explicitly express the dependency for mod_access_compat depending on
