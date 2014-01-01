@@ -215,18 +215,6 @@
 
 
         <div class="section_header section_header_red">
-          <div id="note"></div>
-          Note
-        </div>
-        <div class="content_section_text">
-          <p>
-                If you are a normal user of this web site and don't know what this page is
-                about, this probably means that the site is currently unavailable due to
-                maintenance.
-                If the problem persists, please contact the site's administrator.
-          </p>
-        </div>
-        <div class="section_header section_header_red">
           <div id="about"></div>
           It works!
         </div>
@@ -238,6 +226,15 @@
                 this site is working properly. You should <b>replace this file</b> (located at
                 <tt>/var/www/html/index.html</tt>) before continuing to operate your HTTP server.
           </p>
+
+
+          <p>
+                If you are a normal user of this web site and don't know what this page is
+                about, this probably means that the site is currently unavailable due to
+                maintenance.
+                If the problem persists, please contact the site's administrator.
+          </p>
+
         </div>
         <div class="section_header">
           <div id="changes"></div>
@@ -333,7 +330,7 @@
                 directories (when enabled) and <tt>/usr/share</tt> (for web
                 applications). If your site is using a web document root
                 located elsewhere (such as in <tt>/srv</tt>) you may need to whitelist your
-                document root directory in <tt>/etc/apache2/apach2.conf</tt>.
+                document root directory in <tt>/etc/apache2/apache2.conf</tt>.
             </p>
             <p>
                 The default Debian document root is <tt>/var/www/html</tt>. You
