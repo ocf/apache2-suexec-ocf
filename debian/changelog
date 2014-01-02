@@ -41,8 +41,9 @@ apache2 (2.4.7-1) unstable; urgency=low
     (Closes: #730372).
   * Add GPG support to our watch file. Thanks to Daniel Kahn Gillmor
     for this suggestion and for providing a patch (Closes: #732450)
+  * Refresh suexec-custom.patch.
 
- -- Arno Töll <arno@debian.org>  Mon, 23 Dec 2013 23:52:12 -1100
+ -- Arno Töll <arno@debian.org>  Thu, 02 Jan 2014 00:17:56 -1100
 
 apache2 (2.4.6-3) unstable; urgency=low
 

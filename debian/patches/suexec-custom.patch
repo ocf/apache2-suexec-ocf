@@ -2,10 +2,8 @@ Description: the actual patch to make suexec-custom read a config file
 Forwarded: not-needed
 Author: Stefan Fritsch <sf@debian.org>
 Last-Update: 2012-02-25
-Index: apache2/support/suexec-custom.c
-===================================================================
---- apache2.orig/support/suexec-custom.c
-+++ apache2/support/suexec-custom.c
+--- a/support/suexec-custom.c
++++ b/support/suexec-custom.c
 @@ -29,6 +29,7 @@
   *
   *
@@ -22,7 +20,7 @@ Index: apache2/support/suexec-custom.c
  #if APR_HAVE_UNISTD_H
  #include <unistd.h>
  #endif
-@@ -191,6 +193,26 @@
+@@ -197,6 +199,26 @@
      return;
  }
  
@@ -49,7 +47,7 @@ Index: apache2/support/suexec-custom.c
  static void clean_env(void)
  {
      char pathbuf[512];
-@@ -253,6 +275,11 @@
+@@ -263,6 +285,11 @@
      struct stat dir_info;   /* directory info holder     */
      struct stat prg_info;   /* program info holder       */
      int cwdh;               /* handle to cwd             */
@@ -61,7 +59,7 @@ Index: apache2/support/suexec-custom.c
  
      /*
       * Start with a "clean" environment
-@@ -282,15 +309,10 @@
+@@ -292,15 +319,10 @@
              || (! strcmp(AP_HTTPD_USER, pw->pw_name)))
  #endif /* _OSD_POSIX */
          ) {
@@ -78,7 +76,7 @@ Index: apache2/support/suexec-custom.c
  #ifdef AP_LOG_EXEC
          fprintf(stderr, " -D AP_LOG_EXEC=\"%s\"\n", AP_LOG_EXEC);
  #endif
-@@ -303,9 +325,6 @@
+@@ -313,9 +335,6 @@
  #ifdef AP_UID_MIN
          fprintf(stderr, " -D AP_UID_MIN=%d\n", AP_UID_MIN);
  #endif
@@ -88,7 +86,7 @@ Index: apache2/support/suexec-custom.c
          exit(0);
      }
      /*
-@@ -320,23 +339,6 @@
+@@ -330,23 +349,6 @@
      target_gname = argv[2];
      cmd = argv[3];
  
@@ -112,7 +110,7 @@ Index: apache2/support/suexec-custom.c
  
      /*
       * Check for a leading '/' (absolute path) in the command to be executed,
-@@ -361,6 +363,63 @@
+@@ -371,6 +373,63 @@
      }
  
      /*
@@ -176,7 +174,7 @@ Index: apache2/support/suexec-custom.c
       * Error out if the target username is invalid.
       */
      if (strspn(target_uname, "1234567890") != strlen(target_uname)) {
-@@ -494,7 +553,7 @@
+@@ -511,7 +570,7 @@
  
      if (userdir) {
          if (((chdir(target_homedir)) != 0) ||
@@ -185,7 +183,7 @@ Index: apache2/support/suexec-custom.c
              ((getcwd(dwd, AP_MAXPATH)) == NULL) ||
              ((fchdir(cwdh)) != 0)) {
              log_err("cannot get docroot information (%s)\n", target_homedir);
-@@ -502,7 +561,7 @@
+@@ -519,7 +578,7 @@
          }
      }
      else {

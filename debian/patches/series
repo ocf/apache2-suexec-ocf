@@ -1,7 +1,7 @@
-#make_include_safe.patch # Probably to be droped in 2.4
 fhs_compliance.patch
-#suexec_is_shared.patch # Probably not needed in 2.4
 no_LD_LIBRARY_PATH.patch
 suexec-CVE-2007-1742.patch
 customize_apxs.patch
 build_suexec-custom.patch
+# This patch is applied manually
+#suexec-custom.patch
