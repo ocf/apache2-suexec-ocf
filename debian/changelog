@@ -1,3 +1,10 @@
+apache2 (2.4.7-2) UNRELEASED; urgency=medium
+
+  * Patch the build system to avoid problems with patched config.m4's 
+    as in LP #1251939 in the future.
+
+ -- Stefan Fritsch <sf@debian.org>  Sun, 12 Jan 2014 22:56:52 +0100
+
 apache2 (2.4.7-1) unstable; urgency=low
 
   New upstream version

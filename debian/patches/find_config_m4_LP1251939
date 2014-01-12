@@ -1,0 +1,31 @@
+LP: #1251939
+
+commit 60f2545f1858415d31dcf0bb625262216c7821cd
+Author: Stefan Fritsch <sf@apache.org>
+Date:   Sat Nov 16 23:49:04 2013 +0000
+
+    Explicitly list in which directories to look for config*.m4 files.
+    
+    If some distributor patches a config*.m4 file with quilt, that will
+    place a copy of the original file in .pc/ . Doing a naive "find ."
+    will then cause both the original and the patched m4 file to be included,
+    causing havoc later on.
+    
+    PR: 55787
+    
+    
+    git-svn-id: https://svn.apache.org/repos/asf/httpd/httpd/trunk@1542615 13f79535-47bb-0310-9956-ffa450edef68
+
+Index: apache2/build/config-stubs
+===================================================================
+--- apache2.orig/build/config-stubs
++++ apache2/build/config-stubs
+@@ -15,7 +15,7 @@
+ # config files without a number are sorted before those with a number.
+ #
+ 
+-configfiles=`find . -name "config*.m4" | \
++configfiles=`find os server modules support -name "config*.m4" | \
+ 	sed 's#\(.*/config\)\(.*\).m4#\20 \1\2.m4#' | \
+ 	sort | \
+ 	sed 's#.* ##'`
