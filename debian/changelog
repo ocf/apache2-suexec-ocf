@@ -1,5 +1,10 @@
 apache2 (2.4.7-2) UNRELEASED; urgency=medium
 
+  * Make default cipher list in ssl.conf more secure:
+    - Remove 'MEDIUM'. This disables RC4 and SEED. Also remove '!MD5' because
+      'HIGH' does not include MD5.
+    - Remove the 'Speed-optimized SSL Cipher' configuration example because
+      it depends on RC4, which is considered insecure.
   * Patch the build system to avoid problems with patched config.m4's 
     as in LP #1251939 in the future.
 
