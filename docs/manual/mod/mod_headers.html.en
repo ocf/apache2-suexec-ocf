@@ -9,7 +9,7 @@
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
-<script src="../style/scripts/prettify.js" type="text/javascript">
+<script src="../style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="../images/favicon.ico" rel="shortcut icon" /></head>
@@ -63,10 +63,8 @@ headers</td></tr>
     order in the configuration file and by placement in <a href="../sections.html#mergin">configuration sections</a>. These
     two directives have a different effect if reversed:</p>
 
-    <pre class="prettyprint lang-config">
-RequestHeader append MirrorID "mirror 12"
-RequestHeader unset MirrorID
-    </pre>
+    <pre class="prettyprint lang-config">RequestHeader append MirrorID "mirror 12"
+RequestHeader unset MirrorID</pre>
 
 
     <p>This way round, the <code>MirrorID</code> header is not set. If
@@ -101,9 +99,7 @@ RequestHeader unset MirrorID
         Copy all request headers that begin with "TS" to the
         response headers:
 
-        <pre class="prettyprint lang-config">
-          Header echo ^TS
-        </pre>
+        <pre class="prettyprint lang-config">Header echo ^TS</pre>
 
       </li>
 
@@ -114,9 +110,7 @@ RequestHeader unset MirrorID
         the client to intuit load on the server or in isolating
         bottlenecks between the client and the server.
 
-        <pre class="prettyprint lang-config">
-          Header set MyHeader "%D %t"
-        </pre>
+        <pre class="prettyprint lang-config">Header set MyHeader "%D %t"</pre>
 
 
         <p>results in this header being added to the response:</p>
@@ -129,9 +123,7 @@ RequestHeader unset MirrorID
       <li>
         Say hello to Joe
 
-        <pre class="prettyprint lang-config">
-Header set MyHeader "Hello Joe. It took %D microseconds for Apache to serve this request."
-        </pre>
+        <pre class="prettyprint lang-config">Header set MyHeader "Hello Joe. It took %D microseconds for Apache to serve this request."</pre>
 
 
         <p>results in this header being added to the response:</p>
@@ -149,10 +141,8 @@ Header set MyHeader "Hello Joe. It took %D microseconds for Apache to serve this
         stimulus. Note that this example requires the services of the
         <code class="module"><a href="../mod/mod_setenvif.html">mod_setenvif</a></code> module.
 
-        <pre class="prettyprint lang-config">
-SetEnvIf MyRequestHeader myvalue HAVE_MyRequestHeader
-Header set MyHeader "%D %t mytext" env=HAVE_MyRequestHeader
-        </pre>
+        <pre class="prettyprint lang-config">SetEnvIf MyRequestHeader myvalue HAVE_MyRequestHeader
+Header set MyHeader "%D %t mytext" env=HAVE_MyRequestHeader</pre>
 
 
         <p>If the header <code>MyRequestHeader: myvalue</code> is present on
@@ -169,9 +159,7 @@ Header set MyHeader "%D %t mytext" env=HAVE_MyRequestHeader
         description</a>) by replacing <var>https:</var> with
         <var>http:</var> in the <var>Destination</var> header:
 
-        <pre class="prettyprint lang-config">
-          RequestHeader edit Destination ^https: http: early
-        </pre>
+        <pre class="prettyprint lang-config">RequestHeader edit Destination ^https: http: early</pre>
 
       </li>
 
@@ -183,11 +171,9 @@ Header set MyHeader "%D %t mytext" env=HAVE_MyRequestHeader
         <code>NO_STORE</code> environment variables all existed for the
         request):
 
-        <pre class="prettyprint lang-config">
-Header merge Cache-Control no-cache env=CGI
+        <pre class="prettyprint lang-config">Header merge Cache-Control no-cache env=CGI
 Header merge Cache-Control no-cache env=NO_CACHE
-Header merge Cache-Control no-store env=NO_STORE
-        </pre>
+Header merge Cache-Control no-store env=NO_STORE</pre>
 
 
         <p>then the response would contain the following header:</p>
@@ -205,9 +191,7 @@ Header merge Cache-Control no-store env=NO_STORE
       </li>
       <li>
         Set a test cookie if and only if the client didn't send us a cookie
-        <pre class="prettyprint lang-config">
-          Header set Set-Cookie testcookie "expr=-z %{req:Cookie}"
-        </pre>
+        <pre class="prettyprint lang-config">Header set Set-Cookie testcookie "expr=-z %{req:Cookie}"</pre>
 
       </li>
     </ol>
@@ -216,7 +200,7 @@ Header merge Cache-Control no-store env=NO_STORE
 <div class="directive-section"><h2><a name="Header" id="Header">Header</a> <a name="header" id="header">Directive</a></h2>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Configure HTTP response headers</td></tr>
-<tr><th><a href="directive-dict.html#Syntax">Syntax:</a></th><td><code>Header [<var>condition</var>] add|append|echo|edit|edit*|merge|set|unset|note
+<tr><th><a href="directive-dict.html#Syntax">Syntax:</a></th><td><code>Header [<var>condition</var>] add|append|echo|edit|edit*|merge|set|setifempty|unset|note
 <var>header</var> [<var>value</var>] [<var>replacement</var>]
 [early|env=[!]<var>variable</var>]|expr=<var>expression</var>]
 </code></td></tr>
@@ -224,7 +208,7 @@ Header merge Cache-Control no-store env=NO_STORE
 <tr><th><a href="directive-dict.html#Override">Override:</a></th><td>FileInfo</td></tr>
 <tr><th><a href="directive-dict.html#Status">Status:</a></th><td>Extension</td></tr>
 <tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_headers</td></tr>
-<tr><th><a href="directive-dict.html#Compatibility">Compatibility:</a></th><td>Default condition was temporarily changed to "always" in 2.3.9 and 2.3.10</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibility:</a></th><td>Default condition was temporarily changed to "always" in 2.3.9 and 2.3.10.  SetIfEmpty available since 2.4.7.</td></tr>
 </table>
     <p>This directive can replace, merge or remove HTTP response
     headers. The header is modified just after the content handler
@@ -309,7 +293,7 @@ Header merge Cache-Control no-store env=NO_STORE
 
     <dt><code>setifempty</code></dt>
     <dd>The request header is set, but only if there is no previous header
-    with this name</dd>
+    with this name. Available in 2.4.7 and later.</dd>
 
     <dt><code>unset</code></dt>
     <dd>The response header of this name is removed, if it exists.
@@ -386,8 +370,8 @@ Header merge Cache-Control no-store env=NO_STORE
 
     <p>For <code>edit</code> there is both a <var>value</var> argument
     which is a <a class="glossarylink" href="../glossary.html#regex" title="see glossary">regular expression</a>,
-    and an additional <var>replacement</var> string.</p> As of version 2.4.7
-    the replacement string may also contain format specifiers.
+    and an additional <var>replacement</var> string. As of version 2.4.7
+    the replacement string may also contain format specifiers.</p>
 
     <p>The <code class="directive">Header</code> directive may be followed by
     an additional argument, which may be any of:</p>
@@ -415,7 +399,7 @@ Header merge Cache-Control no-store env=NO_STORE
 <div class="directive-section"><h2><a name="RequestHeader" id="RequestHeader">RequestHeader</a> <a name="requestheader" id="requestheader">Directive</a></h2>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Configure HTTP request headers</td></tr>
-<tr><th><a href="directive-dict.html#Syntax">Syntax:</a></th><td><code>RequestHeader add|append|edit|edit*|merge|set|unset
+<tr><th><a href="directive-dict.html#Syntax">Syntax:</a></th><td><code>RequestHeader add|append|edit|edit*|merge|set|setifempty|unset
 <var>header</var> [<var>value</var>] [<var>replacement</var>]
 [early|env=[!]<var>variable</var>]|expr=<var>expression</var>]
 </code></td></tr>
@@ -423,6 +407,7 @@ Header merge Cache-Control no-store env=NO_STORE
 <tr><th><a href="directive-dict.html#Override">Override:</a></th><td>FileInfo</td></tr>
 <tr><th><a href="directive-dict.html#Status">Status:</a></th><td>Extension</td></tr>
 <tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_headers</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibility:</a></th><td>SetIfEmpty available in 2.4.7 and later</td></tr>
 </table>
     <p>This directive can replace, merge, change or remove HTTP request
     headers. The header is modified just before the content handler
@@ -470,10 +455,10 @@ Header merge Cache-Control no-store env=NO_STORE
     <dt><code>set</code></dt>
     <dd>The request header is set, replacing any previous header
     with this name</dd>
-  
+
     <dt><code>setifempty</code></dt>
     <dd>The request header is set, but only if there is no previous header
-    with this name</dd>
+    with this name. Available in 2.4.7 and later.</dd>
 
     <dt><code>unset</code></dt>
     <dd>The request header of this name is removed, if it exists. If
@@ -541,7 +526,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_headers.html
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossary</a> | <a href="../sitemap.html">Sitemap</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

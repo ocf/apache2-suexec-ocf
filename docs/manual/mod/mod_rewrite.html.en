@@ -9,7 +9,7 @@
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
-<script src="../style/scripts/prettify.js" type="text/javascript">
+<script src="../style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="../images/favicon.ico" rel="shortcut icon" /></head>
@@ -84,9 +84,7 @@ URLs on the fly</td></tr>
       level higher than <code>trace2</code> only for debugging!
     </div>
 
-    <div class="example"><h3>Example</h3><pre class="prettyprint lang-config">
-      LogLevel alert rewrite:trace3
-      </pre>
+    <div class="example"><h3>Example</h3><pre class="prettyprint lang-config">LogLevel alert rewrite:trace3</pre>
 </div>
 
     <div class="note"><h3>RewriteLog</h3>
@@ -139,15 +137,13 @@ URLs on the fly</td></tr>
     since the resource was not relative to the document root.  This 
     misconfiguration would normally cause the server to look for an "opt"
     directory under the document root.</p>
-<pre class="prettyprint lang-config">
-DocumentRoot /var/www/example.com
+<pre class="prettyprint lang-config">DocumentRoot /var/www/example.com
 Alias /myapp /opt/myapp-1.2.3
 &lt;Directory /opt/myapp-1.2.3&gt;
     RewriteEngine On
     RewriteBase /myapp/
     RewriteRule ^index\.html$  welcome.html 
-&lt;/Directory&gt;
-</pre>
+&lt;/Directory&gt;</pre>
 
 
 </div>
@@ -224,6 +220,7 @@ Alias /myapp /opt/myapp-1.2.3
 
               <td>
                  REMOTE_ADDR<br />
+                 CONN_REMOTE_ADDR<br />
                  REMOTE_HOST<br />
                  REMOTE_PORT<br />
                  REMOTE_USER<br />
@@ -351,6 +348,14 @@ Alias /myapp /opt/myapp-1.2.3
                   <dd>Will contain the scheme of the request (usually
                   "http" or "https"). This value can be influenced with
                   <code class="directive"><a href="../mod/core.html#servername">ServerName</a></code>.</dd>
+
+                  <dt><code>REMOTE_ADDR</code></dt>
+                  <dd>The IP address of the remote host (see the
+                  <code class="module"><a href="../mod/mod_remoteip.html">mod_remoteip</a></code> module).</dd>
+
+                  <dt><code>CONN_REMOTE_ADDR</code></dt>
+                  <dd>Since 2.4.8: The peer IP address of the connection (see the
+                  <code class="module"><a href="../mod/mod_remoteip.html">mod_remoteip</a></code> module).</dd>
 
                 </dl>
 </div>
@@ -593,13 +598,18 @@ Alias /myapp /opt/myapp-1.2.3
             whether or not it exists, and is a regular file with size greater
             than zero.</li>
 
-            <li>'<strong>-U</strong>' (is existing URL, via
+            <li><p>'<strong>-U</strong>' (is existing URL, via
             subrequest)<br />
             Checks whether or not <em>TestString</em> is a valid URL,
             accessible via all the server's currently-configured
             access controls for that path. This uses an internal
             subrequest to do the check, so use it with care -
-            it can impact your server's performance!</li>
+            it can impact your server's performance!</p>
+            <p> This flag <em>only</em> returns information about things
+            like access control, authentication, and authorization.  This flag
+            <em>does not</em> return information about the status code the 
+            configured handler (static file, CGI, proxy, etc.) would have 
+            returned.</p> </li>
 
             <li>'<strong>-x</strong>' (has e<strong>x</strong>ecutable
             permissions)<br />
@@ -628,10 +638,8 @@ Alias /myapp /opt/myapp-1.2.3
             to block unwanted hotlinking.
            </p>
 
-           <pre class="prettyprint lang-config">
-           RewriteCond expr "! %{HTTP_REFERER} -strmatch '*://%{HTTP_HOST}/*'"<br />
-           RewriteRule ^/images - [F]
-           </pre>
+           <pre class="prettyprint lang-config">           RewriteCond expr "! %{HTTP_REFERER} -strmatch '*://%{HTTP_HOST}/*'"<br />
+           RewriteRule ^/images - [F]</pre>
 
         </li>
 
@@ -658,12 +666,10 @@ Alias /myapp /opt/myapp-1.2.3
           Use this to combine rule conditions with a local OR
           instead of the implicit AND. Typical example:
 
-<pre class="prettyprint lang-config">
-RewriteCond %{REMOTE_HOST}  ^host1  [OR]
+<pre class="prettyprint lang-config">RewriteCond %{REMOTE_HOST}  ^host1  [OR]
 RewriteCond %{REMOTE_HOST}  ^host2  [OR]
 RewriteCond %{REMOTE_HOST}  ^host3
-RewriteRule ...some special stuff for any of these hosts...
-</pre>
+RewriteRule ...some special stuff for any of these hosts...</pre>
 
 
           Without this flag you would have to write the condition/rule
@@ -689,15 +695,13 @@ RewriteRule ...some special stuff for any of these hosts...
         ``<code>User-Agent:</code>'' header of the request, you can
         use the following: </p>
 
-<pre class="prettyprint lang-config">
-RewriteCond  %{HTTP_USER_AGENT}  ^Mozilla
+<pre class="prettyprint lang-config">RewriteCond  %{HTTP_USER_AGENT}  ^Mozilla
 RewriteRule  ^/$                 /homepage.max.html  [L]
 
 RewriteCond  %{HTTP_USER_AGENT}  ^Lynx
 RewriteRule  ^/$                 /homepage.min.html  [L]
 
-RewriteRule  ^/$                 /homepage.std.html  [L]
-</pre>
+RewriteRule  ^/$                 /homepage.std.html  [L]</pre>
 
 
         <p>Explanation: If you use a browser which identifies itself
@@ -786,17 +790,13 @@ RewriteRule  ^/$                 /homepage.std.html  [L]
       <p>For example, you might define a
       <code class="directive">RewriteMap</code> as:</p>
 
-      <pre class="prettyprint lang-config">
-      RewriteMap examplemap txt:/path/to/file/map.txt
-      </pre>
+      <pre class="prettyprint lang-config">RewriteMap examplemap txt:/path/to/file/map.txt</pre>
 
 
       <p>You would then be able to use this map in a
       <code class="directive">RewriteRule</code> as follows:</p>
 
-      <pre class="prettyprint lang-config">
-      RewriteRule ^/ex/(.*) ${examplemap:$1}
-      </pre>
+      <pre class="prettyprint lang-config">RewriteRule ^/ex/(.*) ${examplemap:$1}</pre>
 
 
       <p>The following combinations for <em>MapType</em> and
@@ -883,6 +883,34 @@ later</td></tr>
       <p> Like <code>Inherit</code> above, but the rules from the parent scope
       are applied <strong>before</strong> rules specified in the child scope.
       Available in Apache HTTP Server 2.3.10 and later.</p>
+      </dd>
+
+      <dt><code>InheritDown</code></dt>
+      <dd>
+
+      <p>If this option is enabled, all child configurations will inherit
+      the configuration of the current configuration. It is equivalent to
+      specifying <code>RewriteOptions Inherit</code> in all child
+      configurations. See the <code>Inherit</code> option for more details
+      on how the parent-child relationships are handled. Available in Apache
+      HTTP Server 2.4.8 and later.</p>
+      </dd>
+
+      <dt><code>InheritDownBefore</code></dt>
+      <dd>
+
+      <p>Like <code>InheritDown</code> above, but the rules from the current
+      scope are applied <strong>before</strong> rules specified in any child's
+      scope. Available in Apache HTTP Server 2.4.8 and later.</p>
+      </dd>
+
+      <dt><code>IgnoreInherit</code></dt>
+      <dd>
+
+      <p>This option forces the current and child configurations to ignore
+      all rules that would be inherited from a parent specifying
+      <code>InheritDown</code> or <code>InheritDownBefore</code>. Available
+      in Apache HTTP Server 2.4.8 and later.</p>
       </dd>
 
       <dt><code>AllowNoSlash</code></dt>
@@ -1174,10 +1202,18 @@ cannot use <code>$N</code> in the substitution string!
         ...</a></em></td>
     </tr>
     <tr>
+        <td>END</td>
+        <td>Stop the rewriting process immediately and don't apply any
+        more rules. Also prevents further execution of rewrite rules
+        in per-directory and .htaccess context. (Available in 2.3.9 and later)
+        <em><a href="../rewrite/flags.html#flag_end">details ...</a></em></td>
+    </tr>
+    <tr>
         <td>env|E=[!]<em>VAR</em>[:<em>VAL</em>]</td>
         <td>Causes an environment variable <em>VAR</em> to be set (to the
         value <em>VAL</em> if provided). The form !<em>VAR</em> causes
-        the environment variable <em>VAR</em> to be unset.<em><a href="../rewrite/flags.html#flag_e">details ...</a></em></td>
+        the environment variable <em>VAR</em> to be unset.
+        <em><a href="../rewrite/flags.html#flag_e">details ...</a></em></td>
     </tr>
     <tr>
         <td>forbidden|F</td>
@@ -1197,7 +1233,7 @@ cannot use <code>$N</code> in the substitution string!
         <td>last|L</td>
         <td>Stop the rewriting process immediately and don't apply any
         more rules. Especially note caveats for per-directory and
-        .htaccess context (see also the END flag). <em><a href="../rewrite/flags.html#flag_end">details ...</a></em></td>
+        .htaccess context (see also the END flag). <em><a href="../rewrite/flags.html#flag_l">details ...</a></em></td>
     </tr>
     <tr>
         <td>next|N</td>
@@ -1250,13 +1286,6 @@ cannot use <code>$N</code> in the substitution string!
         <td>Forces an external redirect, optionally with the specified
         HTTP status code. <em><a href="../rewrite/flags.html#flag_r">details ...</a></em>
         </td>
-    </tr>
-    <tr>
-        <td>END</td>
-        <td>Stop the rewriting process immediately and don't apply any
-        more rules. Also prevents further execution of rewrite rules
-        in per-directory and .htaccess context. (Available in 2.3.9 and later)
-        <em><a href="../rewrite/flags.html#flag_l">details ...</a></em></td>
     </tr>
     <tr>
         <td>skip|S=<em>num</em></td>
@@ -1460,7 +1489,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_rewrite.html
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossary</a> | <a href="../sitemap.html">Sitemap</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

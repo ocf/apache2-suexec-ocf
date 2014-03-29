@@ -744,22 +744,52 @@ static int proxy_walk(request_rec *r)
      */
     const char *proxyname = r->filename + 6;
     int j;
+    apr_pool_t *rxpool = NULL;
 
     for (j = 0; j < num_sec; ++j)
     {
+        int nmatch = 0;
+        int i;
+        ap_regmatch_t *pmatch = NULL;
+
         entry_config = sec_proxy[j];
         entry_proxy = ap_get_module_config(entry_config, &proxy_module);
 
-        /* XXX: What about case insensitive matching ???
-         * Compare regex, fnmatch or string as appropriate
-         * If the entry doesn't relate, then continue
-         */
-        if (entry_proxy->r
-              ? ap_regexec(entry_proxy->r, proxyname, 0, NULL, 0)
-              : (entry_proxy->p_is_fnmatch
-                   ? apr_fnmatch(entry_proxy->p, proxyname, 0)
-                   : strncmp(proxyname, entry_proxy->p,
-                                        strlen(entry_proxy->p)))) {
+        if (entry_proxy->r) {
+
+            if (entry_proxy->refs && entry_proxy->refs->nelts) {
+                if (!rxpool) {
+                    apr_pool_create(&rxpool, r->pool);
+                }
+                nmatch = entry_proxy->refs->nelts;
+                pmatch = apr_palloc(rxpool, nmatch*sizeof(ap_regmatch_t));
+            }
+
+            if (ap_regexec(entry_proxy->r, proxyname, nmatch, pmatch, 0)) {
+                continue;
+            }
+
+            for (i = 0; i < nmatch; i++) {
+                if (pmatch[i].rm_so >= 0 && pmatch[i].rm_eo >= 0 &&
+                        ((const char **)entry_proxy->refs->elts)[i]) {
+                    apr_table_setn(r->subprocess_env,
+                            ((const char **)entry_proxy->refs->elts)[i],
+                            apr_pstrndup(r->pool,
+                                    proxyname + pmatch[i].rm_so,
+                                    pmatch[i].rm_eo - pmatch[i].rm_so));
+                }
+            }
+        }
+
+        else if (
+            /* XXX: What about case insensitive matching ???
+             * Compare regex, fnmatch or string as appropriate
+             * If the entry doesn't relate, then continue
+             */
+            entry_proxy->p_is_fnmatch ? apr_fnmatch(entry_proxy->p,
+                    proxyname, 0) :
+                    strncmp(proxyname, entry_proxy->p,
+                            strlen(entry_proxy->p))) {
             continue;
         }
         per_dir_defaults = ap_merge_per_dir_configs(r->pool, per_dir_defaults,
@@ -767,6 +797,10 @@ static int proxy_walk(request_rec *r)
     }
 
     r->per_dir_config = per_dir_defaults;
+
+    if (rxpool) {
+        apr_pool_destroy(rxpool);
+    }
 
     return OK;
 }
@@ -1314,6 +1348,7 @@ static void *merge_proxy_dir_config(apr_pool_t *p, void *basev, void *addv)
     new->p = add->p;
     new->p_is_fnmatch = add->p_is_fnmatch;
     new->r = add->r;
+    new->refs = add->refs;
 
     /* Put these in the dir config so they work inside <Location> */
     new->raliases = apr_array_append(p, base->raliases, add->raliases);
@@ -1334,7 +1369,6 @@ static void *merge_proxy_dir_config(apr_pool_t *p, void *basev, void *addv)
     new->add_forwarded_headers = add->add_forwarded_headers;
     return new;
 }
-
 
 static const char *
     add_proxy(cmd_parms *cmd, void *dummy, const char *f1, const char *r1, int regex)
@@ -1408,6 +1442,36 @@ static const char *
     add_proxy_regex(cmd_parms *cmd, void *dummy, const char *f1, const char *r1)
 {
     return add_proxy(cmd, dummy, f1, r1, 1);
+}
+
+static char *de_socketfy(apr_pool_t *p, char *url)
+{
+    char *ptr;
+    /*
+     * We could be passed a URL during the config stage that contains
+     * the UDS path... ignore it
+     */
+    if (!strncasecmp(url, "unix:", 5) &&
+        ((ptr = ap_strchr(url, '|')) != NULL)) {
+        /* move past the 'unix:...|' UDS path info */
+        char *ret, *c;
+
+        ret = ptr + 1;
+        /* special case: "unix:....|scheme:" is OK, expand
+         * to "unix:....|scheme://localhost"
+         * */
+        c = ap_strchr(ret, ':');
+        if (c == NULL) {
+            return NULL;
+        }
+        if (c[1] == '\0') {
+            return apr_pstrcat(p, ret, "//localhost", NULL);
+        }
+        else {
+            return ret;
+        }
+    }
+    return url;
 }
 
 static const char *
@@ -1501,7 +1565,7 @@ static const char *
     }
 
     new->fake = apr_pstrdup(cmd->pool, f);
-    new->real = apr_pstrdup(cmd->pool, r);
+    new->real = apr_pstrdup(cmd->pool, de_socketfy(cmd->pool, r));
     new->flags = flags;
     if (use_regex) {
         new->regex = ap_pregcomp(cmd->pool, f, AP_REG_EXTENDED);
@@ -1537,7 +1601,7 @@ static const char *
         new->balancer = balancer;
     }
     else {
-        proxy_worker *worker = ap_proxy_get_worker(cmd->temp_pool, NULL, conf, r);
+        proxy_worker *worker = ap_proxy_get_worker(cmd->temp_pool, NULL, conf, de_socketfy(cmd->pool, r));
         int reuse = 0;
         if (!worker) {
             const char *err = ap_proxy_define_worker(cmd->pool, &worker, NULL, conf, r, 0);
@@ -1549,14 +1613,14 @@ static const char *
             reuse = 1;
             ap_log_error(APLOG_MARK, APLOG_INFO, 0, cmd->server, APLOGNO(01145)
                          "Sharing worker '%s' instead of creating new worker '%s'",
-                         worker->s->name, new->real);
+                         ap_proxy_worker_name(cmd->pool, worker), new->real);
         }
 
         for (i = 0; i < arr->nelts; i++) {
             if (reuse) {
                 ap_log_error(APLOG_MARK, APLOG_WARNING, 0, cmd->server, APLOGNO(01146)
                              "Ignoring parameter '%s=%s' for worker '%s' because of worker sharing",
-                             elts[i].key, elts[i].val, worker->s->name);
+                             elts[i].key, elts[i].val, ap_proxy_worker_name(cmd->pool, worker));
             } else {
                 const char *err = set_worker_param(cmd->pool, worker, elts[i].key,
                                                    elts[i].val);
@@ -1662,6 +1726,7 @@ static const char *
     for (i = 0; i < conf->noproxies->nelts; i++) {
         if (strcasecmp(arg, list[i].name) == 0) { /* ignore case for host names */
             found = 1;
+            break;
         }
     }
 
@@ -1695,8 +1760,10 @@ static const char *
 
     /* Don't duplicate entries */
     for (i = 0; i < conf->dirconn->nelts; i++) {
-        if (strcasecmp(arg, list[i].name) == 0)
+        if (strcasecmp(arg, list[i].name) == 0) {
             found = 1;
+            break;
+        }
     }
 
     if (!found) {
@@ -2013,7 +2080,7 @@ static const char *add_member(cmd_parms *cmd, void *dummy, const char *arg)
     }
 
     /* Try to find existing worker */
-    worker = ap_proxy_get_worker(cmd->temp_pool, balancer, conf, name);
+    worker = ap_proxy_get_worker(cmd->temp_pool, balancer, conf, de_socketfy(cmd->temp_pool, name));
     if (!worker) {
         ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, cmd->server, APLOGNO(01147)
                      "Defining worker '%s' for balancer '%s'",
@@ -2022,13 +2089,13 @@ static const char *add_member(cmd_parms *cmd, void *dummy, const char *arg)
             return apr_pstrcat(cmd->temp_pool, "BalancerMember ", err, NULL);
         ap_log_error(APLOG_MARK, APLOG_DEBUG, 0, cmd->server, APLOGNO(01148)
                      "Defined worker '%s' for balancer '%s'",
-                     worker->s->name, balancer->s->name);
+                     ap_proxy_worker_name(cmd->pool, worker), balancer->s->name);
         PROXY_COPY_CONF_PARAMS(worker, conf);
     } else {
         reuse = 1;
         ap_log_error(APLOG_MARK, APLOG_INFO, 0, cmd->server, APLOGNO(01149)
                      "Sharing worker '%s' instead of creating new worker '%s'",
-                     worker->s->name, name);
+                     ap_proxy_worker_name(cmd->pool, worker), name);
     }
 
     arr = apr_table_elts(params);
@@ -2037,7 +2104,7 @@ static const char *add_member(cmd_parms *cmd, void *dummy, const char *arg)
         if (reuse) {
             ap_log_error(APLOG_MARK, APLOG_WARNING, 0, cmd->server, APLOGNO(01150)
                          "Ignoring parameter '%s=%s' for worker '%s' because of worker sharing",
-                         elts[i].key, elts[i].val, worker->s->name);
+                         elts[i].key, elts[i].val, ap_proxy_worker_name(cmd->pool, worker));
         } else {
             err = set_worker_param(cmd->pool, worker, elts[i].key,
                                                elts[i].val);
@@ -2099,7 +2166,7 @@ static const char *
         }
     }
     else {
-        worker = ap_proxy_get_worker(cmd->temp_pool, NULL, conf, name);
+        worker = ap_proxy_get_worker(cmd->temp_pool, NULL, conf, de_socketfy(cmd->temp_pool, name));
         if (!worker) {
             if (in_proxy_section) {
                 err = ap_proxy_define_worker(cmd->pool, &worker, NULL,
@@ -2196,17 +2263,6 @@ static const char *proxysection(cmd_parms *cmd, void *mconfig, const char *arg)
             return "Regex could not be compiled";
         }
     }
-    else if (!strcmp(cmd->path, "~")) {
-        cmd->path = ap_getword_conf(cmd->pool, &arg);
-        if (!cmd->path)
-            return "<Proxy ~ > block must specify a path";
-        if (strncasecmp(cmd->path, "proxy:", 6))
-            cmd->path += 6;
-        r = ap_pregcomp(cmd->pool, cmd->path, AP_REG_EXTENDED);
-        if (!r) {
-            return "Regex could not be compiled";
-        }
-    }
 
     /* initialize our config and fetch it */
     conf = ap_set_config_vectors(cmd->server, new_dir_conf, cmd->path,
@@ -2219,6 +2275,11 @@ static const char *proxysection(cmd_parms *cmd, void *mconfig, const char *arg)
     conf->r = r;
     conf->p = cmd->path;
     conf->p_is_fnmatch = apr_fnmatch_test(conf->p);
+
+    if (r) {
+        conf->refs = apr_array_make(cmd->pool, 8, sizeof(char *));
+        ap_regname(r, conf->refs, AP_REG_MATCH, 1);
+    }
 
     ap_add_per_proxy_conf(cmd->server, new_dir_conf);
 
@@ -2245,7 +2306,7 @@ static const char *proxysection(cmd_parms *cmd, void *mconfig, const char *arg)
         }
         else {
             worker = ap_proxy_get_worker(cmd->temp_pool, NULL, sconf,
-                                         conf->p);
+                                         de_socketfy(cmd->temp_pool, (char*)conf->p));
             if (!worker) {
                 err = ap_proxy_define_worker(cmd->pool, &worker, NULL,
                                           sconf, conf->p, 0);

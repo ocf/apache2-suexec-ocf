@@ -15,7 +15,7 @@
  */
 
 /*
-  $Id: mod_macro.c 1455215 2013-03-11 16:28:43Z jim $
+  $Id: mod_macro.c 1562134 2014-01-28 18:11:59Z jim $
 */
 
 #include "httpd.h"
@@ -468,7 +468,7 @@ static const char *process_content(apr_pool_t * pool,
     int i;
 
     if (result) {
-        *result = apr_array_make(pool, 1, sizeof(char *));
+        *result = apr_array_make(pool, contents->nelts, sizeof(char *));
     }
 
     /* for each line of the macro body */

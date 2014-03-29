@@ -9,7 +9,7 @@
 <link href="./style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="./style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="./style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="./style/css/prettify.css" />
-<script src="./style/scripts/prettify.js" type="text/javascript">
+<script src="./style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="./images/favicon.ico" rel="shortcut icon" /></head>
@@ -421,12 +421,10 @@ Vary: negotiate,accept-language,accept-charset
 
       <p>Typically the module will be configured as so;</p>
 
-      <pre class="prettyprint lang-config">
-CacheRoot   "/var/cache/apache/"
+      <pre class="prettyprint lang-config">CacheRoot   "/var/cache/apache/"
 CacheEnable disk /
 CacheDirLevels 2
-CacheDirLength 1
-      </pre>
+CacheDirLength 1</pre>
 
 
       <p>Importantly, as the cached files are locally stored, operating system
@@ -614,9 +612,7 @@ CacheDirLength 1
         instructs httpd to open the file when it is started and to re-use
         this file-handle for all subsequent access to this file.</p>
 
-        <pre class="prettyprint lang-config">
-        CacheFile /usr/local/apache2/htdocs/index.html
-        </pre>
+        <pre class="prettyprint lang-config">CacheFile /usr/local/apache2/htdocs/index.html</pre>
 
 
         <p>If you intend to cache a large number of files in this manner, you
@@ -668,8 +664,7 @@ CacheDirLength 1
         the difference in the time it takes to read a file for the first time
         and the second time;</p>
 
-        <div class="example"><pre>
-colm@coroebus:~$ time cat testfile &gt; /dev/null
+        <div class="example"><pre>colm@coroebus:~$ time cat testfile &gt; /dev/null
 real    0m0.065s
 user    0m0.000s
 sys     0m0.001s
@@ -706,9 +701,7 @@ sys     0m0.000s</pre></div>
         start time (using the mmap system call). httpd will use the in-memory
         contents for all subsequent accesses to this file.</p>
 
-        <pre class="prettyprint lang-config">
-        MMapFile /usr/local/apache2/htdocs/index.html
-        </pre>
+        <pre class="prettyprint lang-config">MMapFile /usr/local/apache2/htdocs/index.html</pre>
 
 
         <p>As with the
@@ -854,7 +847,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/caching.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="./mod/">Modules</a> | <a href="./mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="./glossary.html">Glossary</a> | <a href="./sitemap.html">Sitemap</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

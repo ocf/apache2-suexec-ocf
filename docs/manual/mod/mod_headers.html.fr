@@ -9,7 +9,7 @@
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
-<script src="../style/scripts/prettify.js" type="text/javascript">
+<script src="../style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="../images/favicon.ico" rel="shortcut icon" /></head>
@@ -66,10 +66,8 @@ tardif</a></li>
     ces deux directives ont un effet différent si leur ordre est inversé
     :</p>
 
-    <pre class="prettyprint lang-config">
-RequestHeader append MirrorID "mirror 12"
-RequestHeader unset MirrorID
-    </pre>
+    <pre class="prettyprint lang-config">RequestHeader append MirrorID "mirror 12"
+RequestHeader unset MirrorID</pre>
 
 
     <p>Dans cet ordre, l'en-tête <code>MirrorID</code> n'est pas défini.
@@ -111,9 +109,7 @@ tardif</a></h2>
         Copie tous les en-têtes de requête qui commencent par "TS" vers
 	les en-têtes de la réponse :
 
-        <pre class="prettyprint lang-config">
-          Header echo ^TS
-        </pre>
+        <pre class="prettyprint lang-config">Header echo ^TS</pre>
 
       </li>
 
@@ -126,9 +122,7 @@ tardif</a></h2>
 	isoler les goulets d'étranglement entre le client et le
 	serveur.
 
-        <pre class="prettyprint lang-config">
-          Header set mon-en-tête "%D %t"
-        </pre>
+        <pre class="prettyprint lang-config">Header set mon-en-tête "%D %t"</pre>
 
 
         <p>le résultat est l'ajout à la réponse d'un en-tête du type :</p>
@@ -148,10 +142,8 @@ tardif</a></h2>
 
         <p>le résultat est l'ajout à la réponse d'un en-tête du type :</p>
 
-        <pre class="prettyprint lang-config">
-	Header set MyHeader "Bonjour Joe. Il a fallu D=3775428 microsecondes à Apache
-          pour servir cette requête."
-        </pre>
+        <pre class="prettyprint lang-config">	Header set MyHeader "Bonjour Joe. Il a fallu D=3775428 microsecondes à Apache
+          pour servir cette requête."</pre>
 
       </li>
 
@@ -163,10 +155,8 @@ tardif</a></h2>
 	exemple nécessite les services du module
 	<code class="module"><a href="../mod/mod_setenvif.html">mod_setenvif</a></code>.
 
-        <pre class="prettyprint lang-config">
-SetEnvIf MyRequestHeader myvalue HAVE_MyRequestHeader
-Header set MyHeader "%D %t mytext" env=HAVE_MyRequestHeader
-        </pre>
+        <pre class="prettyprint lang-config">SetEnvIf MyRequestHeader myvalue HAVE_MyRequestHeader
+Header set MyHeader "%D %t mytext" env=HAVE_MyRequestHeader</pre>
 
 
         <p>Si l'en-tête <code>mon-en-tête-requête: mavaleur</code> est
@@ -183,9 +173,7 @@ Header set MyHeader "%D %t mytext" env=HAVE_MyRequestHeader
 	du problème</a>) en remplaçant <var>https:</var> par
 	<var>http:</var> dans l'en-tête <var>Destination</var> :
 
-        <pre class="prettyprint lang-config">
-          RequestHeader edit Destination ^https: http: early
-        </pre>
+        <pre class="prettyprint lang-config">RequestHeader edit Destination ^https: http: early</pre>
 
       </li>
 
@@ -198,11 +186,9 @@ Header set MyHeader "%D %t mytext" env=HAVE_MyRequestHeader
 	<code>NO_CACHE</code> et <code>NO_STORE</code> existent pour la
 	requête) :
 
-        <pre class="prettyprint lang-config">
-Header merge Cache-Control no-cache env=CGI
+        <pre class="prettyprint lang-config">Header merge Cache-Control no-cache env=CGI
 Header merge Cache-Control no-cache env=NO_CACHE
-Header merge Cache-Control no-store env=NO_STORE
-        </pre>
+Header merge Cache-Control no-store env=NO_STORE</pre>
 
 
         <p>alors, la réponse contiendra l'en-tête suivant :</p>
@@ -222,9 +208,7 @@ Header merge Cache-Control no-store env=NO_STORE
       <li>
         Définit un cookie de test si et seulement si le client n'envoie
 	pas de cookie
-        <pre class="prettyprint lang-config">
-          Header set Set-Cookie testcookie "expr=-z %{req:Cookie}"
-        </pre>
+        <pre class="prettyprint lang-config">Header set Set-Cookie testcookie "expr=-z %{req:Cookie}"</pre>
 
       </li>
     </ol>
@@ -233,7 +217,7 @@ Header merge Cache-Control no-store env=NO_STORE
 <div class="directive-section"><h2><a name="Header" id="Header">Header</a> <a name="header" id="header">Directive</a></h2>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Configure les en-têtes d'une réponse HTTP</td></tr>
-<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>Header [<var>condition</var>] add|append|echo|edit|edit*|merge|set|unset|note
+<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>Header [<var>condition</var>] add|append|echo|edit|edit*|merge|set|setifempty|unset|note
 <var>en-tête</var> [<var>valeur</var>] [<var>remplacement</var>]
 [early|env=[!]<var>variable</var>]|expr=<var>expression</var>]
 </code></td></tr>
@@ -242,7 +226,8 @@ Header merge Cache-Control no-store env=NO_STORE
 <tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Extension</td></tr>
 <tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_headers</td></tr>
 <tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>La condition par défaut est temporairement passée
-à "always" dans les version 2.3.9 et 2.3.10</td></tr>
+à "always" dans les version 2.3.9 et 2.3.10. SetIfEmpty est
+disponible depuis la version 2.4.7 du serveur HTTP Apache.</td></tr>
 </table>
     <p>Cette directive permet de remplacer, fusionner, ou
     supprimer des en-têtes de réponse HTTP. L'en-tête est modifié juste
@@ -341,7 +326,8 @@ Header merge Cache-Control no-store env=NO_STORE
 
     <dt><code>setifempty</code></dt>
     <dd>L'en-tête est défini, mais seulement s'il n'existe
-    aucun en-tête avec le même nom.</dd>
+    aucun en-tête avec le même nom. Disponible depuis la
+    version 2.4.7 du serveur HTTP Apache.</dd>
 
     <dt><code>unset</code></dt>
     <dd>L'en-tête est supprimé s'il existe. Si plusieurs en-têtes
@@ -457,7 +443,7 @@ Header merge Cache-Control no-store env=NO_STORE
 <div class="directive-section"><h2><a name="RequestHeader" id="RequestHeader">RequestHeader</a> <a name="requestheader" id="requestheader">Directive</a></h2>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Configure les en-têtes d'une requête HTTP</td></tr>
-<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>RequestHeader add|append|edit|edit*|merge|set|unset
+<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>RequestHeader add|append|edit|edit*|merge|set|setifempty|unset
 <var>en-tête</var> [<var>valeur</var>] [<var>remplacement</var>]
 [early|env=[!]<var>variable</var>]|expr=<var>expression</var>]
 </code></td></tr>
@@ -465,6 +451,8 @@ Header merge Cache-Control no-store env=NO_STORE
 <tr><th><a href="directive-dict.html#Override">AllowOverride:</a></th><td>FileInfo</td></tr>
 <tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Extension</td></tr>
 <tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_headers</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>SetIfEmpty est disponible depuis la version 2.4.7 du
+serveur HTTP Apache</td></tr>
 </table>
     <p>Cette directive permet de remplacer, fusionner, modifier ou
     supprimer des en-têtes de requête HTTP. L'en-tête est modifié juste
@@ -520,7 +508,8 @@ Header merge Cache-Control no-store env=NO_STORE
 
     <dt><code>setifempty</code></dt>
     <dd>L'en-tête est défini, mais seulement s'il n'existe
-    aucun en-tête avec le même nom.</dd>
+    aucun en-tête avec le même nom. Disponible depuis la
+    version 2.4.7 du serveur HTTP Apache.</dd>
 
     <dt><code>unset</code></dt>
     <dd>L'en-tête est supprimé s'il existe. Si plusieurs en-têtes
@@ -594,7 +583,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_headers.html
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

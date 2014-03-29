@@ -9,7 +9,7 @@
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
-<script src="../style/scripts/prettify.js" type="text/javascript">
+<script src="../style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="../images/favicon.ico" rel="shortcut icon" /></head>
@@ -92,9 +92,7 @@ existing HTML documents.</p>
     <p>To permit SSI on your server, you must have the following
     directive either in your <code>httpd.conf</code> file, or in a
     <code>.htaccess</code> file:</p>
-<pre class="prettyprint lang-config">
-        Options +Includes
-</pre>
+<pre class="prettyprint lang-config">Options +Includes</pre>
 
 
     <p>This tells Apache that you want to permit files to be parsed
@@ -109,10 +107,8 @@ existing HTML documents.</p>
     do this. You can tell Apache to parse any file with a
     particular file extension, such as <code>.shtml</code>, with
     the following directives:</p>
-<pre class="prettyprint lang-config">
-        AddType text/html .shtml<br />
-        AddOutputFilter INCLUDES .shtml
-</pre>
+<pre class="prettyprint lang-config">        AddType text/html .shtml<br />
+        AddOutputFilter INCLUDES .shtml</pre>
 
 
     <p>One disadvantage to this approach is that if you wanted to
@@ -122,9 +118,7 @@ existing HTML documents.</p>
     directives would be executed.</p>
 
     <p>The other method is to use the <code class="directive"><a href="../mod/mod_include.html#xbithack">XBitHack</a></code> directive:</p>
-<pre class="prettyprint lang-config">
-        XBitHack on
-</pre>
+<pre class="prettyprint lang-config">XBitHack on</pre>
 
 
     <p><code class="directive"><a href="../mod/mod_include.html#xbithack">XBitHack</a></code>
@@ -446,10 +440,8 @@ modified?</a></h3>
 
     <p>In your configuration file, you could put the following
     line:</p>
-<pre class="prettyprint lang-config">
-        BrowserMatchNoCase macintosh Mac<br />
-        BrowserMatchNoCase MSIE InternetExplorer
-</pre>
+<pre class="prettyprint lang-config">        BrowserMatchNoCase macintosh Mac<br />
+        BrowserMatchNoCase MSIE InternetExplorer</pre>
 
 
     <p>This will set environment variables ``Mac'' and
@@ -506,7 +498,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/howto/ssi.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossary</a> | <a href="../sitemap.html">Sitemap</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

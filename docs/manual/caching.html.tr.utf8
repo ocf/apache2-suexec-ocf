@@ -9,7 +9,7 @@
 <link href="./style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="./style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="./style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="./style/css/prettify.css" />
-<script src="./style/scripts/prettify.js" type="text/javascript">
+<script src="./style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="./images/favicon.ico" rel="shortcut icon" /></head>
@@ -395,12 +395,10 @@
 
       <p>Tipik olarak modül şöyle yapılandırılır:</p>
 
-      <pre class="prettyprint lang-config">
-CacheRoot   "/var/cache/apache/"
+      <pre class="prettyprint lang-config">CacheRoot   "/var/cache/apache/"
 CacheEnable disk /
 CacheDirLevels 2
-CacheDirLength 1
-      </pre>
+CacheDirLength 1</pre>
 
 
       <p>En önemlisi önbelleklenen dosyaların yerel olarak saklanması olup
@@ -582,9 +580,7 @@ CacheDirLength 1
           yapılan sonraki her istekte bu dosya tanıtıcısının kullanılmasını
           sağlar.</p>
 
-        <pre class="prettyprint lang-config">
-CacheFile /usr/local/apache2/htdocs/index.html
-        </pre>
+        <pre class="prettyprint lang-config">CacheFile /usr/local/apache2/htdocs/index.html</pre>
 
 
         <p>Büyük miktarda dosyayı bu anlamda önbelleklemeyi tasarlıyorsanız
@@ -677,9 +673,7 @@ CacheFile /usr/local/apache2/htdocs/index.html
           httpd bu dosyaya gelecek sonraki istekler için dosyanın bellekiçi
           içeriğini kullanacaktır.</p>
 
-        <pre class="prettyprint lang-config">
-MMapFile /usr/local/apache2/htdocs/index.html
-        </pre>
+        <pre class="prettyprint lang-config">MMapFile /usr/local/apache2/htdocs/index.html</pre>
 
 
         <p><code class="directive"><a href="./mod/mod_file_cache.html#cachefile">CacheFile</a></code>
@@ -829,7 +823,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/caching.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br /><a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a> altında lisanslıdır.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br /><a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a> altında lisanslıdır.</p>
 <p class="menu"><a href="./mod/">Modüller</a> | <a href="./mod/directives.html">Yönergeler</a> | <a href="http://wiki.apache.org/httpd/FAQ">SSS</a> | <a href="./glossary.html">Terimler</a> | <a href="./sitemap.html">Site Haritası</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();
