@@ -1,4 +1,4 @@
-apache2 (2.4.9-1) UNRELEASED; urgency=medium
+apache2 (2.4.9-1) unstable; urgency=medium
 
   * New upstream version.
     Security fixes:
@@ -28,7 +28,7 @@ apache2 (2.4.9-1) UNRELEASED; urgency=medium
     script.  Closes: #738315
   * Bump Standards-Version (no changes).
 
- -- Stefan Fritsch <sf@debian.org>  Sat, 29 Mar 2014 22:06:50 +0100
+ -- Stefan Fritsch <sf@debian.org>  Sat, 29 Mar 2014 22:50:32 +0100
 
 apache2 (2.4.7-1) unstable; urgency=low
 
