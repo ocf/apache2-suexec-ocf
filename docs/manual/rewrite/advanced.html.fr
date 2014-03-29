@@ -9,7 +9,7 @@
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
-<script src="../style/scripts/prettify.js" type="text/javascript">
+<script src="../style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="../images/favicon.ico" rel="shortcut icon" /></head>
@@ -21,8 +21,8 @@
 <div id="path">
 <a href="http://www.apache.org/">Apache</a> &gt; <a href="http://httpd.apache.org/">Serveur HTTP</a> &gt; <a href="http://httpd.apache.org/docs/">Documentation</a> &gt; <a href="../">Version 2.4</a> &gt; <a href="./">Rewrite</a></div><div id="page-content"><div id="preamble"><h1>Advanced Techniques with mod_rewrite</h1>
 <div class="toplang">
-<p><span>Langues Disponibles: </span><a href="../en/rewrite/avoid.html" hreflang="en" rel="alternate" title="English">&nbsp;en&nbsp;</a> |
-<a href="../fr/rewrite/avoid.html" title="Français">&nbsp;fr&nbsp;</a></p>
+<p><span>Langues Disponibles: </span><a href="../en/rewrite/advanced.html" hreflang="en" rel="alternate" title="English">&nbsp;en&nbsp;</a> |
+<a href="../fr/rewrite/advanced.html" title="Français">&nbsp;fr&nbsp;</a></p>
 </div>
 
 
@@ -101,11 +101,9 @@ http://serveur_physique_utilisateur1/u/utilisateur/chemin
       serveur par défaut qui sera utilisé lorsqu'un utilisateur ne
       possèdera pas d'entrée dans la table de correspondances :</p>
 
-<pre class="prettyprint lang-config">
-RewriteEngine on
+<pre class="prettyprint lang-config">RewriteEngine on
 RewriteMap      users-to-hosts   txt:/path/to/map.users-to-hosts
-RewriteRule   ^/u/([^/]+)/?(.*)   http://${users-to-hosts:$1|server0}/u/$1/$2
-</pre>
+RewriteRule   ^/u/([^/]+)/?(.*)   http://${users-to-hosts:$1|server0}/u/$1/$2</pre>
 
     </dd>
   </dl>
@@ -136,11 +134,9 @@ RewriteRule   ^/u/([^/]+)/?(.*)   http://${users-to-hosts:$1|server0}/u/$1/$2
     <dd>
       A cet effet, on utilise le jeu de règles suivant :
 
-<pre class="prettyprint lang-config">
-# Cet exemple n'est valable que dans un contexte de répertoire
+<pre class="prettyprint lang-config"># Cet exemple n'est valable que dans un contexte de répertoire
 RewriteCond %{REQUEST_URI}   !-U
-RewriteRule ^(.+)\.html$          /regenerate_page.cgi   [PT,L]
-</pre>
+RewriteRule ^(.+)\.html$          /regenerate_page.cgi   [PT,L]</pre>
 
 
       <p>L'opérateur <code>-U</code> permet de déterminer si la chaîne
@@ -181,11 +177,9 @@ RewriteRule ^(.+)\.html$          /regenerate_page.cgi   [PT,L]
       <p>Pour y parvenir, nous allons utiliser la directive <code class="directive"><a href="../mod/mod_rewrite.html#rewritemap">RewriteMap</a></code> et une liste de
       serveurs.</p>
 
-<pre class="prettyprint lang-config">
-RewriteEngine on
+<pre class="prettyprint lang-config">RewriteEngine on
 RewriteMap lb rnd:/path/to/serverlist.txt
-RewriteRule ^/(.*) http://${lb:serveurs}/$1 [P,L]
-</pre>
+RewriteRule ^/(.*) http://${lb:serveurs}/$1 [P,L]</pre>
 
 
 <p><code>liste-serveurs.txt</code> contiendra la liste des serveurs :</p>
@@ -239,9 +233,7 @@ plus de fonctionnalités dans ce domaine que mod_rewrite.</p>
 	  actualisée chaque fois que la ressource est mise à jour dans
 	  le système de fichiers.</p>
 
-<pre class="prettyprint lang-config">
-RewriteRule   ^(/[uge]/[^/]+/?.*):refresh  /interne/cgi/apache/nph-refresh?f=$
-</pre>
+<pre class="prettyprint lang-config">RewriteRule   ^(/[uge]/[^/]+/?.*):refresh  /interne/cgi/apache/nph-refresh?f=$</pre>
 
 
       <p>Nous appelons maintenant cette URL</p>
@@ -260,8 +252,7 @@ RewriteRule   ^(/[uge]/[^/]+/?.*):refresh  /interne/cgi/apache/nph-refresh?f=$
 	  écrive habituellement dans ces cas "laissé à la charge du
 	  lecteur à titre d'exercice", ;-) je vous l'offre, aussi.</p>
 
-<pre class="prettyprint lang-perl">
-#!/sw/bin/perl
+<pre class="prettyprint lang-perl">#!/sw/bin/perl
 ##
 ##  nph-refresh -- script NPH/CGI pour l'actualisation automatique de
 ##  pages
@@ -362,8 +353,7 @@ for ( $n = 0 ; $n &amp; lt ; $QS_n ; $n++ ) {
 
 exit(0);
 
-##EOF##
-</pre>
+##EOF##</pre>
 
     </dd>
   </dl>
@@ -395,10 +385,8 @@ exit(0);
       <p>On utilise le jeu de règles suivant pour développer les
 	  URLs avec tilde selon l'organisation structurée précédente.</p>
 
-<pre class="prettyprint lang-config">
-RewriteEngine on
-RewriteRule   ^/~(<strong>([a-z])</strong>[a-z0-9]+)(.*)  /home/<strong>$2</strong>/$1/public_html$3
-</pre>
+<pre class="prettyprint lang-config">RewriteEngine on
+RewriteRule   ^/~(<strong>([a-z])</strong>[a-z0-9]+)(.*)  /home/<strong>$2</strong>/$1/public_html$3</pre>
 
     </dd>
   </dl>
@@ -458,12 +446,10 @@ RewriteRule   ^/~(<strong>([a-z])</strong>[a-z0-9]+)(.*)  /home/<strong>$2</stro
 	  permettent d'effectuer des redirections dépendant de
 	  l'heure :</p>
 
-<pre class="prettyprint lang-config">
-+RewriteEngine on
+<pre class="prettyprint lang-config">+RewriteEngine on
 +RewriteCond   %{TIME_HOUR}%{TIME_MIN} &gt;0700
 +RewriteCond   %{TIME_HOUR}%{TIME_MIN} &lt;1900
-+RewriteRule   ^foo\.html$             foo.day.html [L]
-</pre>
++RewriteRule   ^foo\.html$             foo.day.html [L]</pre>
 
 
       <p>Avec cet exemple, l'URL <code>foo.html</code> renvoie
@@ -506,19 +492,15 @@ RewriteRule   ^/~(<strong>([a-z])</strong>[a-z0-9]+)(.*)  /home/<strong>$2</stro
       <p>Utiliser le drapeau [E] pour définir une variable
       d'environnement.</p>
 
-<pre class="prettyprint lang-config">
-RewriteEngine on
-RewriteRule   ^/cheval/(.*)   /poney/$1 [E=<strong>rewritten:1</strong>]
-</pre>
+<pre class="prettyprint lang-config">RewriteEngine on
+RewriteRule   ^/cheval/(.*)   /poney/$1 [E=<strong>rewritten:1</strong>]</pre>
 
 
     <p>Plus loin dans votre jeu de règles, vous pouvez vérifier le
     contenu de cette variable d'environnement via une directive
     RewriteCond :</p>
 
-<pre class="prettyprint lang-config">
-RewriteCond %{ENV:rewritten} =1
-</pre>
+<pre class="prettyprint lang-config">RewriteCond %{ENV:rewritten} =1</pre>
 
 
     </dd>
@@ -526,12 +508,12 @@ RewriteCond %{ENV:rewritten} =1
 
 </div></div>
 <div class="bottomlang">
-<p><span>Langues Disponibles: </span><a href="../en/rewrite/avoid.html" hreflang="en" rel="alternate" title="English">&nbsp;en&nbsp;</a> |
-<a href="../fr/rewrite/avoid.html" title="Français">&nbsp;fr&nbsp;</a></p>
+<p><span>Langues Disponibles: </span><a href="../en/rewrite/advanced.html" hreflang="en" rel="alternate" title="English">&nbsp;en&nbsp;</a> |
+<a href="../fr/rewrite/advanced.html" title="Français">&nbsp;fr&nbsp;</a></p>
 </div><div class="top"><a href="#page-header"><img src="../images/up.gif" alt="top" /></a></div><div class="section"><h2><a id="comments_section" name="comments_section">Commentaires</a></h2><div class="warning"><strong>Notice:</strong><br />This is not a Q&amp;A section. Comments placed here should be pointed towards suggestions on improving the documentation or server, and may be removed again by our moderators if they are either implemented or considered invalid/off-topic. Questions on how to manage the Apache HTTP Server should be directed at either our IRC channel, #httpd, on Freenode, or sent to our <a href="http://httpd.apache.org/lists.html">mailing lists</a>.</div>
 <script type="text/javascript"><!--//--><![CDATA[//><!--
 var comments_shortname = 'httpd';
-var comments_identifier = 'http://httpd.apache.org/docs/2.4/rewrite/avoid.html';
+var comments_identifier = 'http://httpd.apache.org/docs/2.4/rewrite/advanced.html';
 (function(w, d) {
     if (w.location.hostname.toLowerCase() == "httpd.apache.org") {
         d.write('<div id="comments_thread"><\/div>');
@@ -546,7 +528,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/rewrite/avoid.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

@@ -131,6 +131,10 @@
 #define HAVE_TLSV1_X
 #endif
 
+#if defined(SSL_CONF_FLAG_FILE)
+#define HAVE_SSL_CONF_CMD
+#endif
+
 /**
   * The following features all depend on TLS extension support.
   * Within this block, check again for features (not version numbers).
@@ -232,9 +236,6 @@ ap_set_module_config(c->conn_config, &ssl_module, val)
 #define mySrvConfigFromConn(c) mySrvConfig(mySrvFromConn(c))
 #define myModConfigFromConn(c) myModConfig(mySrvFromConn(c))
 
-#define myCtxVarSet(mc,num,val)  mc->rCtx.pV##num = val
-#define myCtxVarGet(mc,num,type) (type)(mc->rCtx.pV##num)
-
 /**
  * Defaults for the configuration
  */
@@ -255,31 +256,6 @@ ap_set_module_config(c->conn_config, &ssl_module, val)
 /* Default timeout for OCSP queries */
 #ifndef DEFAULT_OCSP_TIMEOUT
 #define DEFAULT_OCSP_TIMEOUT 10
-#endif
-
-/**
- * Define the certificate algorithm types
- */
-
-typedef int ssl_algo_t;
-
-#define SSL_ALGO_UNKNOWN (0)
-#define SSL_ALGO_RSA     (1<<0)
-#define SSL_ALGO_DSA     (1<<1)
-#ifdef HAVE_ECC
-#define SSL_ALGO_ECC     (1<<2)
-#define SSL_ALGO_ALL     (SSL_ALGO_RSA|SSL_ALGO_DSA|SSL_ALGO_ECC)
-#else
-#define SSL_ALGO_ALL     (SSL_ALGO_RSA|SSL_ALGO_DSA)
-#endif
-
-#define SSL_AIDX_RSA     (0)
-#define SSL_AIDX_DSA     (1)
-#ifdef HAVE_ECC
-#define SSL_AIDX_ECC     (2)
-#define SSL_AIDX_MAX     (3)
-#else
-#define SSL_AIDX_MAX     (2)
 #endif
 
 /**
@@ -498,13 +474,10 @@ typedef struct {
     apr_array_header_t   *aRandSeed;
     apr_hash_t     *tVHostKeys;
 
-    /* Two hash tables of pointers to ssl_asn1_t structures.  The
-     * structures are used to store certificates and private keys
-     * respectively, in raw DER format (serialized OpenSSL X509 and
-     * PrivateKey structures).  The tables are indexed by (vhost-id,
-     * algorithm type) using the function ssl_asn1_table_keyfmt(); for
-     * example the string "vhost.example.com:443:RSA". */
-    apr_hash_t     *tPublicCert;
+    /* A hash table of pointers to ssl_asn1_t structures.  The structures
+     * are used to store private keys in raw DER format (serialized OpenSSL
+     * PrivateKey structures).  The table is indexed by (vhost-id,
+     * index), for example the string "vhost.example.com:443:0". */
     apr_hash_t     *tPrivateKey;
 
 #if defined(HAVE_OPENSSL_ENGINE_H) && defined(HAVE_ENGINE_INIT)
@@ -516,27 +489,14 @@ typedef struct {
     ap_socache_instance_t *stapling_cache_context;
     apr_global_mutex_t   *stapling_mutex;
 #endif
-
-    struct {
-        void *pV1, *pV2, *pV3, *pV4, *pV5, *pV6, *pV7, *pV8, *pV9, *pV10;
-    } rCtx;
 } SSLModConfigRec;
 
 /** Structure representing configured filenames for certs and keys for
- * a given vhost, and the corresponding in-memory structures once the
- * files are parsed.  */
+ * a given vhost */
 typedef struct {
-    /* Lists of configured certs and keys for this server; from index
-     * 0 up to SSL_AIDX_MAX-1 or the first NULL pointer.  Note that
-     * these arrays are NOT indexed by algorithm type, they are simply
-     * unordered lists. */
-    const char  *cert_files[SSL_AIDX_MAX];
-    const char  *key_files[SSL_AIDX_MAX];
-    /* Loaded certs and keys; these arrays ARE indexed by the
-     * algorithm type, i.e.  keys[SSL_AIDX_RSA] maps to the RSA
-     * private key. */
-    X509        *certs[SSL_AIDX_MAX];
-    EVP_PKEY    *keys[SSL_AIDX_MAX];
+    /* Lists of configured certs and keys for this server */
+    apr_array_header_t *cert_files;
+    apr_array_header_t *key_files;
 
     /** Certificates which specify the set of CA names which should be
      * sent in the CertificateRequest message: */
@@ -577,6 +537,13 @@ typedef struct {
 } modssl_ticket_key_t;
 #endif
 
+#ifdef HAVE_SSL_CONF_CMD
+typedef struct {
+    const char *name;
+    const char *value;
+} ssl_ctx_param_t;
+#endif
+
 typedef struct SSLSrvConfigRec SSLSrvConfigRec;
 
 typedef struct {
@@ -598,7 +565,6 @@ typedef struct {
     const char   *pphrase_dialog_path;
 
     const char  *cert_chain;
-    const char  *pkcs7;
 
     /** certificate revocation list */
     const char    *crl_path;
@@ -633,7 +599,10 @@ typedef struct {
     long ocsp_resptime_skew;
     long ocsp_resp_maxage;
     apr_interval_time_t ocsp_responder_timeout;
-
+#ifdef HAVE_SSL_CONF_CMD
+    SSL_CONF_CTX *ssl_ctx_config; /* Configuration context */
+    apr_array_header_t *ssl_ctx_param; /* parameters to pass to SSL_CTX */
+#endif
 } modssl_ctx_t;
 
 struct SSLSrvConfigRec {
@@ -704,7 +673,6 @@ const char  *ssl_cmd_SSLCipherSuite(cmd_parms *, void *, const char *);
 const char  *ssl_cmd_SSLCertificateFile(cmd_parms *, void *, const char *);
 const char  *ssl_cmd_SSLCertificateKeyFile(cmd_parms *, void *, const char *);
 const char  *ssl_cmd_SSLCertificateChainFile(cmd_parms *, void *, const char *);
-const char  *ssl_cmd_SSLPKCS7CertificateFile(cmd_parms *, void *, const char *);
 const char  *ssl_cmd_SSLCACertificatePath(cmd_parms *, void *, const char *);
 const char  *ssl_cmd_SSLCACertificateFile(cmd_parms *, void *, const char *);
 const char  *ssl_cmd_SSLCADNRequestPath(cmd_parms *, void *, const char *);
@@ -754,6 +722,10 @@ const char *ssl_cmd_SSLOCSPResponseMaxAge(cmd_parms *cmd, void *dcfg, const char
 const char *ssl_cmd_SSLOCSPResponderTimeout(cmd_parms *cmd, void *dcfg, const char *arg);
 const char *ssl_cmd_SSLOCSPEnable(cmd_parms *cmd, void *dcfg, int flag);
 
+#ifdef HAVE_SSL_CONF_CMD
+const char *ssl_cmd_SSLOpenSSLConfCmd(cmd_parms *cmd, void *dcfg, const char *arg1, const char *arg2);
+#endif
+
 #ifdef HAVE_SRP
 const char *ssl_cmd_SSLSRPVerifierFile(cmd_parms *cmd, void *dcfg, const char *arg);
 const char *ssl_cmd_SSLSRPUnknownUserSeed(cmd_parms *cmd, void *dcfg, const char *arg);
@@ -762,10 +734,11 @@ const char *ssl_cmd_SSLSRPUnknownUserSeed(cmd_parms *cmd, void *dcfg, const char
 const char *ssl_cmd_SSLFIPS(cmd_parms *cmd, void *dcfg, int flag);
 
 /**  module initialization  */
-int          ssl_init_Module(apr_pool_t *, apr_pool_t *, apr_pool_t *, server_rec *);
-void         ssl_init_Engine(server_rec *, apr_pool_t *);
-void         ssl_init_ConfigureServer(server_rec *, apr_pool_t *, apr_pool_t *, SSLSrvConfigRec *);
-void         ssl_init_CheckServers(server_rec *, apr_pool_t *);
+apr_status_t ssl_init_Module(apr_pool_t *, apr_pool_t *, apr_pool_t *, server_rec *);
+apr_status_t ssl_init_Engine(server_rec *, apr_pool_t *);
+apr_status_t ssl_init_ConfigureServer(server_rec *, apr_pool_t *, apr_pool_t *, SSLSrvConfigRec *,
+                                      apr_array_header_t *);
+apr_status_t ssl_init_CheckServers(server_rec *, apr_pool_t *);
 STACK_OF(X509_NAME)
             *ssl_init_FindCAList(server_rec *, apr_pool_t *, const char *, const char *);
 void         ssl_init_Child(apr_pool_t *, server_rec *);
@@ -802,7 +775,7 @@ int         ssl_callback_SessionTicket(SSL *, unsigned char *, unsigned char *,
 #endif
 
 /**  Session Cache Support  */
-void         ssl_scache_init(server_rec *, apr_pool_t *);
+apr_status_t ssl_scache_init(server_rec *, apr_pool_t *);
 void         ssl_scache_status_register(apr_pool_t *p);
 void         ssl_scache_kill(server_rec *);
 BOOL         ssl_scache_store(server_rec *, UCHAR *, int,
@@ -827,7 +800,7 @@ const char *ssl_cmd_SSLStaplingReturnResponderErrors(cmd_parms *, void *, int);
 const char *ssl_cmd_SSLStaplingFakeTryLater(cmd_parms *, void *, int);
 const char *ssl_cmd_SSLStaplingResponderTimeout(cmd_parms *, void *, const char *);
 const char  *ssl_cmd_SSLStaplingForceURL(cmd_parms *, void *, const char *);
-void         modssl_init_stapling(server_rec *, apr_pool_t *, apr_pool_t *, modssl_ctx_t *);
+apr_status_t modssl_init_stapling(server_rec *, apr_pool_t *, apr_pool_t *, modssl_ctx_t *);
 void         ssl_stapling_ex_init(void);
 int          ssl_stapling_init_cert(server_rec *s, modssl_ctx_t *mctx, X509 *x);
 #endif
@@ -855,13 +828,12 @@ void         ssl_util_ppclose(server_rec *, apr_pool_t *, apr_file_t *);
 char        *ssl_util_readfilter(server_rec *, apr_pool_t *, const char *,
                                  const char * const *);
 BOOL         ssl_util_path_check(ssl_pathcheck_t, const char *, apr_pool_t *);
-ssl_algo_t   ssl_util_algotypeof(X509 *, EVP_PKEY *);
-char        *ssl_util_algotypestr(ssl_algo_t);
 void         ssl_util_thread_setup(apr_pool_t *);
 int          ssl_init_ssl_connection(conn_rec *c, request_rec *r);
 
 /**  Pass Phrase Support  */
-void         ssl_pphrase_Handle(server_rec *, apr_pool_t *);
+apr_status_t ssl_load_encrypted_pkey(server_rec *, apr_pool_t *, int,
+                                     const char *, apr_array_header_t **);
 
 /**  Diffie-Hellman Parameter Support  */
 DH           *ssl_dh_GetParamFromFile(const char *);
@@ -879,14 +851,6 @@ ssl_asn1_t *ssl_asn1_table_get(apr_hash_t *table,
 void ssl_asn1_table_unset(apr_hash_t *table,
                           const char *key);
 
-const char *ssl_asn1_keystr(int keytype);
-
-const char *ssl_asn1_table_keyfmt(apr_pool_t *p,
-                                  const char *id,
-                                  int keytype);
-
-STACK_OF(X509) *ssl_read_pkcs7(server_rec *s, const char *pkcs7);
-
 /**  Mutex Support  */
 int          ssl_mutex_init(server_rec *, apr_pool_t *);
 int          ssl_mutex_reinit(server_rec *, apr_pool_t *);
@@ -899,8 +863,9 @@ int          ssl_stapling_mutex_reinit(server_rec *, apr_pool_t *);
 #define SSL_CACHE_MUTEX_TYPE    "ssl-cache"
 #define SSL_STAPLING_MUTEX_TYPE "ssl-stapling"
 
+apr_status_t ssl_die(server_rec *);
+
 /**  Logfile Support  */
-void         ssl_die(server_rec *);
 void         ssl_log_ssl_error(const char *, int, int, server_rec *);
 
 /* ssl_log_xerror, ssl_log_cxerror and ssl_log_rxerror are wrappers for the

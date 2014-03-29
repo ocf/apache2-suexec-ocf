@@ -66,7 +66,6 @@ SSLModConfigRec *ssl_config_global_create(server_rec *s)
                                                 sizeof(ssl_randseed_t));
     mc->tVHostKeys             = apr_hash_make(pool);
     mc->tPrivateKey            = apr_hash_make(pool);
-    mc->tPublicCert            = apr_hash_make(pool);
 #if defined(HAVE_OPENSSL_ENGINE_H) && defined(HAVE_ENGINE_INIT)
     mc->szCryptoDevice         = NULL;
 #endif
@@ -98,7 +97,7 @@ BOOL ssl_config_global_isfixed(SSLModConfigRec *mc)
 **  _________________________________________________________________
 */
 
-static void modssl_ctx_init(modssl_ctx_t *mctx)
+static void modssl_ctx_init(modssl_ctx_t *mctx, apr_pool_t *p)
 {
     mctx->sc                  = NULL; /* set during module init */
 
@@ -116,7 +115,6 @@ static void modssl_ctx_init(modssl_ctx_t *mctx)
     mctx->pphrase_dialog_type = SSL_PPTYPE_UNSET;
     mctx->pphrase_dialog_path = NULL;
 
-    mctx->pkcs7               = NULL;
     mctx->cert_chain          = NULL;
 
     mctx->crl_path            = NULL;
@@ -153,6 +151,13 @@ static void modssl_ctx_init(modssl_ctx_t *mctx)
     mctx->srp_unknown_user_seed = NULL;
     mctx->srp_vbase =             NULL;
 #endif
+#ifdef HAVE_SSL_CONF_CMD
+    mctx->ssl_ctx_config = SSL_CONF_CTX_new();
+    SSL_CONF_CTX_set_flags(mctx->ssl_ctx_config, SSL_CONF_FLAG_FILE);
+    SSL_CONF_CTX_set_flags(mctx->ssl_ctx_config, SSL_CONF_FLAG_SERVER);
+    SSL_CONF_CTX_set_flags(mctx->ssl_ctx_config, SSL_CONF_FLAG_CERTIFICATE);
+    mctx->ssl_ctx_param = apr_array_make(p, 5, sizeof(ssl_ctx_param_t));
+#endif
 }
 
 static void modssl_ctx_init_proxy(SSLSrvConfigRec *sc,
@@ -162,7 +167,7 @@ static void modssl_ctx_init_proxy(SSLSrvConfigRec *sc,
 
     mctx = sc->proxy = apr_palloc(p, sizeof(*sc->proxy));
 
-    modssl_ctx_init(mctx);
+    modssl_ctx_init(mctx, p);
 
     mctx->pkp = apr_palloc(p, sizeof(*mctx->pkp));
 
@@ -180,11 +185,12 @@ static void modssl_ctx_init_server(SSLSrvConfigRec *sc,
 
     mctx = sc->server = apr_palloc(p, sizeof(*sc->server));
 
-    modssl_ctx_init(mctx);
+    modssl_ctx_init(mctx, p);
 
     mctx->pks = apr_pcalloc(p, sizeof(*mctx->pks));
 
-    /* mctx->pks->... certs/keys are set during module init */
+    mctx->pks->cert_files = apr_array_make(p, 3, sizeof(char *));
+    mctx->pks->key_files  = apr_array_make(p, 3, sizeof(char *));
 
 #ifdef HAVE_TLS_SESSION_TICKETS
     mctx->ticket_key = apr_pcalloc(p, sizeof(*mctx->ticket_key));
@@ -241,7 +247,8 @@ void *ssl_config_server_create(apr_pool_t *p, server_rec *s)
 #define cfgMergeBool(el)    cfgMerge(el, UNSET)
 #define cfgMergeInt(el)     cfgMerge(el, UNSET)
 
-static void modssl_ctx_cfg_merge(modssl_ctx_t *base,
+static void modssl_ctx_cfg_merge(apr_pool_t *p,
+                                 modssl_ctx_t *base,
                                  modssl_ctx_t *add,
                                  modssl_ctx_t *mrg)
 {
@@ -284,31 +291,33 @@ static void modssl_ctx_cfg_merge(modssl_ctx_t *base,
     cfgMergeString(srp_vfile);
     cfgMergeString(srp_unknown_user_seed);
 #endif
+
+#ifdef HAVE_SSL_CONF_CMD
+    cfgMergeArray(ssl_ctx_param);
+#endif
 }
 
-static void modssl_ctx_cfg_merge_proxy(modssl_ctx_t *base,
+static void modssl_ctx_cfg_merge_proxy(apr_pool_t *p,
+                                       modssl_ctx_t *base,
                                        modssl_ctx_t *add,
                                        modssl_ctx_t *mrg)
 {
-    modssl_ctx_cfg_merge(base, add, mrg);
+    modssl_ctx_cfg_merge(p, base, add, mrg);
 
     cfgMergeString(pkp->cert_file);
     cfgMergeString(pkp->cert_path);
     cfgMergeString(pkp->ca_cert_file);
 }
 
-static void modssl_ctx_cfg_merge_server(modssl_ctx_t *base,
+static void modssl_ctx_cfg_merge_server(apr_pool_t *p,
+                                        modssl_ctx_t *base,
                                         modssl_ctx_t *add,
                                         modssl_ctx_t *mrg)
 {
-    int i;
+    modssl_ctx_cfg_merge(p, base, add, mrg);
 
-    modssl_ctx_cfg_merge(base, add, mrg);
-
-    for (i = 0; i < SSL_AIDX_MAX; i++) {
-        cfgMergeString(pks->cert_files[i]);
-        cfgMergeString(pks->key_files[i]);
-    }
+    cfgMergeArray(pks->cert_files);
+    cfgMergeArray(pks->key_files);
 
     cfgMergeString(pks->ca_name_path);
     cfgMergeString(pks->ca_name_file);
@@ -346,9 +355,9 @@ void *ssl_config_server_merge(apr_pool_t *p, void *basev, void *addv)
     cfgMergeBool(compression);
 #endif
 
-    modssl_ctx_cfg_merge_proxy(base->proxy, add->proxy, mrg->proxy);
+    modssl_ctx_cfg_merge_proxy(p, base->proxy, add->proxy, mrg->proxy);
 
-    modssl_ctx_cfg_merge_server(base->server, add->server, mrg->server);
+    modssl_ctx_cfg_merge_server(p, base->server, add->server, mrg->server);
 
     return mrg;
 }
@@ -707,7 +716,7 @@ const char *ssl_cmd_SSLHonorCipherOrder(cmd_parms *cmd, void *dcfg, int flag)
     sc->cipher_server_pref = flag?TRUE:FALSE;
     return NULL;
 #else
-    return "SSLHonorCiperOrder unsupported; not implemented by the SSL library";
+    return "SSLHonorCipherOrder unsupported; not implemented by the SSL library";
 #endif
 }
 
@@ -745,56 +754,20 @@ static const char *ssl_cmd_check_dir(cmd_parms *parms,
 
 }
 
-#define SSL_AIDX_CERTS 1
-#define SSL_AIDX_KEYS  2
-
-static const char *ssl_cmd_check_aidx_max(cmd_parms *parms,
-                                          const char *arg,
-                                          int idx)
-{
-    SSLSrvConfigRec *sc = mySrvConfig(parms->server);
-    const char *err, *desc=NULL, **files=NULL;
-    int i;
-
-    if ((err = ssl_cmd_check_file(parms, &arg))) {
-        return err;
-    }
-
-    switch (idx) {
-      case SSL_AIDX_CERTS:
-        desc = "certificates";
-        files = sc->server->pks->cert_files;
-        break;
-      case SSL_AIDX_KEYS:
-        desc = "private keys";
-        files = sc->server->pks->key_files;
-        break;
-    }
-
-    for (i = 0; i < SSL_AIDX_MAX; i++) {
-        if (!files[i]) {
-            files[i] = arg;
-            return NULL;
-        }
-    }
-
-    return apr_psprintf(parms->pool,
-                        "%s: only up to %d "
-                        "different %s per virtual host allowed",
-                         parms->cmd->name, SSL_AIDX_MAX, desc);
-}
-
 const char *ssl_cmd_SSLCertificateFile(cmd_parms *cmd,
                                        void *dcfg,
                                        const char *arg)
 {
-
+    SSLSrvConfigRec *sc = mySrvConfig(cmd->server);
     const char *err;
 
-    if ((err = ssl_cmd_check_aidx_max(cmd, arg, SSL_AIDX_CERTS))) {
+    if ((err = ssl_cmd_check_file(cmd, &arg))) {
         return err;
     }
 
+    *(const char **)apr_array_push(sc->server->pks->cert_files) =
+        apr_pstrdup(cmd->pool, arg);
+    
     return NULL;
 }
 
@@ -802,11 +775,15 @@ const char *ssl_cmd_SSLCertificateKeyFile(cmd_parms *cmd,
                                           void *dcfg,
                                           const char *arg)
 {
+    SSLSrvConfigRec *sc = mySrvConfig(cmd->server);
     const char *err;
 
-    if ((err = ssl_cmd_check_aidx_max(cmd, arg, SSL_AIDX_KEYS))) {
+    if ((err = ssl_cmd_check_file(cmd, &arg))) {
         return err;
     }
+
+    *(const char **)apr_array_push(sc->server->pks->key_files) =
+        apr_pstrdup(cmd->pool, arg);
 
     return NULL;
 }
@@ -818,27 +795,17 @@ const char *ssl_cmd_SSLCertificateChainFile(cmd_parms *cmd,
     SSLSrvConfigRec *sc = mySrvConfig(cmd->server);
     const char *err;
 
+    ap_log_error(APLOG_MARK, APLOG_WARNING|APLOG_STARTUP, 0, cmd->server,
+                 APLOGNO(02559)
+                 "The SSLCertificateChainFile directive (%s:%d) is deprecated, "
+                 "SSLCertificateFile should be used instead",
+                 cmd->directive->filename, cmd->directive->line_num);
+
     if ((err = ssl_cmd_check_file(cmd, &arg))) {
         return err;
     }
 
     sc->server->cert_chain = arg;
-
-    return NULL;
-}
-
-const char *ssl_cmd_SSLPKCS7CertificateFile(cmd_parms *cmd,
-                                            void *dcfg,
-                                            const char *arg)
-{
-    SSLSrvConfigRec *sc = mySrvConfig(cmd->server);
-    const char *err;
-
-    if ((err = ssl_cmd_check_file(cmd, &arg))) {
-        return err;
-    }
-
-    sc->server->pkcs7 = arg;
 
     return NULL;
 }
@@ -1808,6 +1775,38 @@ const char *ssl_cmd_SSLStaplingForceURL(cmd_parms *cmd, void *dcfg,
 
 #endif /* HAVE_OCSP_STAPLING */
 
+#ifdef HAVE_SSL_CONF_CMD
+const char *ssl_cmd_SSLOpenSSLConfCmd(cmd_parms *cmd, void *dcfg,
+                                      const char *arg1, const char *arg2)
+{
+    SSLSrvConfigRec *sc = mySrvConfig(cmd->server);
+    SSL_CONF_CTX *cctx = sc->server->ssl_ctx_config;
+    int value_type = SSL_CONF_cmd_value_type(cctx, arg1);
+    const char *err;
+    ssl_ctx_param_t *param;
+
+    if (value_type == SSL_CONF_TYPE_UNKNOWN) {
+        return apr_psprintf(cmd->pool,
+                            "'%s': invalid OpenSSL configuration command",
+                            arg1);
+    }
+
+    if (value_type == SSL_CONF_TYPE_FILE) {
+        if ((err = ssl_cmd_check_file(cmd, &arg2)))
+            return err;
+    }
+    else if (value_type == SSL_CONF_TYPE_DIR) {
+        if ((err = ssl_cmd_check_dir(cmd, &arg2)))
+            return err;
+    }
+
+    param = apr_array_push(sc->server->ssl_ctx_param);
+    param->name = arg1;
+    param->value = arg2;
+    return NULL;
+}
+#endif
+
 #ifdef HAVE_SRP
 
 const char *ssl_cmd_SSLSRPVerifierFile(cmd_parms *cmd, void *dcfg,
@@ -1852,8 +1851,12 @@ void ssl_hook_ConfigTest(apr_pool_t *pconf, server_rec *s)
             modssl_pk_server_t *const pks = sc->server->pks;
             int i;
 
-            for (i = 0; (i < SSL_AIDX_MAX) && pks->cert_files[i]; i++) {
-                apr_file_printf(out, "  %s\n", pks->cert_files[i]);
+            for (i = 0; (i < pks->cert_files->nelts) &&
+                        APR_ARRAY_IDX(pks->cert_files, i, const char *);
+                 i++) {
+                apr_file_printf(out, "  %s\n",
+                                APR_ARRAY_IDX(pks->cert_files,
+                                              i, const char *));
             }
         }
 

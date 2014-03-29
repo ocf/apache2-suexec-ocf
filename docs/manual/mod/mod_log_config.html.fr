@@ -9,7 +9,7 @@
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
-<script src="../style/scripts/prettify.js" type="text/javascript">
+<script src="../style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="../images/favicon.ico" rel="shortcut icon" /></head>
@@ -450,14 +450,12 @@ expr=<var>expression</var>]</code></td></tr>
     <p>Par exemple, les deux blocs de directives suivants produisent le
     même effet :</p>
 
-    <pre class="prettyprint lang-config">
-# Journal personnalisé avec alias de format
+    <pre class="prettyprint lang-config"># Journal personnalisé avec alias de format
 LogFormat "%h %l %u %t \"%r\" %&gt;s %b" common
 CustomLog logs/access_log common
 
 # Journal personnalisé avec chaîne de format explicite
-CustomLog logs/access_log "%h %l %u %t \"%r\" %&gt;s %b"
-    </pre>
+CustomLog logs/access_log "%h %l %u %t \"%r\" %&gt;s %b"</pre>
 
 
     <p>Le troisième argument est optionnel et permet de contrôler si une
@@ -479,20 +477,16 @@ CustomLog logs/access_log "%h %l %u %t \"%r\" %&gt;s %b"
     images GIF sur votre serveur dans un fichier journal séparé, et pas
     dans votre journal principal, vous pouvez utiliser :</p>
 
-    <pre class="prettyprint lang-config">
-SetEnvIf Request_URI \.gif$ gif-image
+    <pre class="prettyprint lang-config">SetEnvIf Request_URI \.gif$ gif-image
 CustomLog gif-requests.log common env=gif-image
-CustomLog nongif-requests.log common env=!gif-image
-    </pre>
+CustomLog nongif-requests.log common env=!gif-image</pre>
 
 
     <p>Ou, pour reproduire le comportement de l'ancienne directive
     RefererIgnore, vous pouvez utiliser :</p>
 
-    <pre class="prettyprint lang-config">
-SetEnvIf Referer example\.com localreferer
-CustomLog referer.log referer env=!localreferer
-    </pre>
+    <pre class="prettyprint lang-config">SetEnvIf Referer example\.com localreferer
+CustomLog referer.log referer env=!localreferer</pre>
 
 
 </div>
@@ -537,9 +531,7 @@ journal</td></tr>
     utiliser un alias pour en définir un autre. Notez que l'alias ne
     doit pas contenir de caractère pourcent (<code>%</code>).</p>
 
-    <div class="example"><h3>Exemple</h3><pre class="prettyprint lang-config">
-      LogFormat "%v %h %l %u %t \"%r\" %&gt;s %b" serveur_virtuel_commun
-      </pre>
+    <div class="example"><h3>Exemple</h3><pre class="prettyprint lang-config">LogFormat "%v %h %l %u %t \"%r\" %&gt;s %b" serveur_virtuel_commun</pre>
 </div>
 
 
@@ -562,10 +554,8 @@ journal</td></tr>
     qui ne définit pas d'alias. Si aucun format particulier n'a été
     spécifié, c'est le Common Log Format qui sera utilisé.</p>
 
-    <div class="example"><h3>Exemple</h3><pre class="prettyprint lang-config">
-LogFormat "%h %l %u %t \"%r\" %&gt;s %b \"%{Referer}i\" \"%{User-agent}i\""
-TransferLog logs/access_log
-      </pre>
+    <div class="example"><h3>Exemple</h3><pre class="prettyprint lang-config">LogFormat "%h %l %u %t \"%r\" %&gt;s %b \"%{Referer}i\" \"%{User-agent}i\""
+TransferLog logs/access_log</pre>
 </div>
 
 </div>
@@ -594,7 +584,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_log_config.h
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

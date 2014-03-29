@@ -54,7 +54,7 @@ static int proxy_http_canon(request_rec *r, char *url)
     else {
         return DECLINED;
     }
-    def_port = apr_uri_port_of_scheme(scheme);
+    port = def_port = ap_proxy_port_of_scheme(scheme);
 
     ap_log_rerror(APLOG_MARK, APLOG_TRACE1, 0, r,
                   "HTTP: canonicalising URL %s", url);
@@ -62,7 +62,6 @@ static int proxy_http_canon(request_rec *r, char *url)
     /* do syntatic check.
      * We break the URL into host, port, path, search
      */
-    port = def_port;
     err = ap_proxy_canon_netloc(r->pool, &url, NULL, NULL, &host, &port);
     if (err) {
         ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, APLOGNO(01083)
@@ -319,6 +318,12 @@ static int stream_reqbody_chunked(apr_pool_t *p,
                                 HUGE_STRING_LEN);
 
         if (status != APR_SUCCESS) {
+            conn_rec *c = r->connection;
+            ap_log_rerror(APLOG_MARK, APLOG_ERR, status, r, APLOGNO(02608)
+                          "read request body failed to %pI (%s)"
+                          " from %s (%s)", p_conn->addr,
+                          p_conn->hostname ? p_conn->hostname: "",
+                          c->client_ip, c->remote_host ? c->remote_host: "");
             return HTTP_BAD_REQUEST;
         }
     }
@@ -464,6 +469,12 @@ static int stream_reqbody_cl(apr_pool_t *p,
                                 HUGE_STRING_LEN);
 
         if (status != APR_SUCCESS) {
+            conn_rec *c = r->connection;
+            ap_log_rerror(APLOG_MARK, APLOG_ERR, status, r, APLOGNO(02609)
+                          "read request body failed to %pI (%s)"
+                          " from %s (%s)", p_conn->addr,
+                          p_conn->hostname ? p_conn->hostname: "",
+                          c->client_ip, c->remote_host ? c->remote_host: "");
             return HTTP_BAD_REQUEST;
         }
     }
@@ -607,6 +618,12 @@ static int spool_reqbody_cl(apr_pool_t *p,
                                 HUGE_STRING_LEN);
 
         if (status != APR_SUCCESS) {
+            conn_rec *c = r->connection;
+            ap_log_rerror(APLOG_MARK, APLOG_ERR, status, r, APLOGNO(02610)
+                          "read request body failed to %pI (%s)"
+                          " from %s (%s)", p_conn->addr,
+                          p_conn->hostname ? p_conn->hostname: "",
+                          c->client_ip, c->remote_host ? c->remote_host: "");
             return HTTP_BAD_REQUEST;
         }
     }
@@ -710,7 +727,7 @@ int ap_proxy_http_request(apr_pool_t *p, request_rec *r,
         force10 = 0;
     }
 
-    header_brigade = apr_brigade_create(p, origin->bucket_alloc);
+    header_brigade = apr_brigade_create(p, bucket_alloc);
     rv = ap_proxy_create_hdrbrgd(p, header_brigade, r, p_conn,
                                  worker, conf, uri, url, server_portstr,
                                  &old_cl_val, &old_te_val);
@@ -1197,7 +1214,7 @@ apr_status_t ap_proxygetline(apr_bucket_brigade *bb, char *s, int n, request_rec
 }
 
 /*
- * Limit the number of interim respones we sent back to the client. Otherwise
+ * Limit the number of interim responses we sent back to the client. Otherwise
  * we suffer from a memory build up. Besides there is NO sense in sending back
  * an unlimited number of interim responses to the client. Thus if we cross
  * this limit send back a 502 (Bad Gateway).
@@ -1699,6 +1716,7 @@ apr_status_t ap_proxy_http_process_response(apr_pool_t * p, request_rec *r,
                         continue;
                     }
                     else if (rv == APR_EOF) {
+                        backend->close = 1;
                         break;
                     }
                     else if (rv != APR_SUCCESS) {
@@ -1812,6 +1830,10 @@ apr_status_t ap_proxy_http_process_response(apr_pool_t * p, request_rec *r,
             apr_brigade_cleanup(bb);
         }
     } while (interim_response && (interim_response < AP_MAX_INTERIM_RESPONSES));
+
+    /* We have to cleanup bb brigade, because buckets inserted to it could be
+     * created from scpool and this pool can be freed before this brigade. */
+    apr_brigade_cleanup(bb);
 
     /* See define of AP_MAX_INTERIM_RESPONSES for why */
     if (interim_response >= AP_MAX_INTERIM_RESPONSES) {

@@ -10,7 +10,7 @@
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
-<script src="../style/scripts/prettify.js" type="text/javascript">
+<script src="../style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="../images/favicon.ico" rel="shortcut icon" /></head>
@@ -99,9 +99,7 @@ HTML préexistants.</p>
     devez ajouter la directive suivante dans votre fichier
     <code>httpd.conf</code>, ou dans un fichier <code>.htaccess</code>
     :</p>
-<pre class="prettyprint lang-config">
-        Options +Includes
-</pre>
+<pre class="prettyprint lang-config">Options +Includes</pre>
 
 
     <p>Cette directive indique à Apache que vous désirez permettre la
@@ -117,10 +115,8 @@ HTML préexistants.</p>
     directives SSI. Vous devez indiquer à Apache quels fichiers seront
     concernés. Vous pouvez y parvenir en indiquant une extension, comme
     <code>.shtml</code>, à l'aide des directives suivantes :</p>
-<pre class="prettyprint lang-config">
-        AddType text/html .shtml<br />
-        AddOutputFilter INCLUDES .shtml
-</pre>
+<pre class="prettyprint lang-config">        AddType text/html .shtml<br />
+        AddOutputFilter INCLUDES .shtml</pre>
 
 
     <p>Un des désavantages de cette approche réside dans le fait que si
@@ -131,9 +127,7 @@ HTML préexistants.</p>
     SSI qu'elle contient soient traitées.</p>
 
     <p>Une autre méthode consiste à utiliser la directive <code class="directive"><a href="../mod/mod_include.html#xbithack">XBitHack</a></code> :</p>
-<pre class="prettyprint lang-config">
-        XBitHack on
-</pre>
+<pre class="prettyprint lang-config">XBitHack on</pre>
 
 
     <p>La directive <code class="directive"><a href="../mod/mod_include.html#xbithack">XBitHack</a></code>
@@ -458,10 +452,8 @@ HTML préexistants.</p>
 
     <p>Vous pouvez ajouter les lignes suivantes dans votre fichier de
     configuration :</p>
-<pre class="prettyprint lang-config">
-        BrowserMatchNoCase macintosh Mac<br />
-        BrowserMatchNoCase MSIE InternetExplorer
-</pre>
+<pre class="prettyprint lang-config">        BrowserMatchNoCase macintosh Mac<br />
+        BrowserMatchNoCase MSIE InternetExplorer</pre>
 
 
     <p>Ces lignes définissent les variables d'environnement "Mac" et
@@ -519,7 +511,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/howto/ssi.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

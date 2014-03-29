@@ -1,5 +1,136 @@
                                                          -*- coding: utf-8 -*-
 
+Changes with Apache 2.4.9
+
+  *) mod_ssl: Work around a bug in some older versions of OpenSSL that
+     would cause a crash in SSL_get_certificate for servers where the
+     certificate hadn't been sent. [Stephen Henson]
+
+   *) mod_lua: Add a fixups hook that checks if the original request is intended 
+      for LuaMapHandler. This fixes a bug where FallbackResource invalidates the 
+      LuaMapHandler directive in certain cases by changing the URI before the map 
+      handler code executes [Daniel Gruno, Daniel Ferradal <dferradal gmail com>].
+
+Changes with Apache 2.4.8
+
+  *) SECURITY: CVE-2014-0098 (cve.mitre.org)
+     Clean up cookie logging with fewer redundant string parsing passes.
+     Log only cookies with a value assignment. Prevents segfaults when
+     logging truncated cookies.
+     [William Rowe, Ruediger Pluem, Jim Jagielski]
+
+  *) SECURITY: CVE-2013-6438 (cve.mitre.org)
+     mod_dav: Keep track of length of cdata properly when removing
+     leading spaces. Eliminates a potential denial of service from
+     specifically crafted DAV WRITE requests
+     [Amin Tora <Amin.Tora neustar.biz>]
+
+  *) core: Support named groups and backreferences within the LocationMatch,
+     DirectoryMatch, FilesMatch and ProxyMatch directives. (Requires
+     non-ancient PCRE library) [Graham Leggett]
+
+  *) core: draft-ietf-httpbis-p1-messaging-23 corrections regarding
+     TE/CL conflicts. [Yann Ylavic <ylavic.dev gmail com>, Jim Jagielski]
+
+  *) mod_dir: Add DirectoryCheckHandler to allow a 2.2-like behavior, skipping 
+     execution when a handler is already set. PR53929. [Eric Covener]
+
+  *) mod_ssl: Do not perform SNI / Host header comparison in case of a
+     forward proxy request. [Ruediger Pluem]
+
+  *) mod_ssl: Remove the hardcoded algorithm-type dependency for the
+     SSLCertificateFile and SSLCertificateKeyFile directives, to enable
+     future algorithm agility, and deprecate the SSLCertificateChainFile
+     directive (obsoleted by SSLCertificateFile). [Kaspar Brand]
+
+  *) mod_rewrite: Add RewriteOptions InheritDown, InheritDownBefore, 
+     and IgnoreInherit to allow RewriteRules to be pushed from parent scopes
+     to child scopes without explicitly configuring each child scope.
+     PR56153.  [Edward Lu <Chaosed0 gmail com>] 
+
+  *) prefork: Fix long delays when doing a graceful restart.
+     PR 54852 [Jim Jagielski, Arkadiusz Miskiewicz <arekm maven pl>]
+
+  *) FreeBSD: Disable IPv4-mapped listening sockets by default for versions
+     5+ instead of just for FreeBSD 5. PR 53824. [Jeff Trawick]
+
+  *) mod_proxy_wstunnel: Avoid busy loop on client errors, drop message
+     IDs 02445, 02446, and 02448 to TRACE1 from DEBUG. PR 56145.
+     [Joffroy Christen <joffroy.christen solvaxis com>, Eric Covener]
+
+  *) mod_remoteip: Correct the trusted proxy match test. PR 54651.
+     [Yoshinori Ehara <yoshinori ehara gmail com>, Eugene L <eugenel amazon com>]
+
+  *) mod_proxy_fcgi: Fix error message when an unexpected protocol version
+     number is received from the application.  PR 56110.  [Jeff Trawick]
+
+  *) mod_remoteip: Use the correct IP addresses to populate the proxy_ips field.
+     PR 55972. [Mike Rumph]
+
+  *) mod_lua: Update r:setcookie() to accept a table of options and add domain,
+     path and httponly to the list of options available to set.
+     PR 56128 [Edward Lu <Chaosed0 gmail com>, Daniel Gruno]
+     
+  *) mod_lua: Fix r:setcookie() to add, rather than replace,
+     the Set-Cookie header. PR56105
+     [Kevin J Walters <kjw ms com>, Edward Lu <Chaosed0 gmail com>]
+
+  *) mod_lua: Allow for database results to be returned as a hash with 
+     row-name/value pairs instead of just row-number/value. [Daniel Gruno]
+
+  *) mod_rewrite: Add %{CONN_REMOTE_ADDR} as the non-useragent counterpart to
+     %{REMOTE_ADDR}. PR 56094. [Edward Lu <Chaosed0 gmail com>]
+
+  *) WinNT MPM: If ap_run_pre_connection() fails or sets c->aborted, don't
+     save the socket for reuse by the next worker as if it were an 
+     APR_SO_DISCONNECTED socket. Restores 2.2 behavior. [Eric Covener]
+
+  *) mod_dir: Don't search for a DirectoryIndex or DirectorySlash on a URL
+     that was just rewritten by mod_rewrite. PR53929. [Eric Covener]
+
+  *) mod_session: When we have a session we were unable to decode,
+     behave as if there was no session at all. [Thomas Eckert
+     <thomas.r.w.eckert gmail com>]
+
+  *) mod_session: Fix problems interpreting the SessionInclude and
+     SessionExclude configuration. PR 56038. [Erik Pearson
+     <erik adaptations.com>]
+
+  *) mod_authn_core: Allow <AuthnProviderAlias>'es to be seen from auth
+     stanzas under virtual hosts. PR 55622. [Eric Covener]
+
+  *) mod_proxy_fcgi: Use apr_socket_timeout_get instead of hard-coded
+     30 seconds timeout. [Jan Kaluza]
+
+  *) mod_proxy: Added support for unix domain sockets as the
+     backend server endpoint [Jim Jagielski, Blaise Tarr
+     <blaise tarr gmail com>]
+
+  *) build: only search for modules (config*.m4) in known subdirectories, see
+     build/config-stubs. [Stefan Fritsch]
+
+  *) mod_cache_disk: Fix potential hangs on Windows when using mod_cache_disk. 
+     PR 55833. [Eric Covener]
+
+  *) mod_ssl: Add support for OpenSSL configuration commands by introducing
+     the SSLOpenSSLConfCmd directive. [Stephen Henson, Kaspar Brand]
+
+  *) mod_proxy: Remove (never documented) <Proxy ~ wildcard-url> syntax which
+     is equivalent to <ProxyMatch wildcard-url>. [Christophe Jaillet]
+
+  *) mod_authz_user, mod_authz_host, mod_authz_groupfile, mod_authz_dbm,
+     mod_authz_dbd, mod_authnz_ldap: Support the expression parser within the
+     require directives. [Graham Leggett]
+
+  *) mod_proxy_http: Core dumped under high load. PR 50335.
+     [Jan Kaluza <jkaluza redhat.com>]
+
+  *) mod_socache_shmcb.c: Remove arbitrary restriction on shared memory size
+     previously limited to 64MB. [Jens Låås <jelaas gmail.com>]
+
+  *) mod_lua: Use binary copy when dealing with uploads through r:parsebody() 
+     to prevent truncating files. [Daniel Gruno]
+
 Changes with Apache 2.4.7
 
   *) APR 1.5.0 or later is now required for the event MPM.
@@ -7,6 +138,9 @@ Changes with Apache 2.4.7
   *) slotmem_shm: Error detection. [Jim Jagielski]
 
   *) event: Use skiplist data structure. [Jim Jagielski]
+
+  *) event: Fail at startup with message AP02405 if the APR atomic
+     implementation is not compatible with the MPM.  [Jim Jagielski]
 
   *) mpm_unix: Add ap_mpm_podx_* implementation to avoid code duplication
      and align w/ trunk. [Jim Jagielski]
@@ -32,6 +166,10 @@ Changes with Apache 2.4.7
   *) mod_ssl: drop support for export-grade ciphers with ephemeral RSA
      keys, and unconditionally disable aNULL, eNULL and EXP ciphers
      (not overridable via SSLCipherSuite). [Kaspar Brand]
+
+  *) mod_proxy: Added support for unix domain sockets as the
+     backend server endpoint [Jim Jagielski, Blaise Tarr
+     <blaise tarr gmail com>]
 
   *) Add experimental cmake-based build system for Windows.  [Jeff Trawick,
      Tom Donovan]
@@ -185,6 +323,30 @@ Changes with Apache 2.4.7
   *) support/htdbm: fix processing of -t command line switch. Regression
      introduced in 2.4.4
      PR 55264 [Jo Rhett <jrhett netconsonance com>]
+
+  *) mod_lua: add websocket support via r:wsupgrade, r:wswrite, r:wsread 
+     and r:wsping. [Daniel Gruno]
+
+  *) mod_lua: add support for writing/reading cookies via r:getcookie and 
+     r:setcookie. [Daniel Gruno]
+
+  *) mod_lua: If the first yield() of a LuaOutputFilter returns a string, it should
+     be prefixed to the response as documented. [Eric Covener] 
+     Note: Not present in 2.4.7 CHANGES
+
+  *) mod_lua: Remove ETAG, Content-Length, and Content-MD5 when a LuaOutputFilter
+     is configured without mod_filter. [Eric Covener]
+     Note: Not present in 2.4.7 CHANGES
+
+  *) mod_lua: Register LuaOutputFilter scripts as changing the content and
+     content-length by default, when run my mod_filter.  Previously,
+     growing or shrinking a response that started with Content-Length set
+     would require mod_filter and FilterProtocol change=yes. [Eric Covener]
+     Note: Not present in 2.4.7 CHANGES
+
+  *) mod_lua: Return a 500 error if a LuaHook* script doesn't return a
+     numeric return code. [Eric Covener]
+     Note: Not present in 2.4.7 CHANGES
 
 Changes with Apache 2.4.6
 

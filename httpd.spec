@@ -4,7 +4,7 @@
 
 Summary: Apache HTTP Server
 Name: httpd
-Version: 2.4.7
+Version: 2.4.9
 Release: 1
 URL: http://httpd.apache.org/
 Vendor: Apache Software Foundation
@@ -67,7 +67,7 @@ the Apache HTTP Server.
 Group: System Environment/Daemons
 Summary: LDAP modules for the Apache HTTP server
 BuildRequires: openldap-devel
-Requires: httpd = %{version}-%{release}, httpd-mmn = %{mmn}
+Requires: httpd = %{version}-%{release}, httpd-mmn = %{mmn}, apr-util-ldap
 
 %description -n mod_authnz_ldap
 The mod_authnz_ldap module for the Apache HTTP server provides

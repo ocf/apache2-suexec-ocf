@@ -24469,8 +24469,8 @@ fi
       fi
     fi
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for OpenSSL version >= 0.9.7" >&5
-$as_echo_n "checking for OpenSSL version >= 0.9.7... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for OpenSSL version >= 0.9.8a" >&5
+$as_echo_n "checking for OpenSSL version >= 0.9.8a... " >&6; }
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <openssl/opensslv.h>
@@ -24481,7 +24481,7 @@ main ()
 #if !defined(OPENSSL_VERSION_NUMBER)
 #error "Missing OpenSSL version"
 #endif
-#if OPENSSL_VERSION_NUMBER < 0x0090700f
+#if OPENSSL_VERSION_NUMBER < 0x0090801f
 #error "Unsupported OpenSSL version " OPENSSL_VERSION_TEXT
 #endif
   ;
@@ -32228,7 +32228,10 @@ if test "${enable_v4_mapped+set}" = set; then :
 else
 
     case $host in
-    *freebsd5*|*netbsd*|*openbsd*)
+    *freebsd1234.*)
+        v4mapped=yes
+        ;;
+    *freebsd*|*netbsd*|*openbsd*)
         v4mapped=no
         ;;
     *)

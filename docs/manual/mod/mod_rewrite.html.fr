@@ -9,7 +9,7 @@
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
-<script src="../style/scripts/prettify.js" type="text/javascript">
+<script src="../style/scripts/prettify.min.js" type="text/javascript">
 </script>
 
 <link href="../images/favicon.ico" rel="shortcut icon" /></head>
@@ -93,9 +93,7 @@ règles permettant de réécrire les URLs des requêtes
       supérieur à <code>trace2</code> qu'à des fins de débogage !
     </div>
 
-    <div class="example"><h3>Exemple</h3><pre class="prettyprint lang-config">
-      LogLevel alert rewrite:trace3
-      </pre>
+    <div class="example"><h3>Exemple</h3><pre class="prettyprint lang-config">LogLevel alert rewrite:trace3</pre>
 </div>
 
     <div class="note"><h3>RewriteLog</h3>
@@ -155,15 +153,13 @@ ressource n'était pas relative à la racine des documents. Cette erreur
 de configuration aurait conduit le serveur à rechercher un répertoire
 "opt" à la racine des documents.</p>
 
-<pre class="prettyprint lang-config">
-DocumentRoot /var/www/example.com
+<pre class="prettyprint lang-config">DocumentRoot /var/www/example.com
 Alias /myapp /opt/myapp-1.2.3
 &lt;Directory /opt/myapp-1.2.3&gt;
  RewriteEngine On
     RewriteBase /myapp/
     RewriteRule ^index\.html$  welcome.html
-&lt;/Directory&gt;
-</pre>
+&lt;/Directory&gt;</pre>
 
 
 </div>
@@ -241,6 +237,7 @@ la réécriture soit effectuée
 
               <td>
                  REMOTE_ADDR<br />
+		 CONN_REMOTE_ADDR<br />
                  REMOTE_HOST<br />
                  REMOTE_PORT<br />
                  REMOTE_USER<br />
@@ -369,6 +366,15 @@ la réécriture soit effectuée
                   <dd>Contient le protocole de la requête (en général
 		  "http" ou "https"). La valeur peut être modifiée par
 		  la directive <code class="directive"><a href="../mod/core.html#servername">ServerName</a></code>.</dd>
+
+		  <dt><code>REMOTE_ADDR</code></dt>
+                  <dd>L'adresse IP de l'hôte distant (voir le module
+		  <code class="module"><a href="../mod/mod_remoteip.html">mod_remoteip</a></code>).</dd>
+
+                  <dt><code>CONN_REMOTE_ADDR</code></dt>
+                  <dd>Depuis la version 2.4.8 : l'adresse IP distante de
+		  la connexion (voir le module
+		  <code class="module"><a href="../mod/mod_remoteip.html">mod_remoteip</a></code>).</dd>
 
                 </dl>
 </div>
@@ -635,14 +641,20 @@ la réécriture soit effectuée
 	    vérifie son existence et si elle est un fichier régulier
 	    d'une taille supérieure à zéro.</li>
 
-            <li>'<strong>-U</strong>' (test de l'existence d'une
-	    <strong>U</strong>RL via une sous-requête)<br />
+            <li><p>'<strong>-U</strong>' (test de l'existence d'une
+	    URL via une sous-requête)<br />
 	    Vérifie si <em>chaîne de test</em> est une URL valide,
 	    accessible à travers tous les contrôles d'accès du serveur
 	    actuellement configurés pour ce chemin. C'est une
 	    sous-requête interne qui effectue cette vérification - à
 	    utiliser avec précautions car les performances du serveur
-	    peuvent s'en trouver affectées !</li>
+	    peuvent s'en trouver affectées !</p>
+	    <p>Ce drapeau ne renvoie <em>que</em> des informations
+	    concernant le contrôle d'accès, l'authentification et
+	    l'autorisation. Il ne renvoie <em>pas</em> d'informations
+	    concernant le code d'état que le gestionnaire configuré
+	    (static file, CGI, proxy, etc...) aurait, quant à lui,
+	    retourné.</p></li>
 
 	  <li>'<strong>-x</strong>' (a l'attribut d'exécution positionné)<br />
             Considère la <em>chaîne de test</em> comme un chemin et
@@ -670,10 +682,8 @@ la réécriture soit effectuée
 	    non désiré.
            </p>
 
-           <pre class="prettyprint lang-config">
-           RewriteCond expr "! %{HTTP_REFERER} -strmatch '*://%{HTTP_HOST}/*'"<br />
-           RewriteRule ^/images - [F]
-           </pre>
+           <pre class="prettyprint lang-config">           RewriteCond expr "! %{HTTP_REFERER} -strmatch '*://%{HTTP_HOST}/*'"<br />
+           RewriteRule ^/images - [F]</pre>
 
         </li>
 
@@ -702,12 +712,10 @@ la réécriture soit effectuée
 	  Permet de chaîner les conditions de règles avec un OU au
 	  lieu du AND implicite. Exemple typique :
 
-<pre class="prettyprint lang-config">
-RewriteCond %{REMOTE_HOST}  ^host1  [OR]
+<pre class="prettyprint lang-config">RewriteCond %{REMOTE_HOST}  ^host1  [OR]
 RewriteCond %{REMOTE_HOST}  ^host2  [OR]
 RewriteCond %{REMOTE_HOST}  ^host3
-RewriteRule ...règles concernant tous ces hôtes...
-</pre>
+RewriteRule ...règles concernant tous ces hôtes...</pre>
 
 
           Sans ce drapeau, les paires
@@ -734,15 +742,13 @@ RewriteRule ...règles concernant tous ces hôtes...
        l'en-tête ``<code>User-Agent:</code>'' de la requête, vous
        pouvez utiliser ce qui suit : </p>
 
-<pre class="prettyprint lang-config">
-RewriteCond  %{HTTP_USER_AGENT}  ^Mozilla
+<pre class="prettyprint lang-config">RewriteCond  %{HTTP_USER_AGENT}  ^Mozilla
 RewriteRule  ^/$                 /homepage.max.html  [L]
 
 RewriteCond  %{HTTP_USER_AGENT}  ^Lynx
 RewriteRule  ^/$                 /homepage.min.html  [L]
 
-RewriteRule  ^/$                 /homepage.std.html  [L]
-</pre>
+RewriteRule  ^/$                 /homepage.std.html  [L]</pre>
 
 
         <p>Explications : si vous utilisez un navigateur
@@ -848,17 +854,13 @@ correspondance</em>:<em>source de la correspondance</em>
       <p>Par exemple, vous pouvez définir une directive
       <code class="directive">RewriteMap</code> comme suit </p>
 
-      <pre class="prettyprint lang-config">
-      RewriteMap map-exemple txt:/chemin/vers/fichier/map.txt
-      </pre>
+      <pre class="prettyprint lang-config">RewriteMap map-exemple txt:/chemin/vers/fichier/map.txt</pre>
 
 
       <p>Vous pourrez ensuite utiliser cette table dans une
       directive <code class="directive">RewriteRule</code> comme suit :</p>
 
-      <pre class="prettyprint lang-config">
-      RewriteRule ^/ex/(.*) ${map-exemple:$1}
-      </pre>
+      <pre class="prettyprint lang-config">RewriteRule ^/ex/(.*) ${map-exemple:$1}</pre>
 
 
       <p>Les combinaisons suivantes pour <em>type de correspondance</em>
@@ -949,6 +951,38 @@ la version version 2.1</td></tr>
       <strong>avant</strong> les règles spécifiées dans le niveau
       enfant. Disponible depuis la version 2.3.10 du serveur HTTP
       Apache.</p>
+      </dd>
+
+      <dt><code>InheritDown</code></dt>
+      <dd>
+
+      <p>Si cette option est activée, toutes les configurations enfants
+      hériteront de la configuration courante. Il en est de même si l'on
+      spécifie <code>RewriteOptions Inherit</code> dans toutes les
+      configurations enfants. Voir l'option <code>Inherit</code> pour
+      plus de détails à propos de la manière dont les relations
+      parent-enfants sont traitées. Cette option est disponible à partir
+      de la version 2.4.8 du serveur HTTP Apache.</p>
+      </dd>
+
+      <dt><code>InheritDownBefore</code></dt>
+      <dd>
+
+      <p>L'effet de cette option est équivalent à celui de l'option
+      <code>InheritDown</code> ci-dessus, mais les règles de la
+      configuration parente s'appliquent <strong>avant</strong> toute
+      règle de la configuration enfant. Cette option est disponible à partir
+      de la version 2.4.8 du serveur HTTP Apache.</p>
+      </dd>
+
+      <dt><code>IgnoreInherit</code></dt>
+      <dd>
+
+      <p>Si cette option est activée, les configurations courante et
+      enfants ignoreront toute règle héritée d'une configuration parente
+      via les options <code>InheritDown</code> ou
+      <code>InheritDownBefore</code>. Cette option est disponible à partir
+      de la version 2.4.8 du serveur HTTP Apache.</p>
       </dd>
 
       <dt><code>AllowNoSlash</code></dt>
@@ -1279,6 +1313,14 @@ substitution !
         ...</a></em></td>
     </tr>
     <tr>
+        <td>END</td>
+        <td>Stoppe le processus de réécriture immédiatement et
+	n'applique plus aucune règle. Empêche aussi l'application
+	ultérieure de règles de réécriture dans les contextes de
+	répertoire et de fichier .htaccess (disponible à partir de la
+	version 2.3.9 du serveur HTTP Apache). <em><a href="../rewrite/flags.html#flag_end">détails ...</a></em></td>
+    </tr>
+    <tr>    
         <td>env|E=[!]<em>VAR</em>[:<em>VAL</em>]</td>
         <td>Définit la variable d'environnement <em>VAR</em> (à la valeur
 	<em>VAL</em> si elle est fournie). La variante !<em>VAR</em>
@@ -1303,7 +1345,7 @@ substitution !
         <td>Arrête le processus de réécriture immédiatement et n'applique
 	plus aucune règle. Prêtez une attention particulière aux mises
 	en garde concernant les contextes de niveau répertoire et
-	.htaccess (voir aussi le drapeau END). <em><a href="../rewrite/flags.html#flag_end">détails ...</a></em></td>
+	.htaccess (voir aussi le drapeau END). <em><a href="../rewrite/flags.html#flag_l">détails ...</a></em></td>
     </tr>
     <tr>
         <td>next|N</td>
@@ -1356,14 +1398,6 @@ substitution !
         <td>Force une redirection externe, avec un code de statut HTTP
 	optionnel. <em><a href="../rewrite/flags.html#flag_r">détails ...</a></em>
         </td>
-    </tr>
-    <tr>
-        <td>END</td>
-        <td>Arrête le processus de réécriture immédiatement et
-	n'applique plus aucune règle. Empêche aussi l'exécution
-	ultérieure de règles de réécriture dans des contextes de
-	répertoire et des fichiers .htaccess (disponible depuis la
-	version 2.3.9) <em><a href="../rewrite/flags.html#flag_l">détails ...</a></em></td>
     </tr>
     <tr>
         <td>skip|S=<em>nombre</em></td>
@@ -1567,7 +1601,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_rewrite.html
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2013 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();
