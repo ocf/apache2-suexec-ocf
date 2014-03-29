@@ -24,6 +24,8 @@ apache2 (2.4.9-1) UNRELEASED; urgency=medium
       'HIGH' does not include MD5.
     - Remove the 'Speed-optimized SSL Cipher' configuration example because
       it depends on RC4, which is considered insecure.
+  * Change init script short description to describe the service, not the
+    script.  Closes: #738315
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 29 Mar 2014 22:06:50 +0100
 
