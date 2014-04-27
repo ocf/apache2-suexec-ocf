@@ -58,7 +58,7 @@ Last-Update: 2012-02-25
  #else
  /* Set default for non OS/2 file system */
 -#define DOCUMENT_LOCATION  HTTPD_ROOT "/htdocs"
-+#define DOCUMENT_LOCATION  "/var/www"
++#define DOCUMENT_LOCATION  "/var/www/html"
  #endif
  #endif /* DOCUMENT_LOCATION */
  

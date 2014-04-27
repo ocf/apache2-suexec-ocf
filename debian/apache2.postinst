@@ -276,14 +276,22 @@ install_default_site()
 install_default_files()
 {
 	if is_fresh_install $@ || we_are_upgrading_from_wheezy $@ ; then
-		if [ ! -e /var/www/index.html  -a \
-			! -h /var/www/index.html  -a \
-			! -e /var/www/index.cgi   -a \
-			! -e /var/www/index.pl    -a \
-			! -e /var/www/index.php   -a \
-			! -e /var/www/index.xhtml -a \
-			! -e /var/www/index.htm ] ; then
-				cp /usr/share/apache2/default-site/index.html /var/www/html/index.html
+		local do_copy=true
+		local dir ext
+		for dir in /var/www /var/www/html ; do
+			for ext in html cgi pl php xhtml htm ; do
+				if [ -e $dir/index.$ext ] ; then
+					do_copy=false
+					break 2
+				fi
+			done
+			if [ -h $dir/index.html ] ; then
+				do_copy=false
+				break
+			fi
+		done
+		if $do_copy ; then
+			cp /usr/share/apache2/default-site/index.html /var/www/html/index.html
 		fi
 	fi
 }
