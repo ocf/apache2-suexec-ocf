@@ -10,6 +10,8 @@ apache2 (2.4.9-2) UNRELEASED; urgency=medium
   * Remove conflicts of mpm modules with mpm_itk, which isn't an mpm
     anymore. Fixes a part of: #734865. libapache2-mpm-itk needs a fix, too.
   * Remove obsolete warning in a2enmod about mpm-itk.
+  * Fix lintian warning: Remove image ref to w3.org, which is a privacy
+    breach.
 
  -- Stefan Fritsch <sf@debian.org>  Sun, 27 Apr 2014 22:15:58 +0200
 
