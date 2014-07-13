@@ -2,8 +2,10 @@ apache2 (2.4.9-3) UNRELEASED; urgency=medium
 
   * Warn users if they try to disable modules that we consider essential for
     operation of the Apache web server (Closes: #709461)
+  * Drop libcap from our build-dependencies. That was needed for itk which we
+    gave source out to it's own package again.
 
- -- Arno Töll <arno@debian.org>  Sun, 13 Jul 2014 01:25:26 -1100
+ -- Arno Töll <arno@debian.org>  Sun, 13 Jul 2014 07:00:13 -1100
 
 apache2 (2.4.9-2) unstable; urgency=medium
 
