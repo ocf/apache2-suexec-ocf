@@ -4,8 +4,17 @@ apache2 (2.4.9-3) UNRELEASED; urgency=medium
     operation of the Apache web server (Closes: #709461)
   * Drop libcap from our build-dependencies. That was needed for itk which we
     gave source out to it's own package again.
+  * Provide apache2.2-common package to avoid upgrading problems for people
+    using --purge (apt) or --purge-unused (aptitude) even though that's
+    clearly discouraged. This caused disappearing of conffiles because we move
+    them from apache2.2-common to apache2 during the upgrade. Ugh. This was
+    not a bug in our packaging, but an unfortunately people blame us
+    nonetheless even though it's not all our fault. This alternative helps
+    those people, but at the same time means that incompatible modules aren't
+    force-removed by dpkg during the upgrade. Hopefully we catch all of them
+    with the Breaks relation coming along (Closes: #716880, #752922, #711925)
 
- -- Arno Töll <arno@debian.org>  Sun, 13 Jul 2014 07:00:13 -1100
+ -- Arno Töll <arno@debian.org>  Sun, 20 Jul 2014 04:55:03 -1100
 
 apache2 (2.4.9-2) unstable; urgency=medium
 
