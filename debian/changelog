@@ -1,5 +1,14 @@
-apache2 (2.4.9-3) UNRELEASED; urgency=medium
+apache2 (2.4.10-1) UNRELEASED; urgency=medium
 
+  * New upstream version
+    + Refresh debian/patches/fhs_compliance.patch
+    + Security Fixes:
+      - CVE-2014-0117 mod_proxy: Fix DoS that could cause a crash
+      - CVE-2014-0226 Fix a race condition resulting in a heap overflow in
+        scoreboard handling
+      - CVE-2014-0118 mod_deflate: The DEFLATE input filter now limits the
+        length and compression ratio of inflated request to mitigate a possible DoS
+      - CVE-2014-0231 mod_cgid: Fix a denial of service against CGI scripts
   * Warn users if they try to disable modules that we consider essential for
     operation of the Apache web server (Closes: #709461)
   * Drop libcap from our build-dependencies. That was needed for itk which we
@@ -14,7 +23,7 @@ apache2 (2.4.9-3) UNRELEASED; urgency=medium
     force-removed by dpkg during the upgrade. Hopefully we catch all of them
     with the Breaks relation coming along (Closes: #716880, #752922, #711925)
 
- -- Arno Töll <arno@debian.org>  Sun, 20 Jul 2014 04:55:03 -1100
+ -- Arno Töll <arno@debian.org>  Sun, 20 Jul 2014 06:24:54 -1100
 
 apache2 (2.4.9-2) unstable; urgency=medium
 
