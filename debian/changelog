@@ -9,6 +9,7 @@ apache2 (2.4.10-1) UNRELEASED; urgency=medium
       - CVE-2014-0118 mod_deflate: The DEFLATE input filter now limits the
         length and compression ratio of inflated request to mitigate a possible DoS
       - CVE-2014-0231 mod_cgid: Fix a denial of service against CGI scripts
+    + Fixes SNI with certificate defined in global scope. (Closes: #751361)
   * Warn users if they try to disable modules that we consider essential for
     operation of the Apache web server (Closes: #709461)
   * Drop libcap from our build-dependencies. That was needed for itk which we
