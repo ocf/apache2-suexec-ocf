@@ -201,7 +201,12 @@ Breaks: libapache2-mod-apparmor (<< 2.8.0-1),
   libapache2-mod-mime-xattr (<< 0.4-5),
   libapache2-mod-defensible (<< 1.4-3.1),
   libapache2-mod-ldap-userdir (<< 1.1.19-2),
-  libapache2-mod-ocamlnet (<< 3.5.1-1+deb8)
+  libapache2-mod-ocamlnet (<< 3.5.1-1+deb8),
+  libapache2-mod-proxy-html (<< 1:2.4.9-2),
+  libapache2-mod-ruby (<< 1.2.6-2+deb8),
+  libapache2-mod-axis2c (<< 1.6.0-6),
+  libapache2-modsecurity (<< 2.8.0-1),
+  libapache2-mod-chroot (<< 0.5-7+deb8)
 
 
 Package: libapache2-mod-proxy-html
