@@ -208,8 +208,8 @@ Breaks: libapache2-mod-apparmor (<< 2.8.0-1),
   libapache2-modsecurity (<< 2.8.0-1),
   libapache2-mod-chroot (<< 0.5-7+deb8),
   libapache2-mod-annodex (<< 0.2.2-6+deb8),
-  libapache2-mod-line-edit (<< 1.0.0-1+deb8),
-  libapache2-mod-bt,
+  libapache2-mod-line-edit (<< 1.0.0-1+deb8)
+Conflicts: libapache2-mod-bt,
   libapache2-mod-cband,
   libapache2-mod-php4,
   libapache2-mod-shib
