@@ -1,5 +1,6 @@
-apache2 (2.4.10-1) UNRELEASED; urgency=medium
+apache2 (2.4.10-1) unstable; urgency=medium
 
+  [ Arno Töll ]
   * New upstream version
     + Refresh debian/patches/fhs_compliance.patch
     + Security Fixes:
@@ -25,7 +26,7 @@ apache2 (2.4.10-1) UNRELEASED; urgency=medium
     force-removed by dpkg during the upgrade. Hopefully we catch all of them
     with the Breaks relation coming along (Closes: #716880, #752922, #711925)
 
- -- Arno Töll <arno@debian.org>  Sun, 20 Jul 2014 06:24:54 -1100
+ -- Stefan Fritsch <sf@debian.org>  Tue, 22 Jul 2014 23:16:20 +0200
 
 apache2 (2.4.9-2) unstable; urgency=medium
 
