@@ -29,8 +29,8 @@ Description: Apache HTTP Server
  extensible HTTP server as standards-compliant open source software. The
  result has long been the number one web server on the Internet.
  .
- This package contains the configuration files, init scripts and support
- scripts. It does not install the actual apache2 binaries.
+ Installing this package results in a full installation, including the
+ configuration files, init scripts and support scripts.
 
 Package: apache2-data
 Architecture: all
