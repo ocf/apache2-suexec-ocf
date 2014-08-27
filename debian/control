@@ -20,6 +20,7 @@ Depends: ${misc:Depends}, lsb-base, procps [!hurd-i386],
  apache2-data (= ${source:Version}), ${perl:Depends}
 Replaces: apache2.2-common
 Conflicts: apache2.2-common (<< 2.3~)
+Provides: httpd, httpd-cgi
 Recommends: ssl-cert
 Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom,
  apache2-utils
@@ -49,7 +50,7 @@ Package: apache2-bin
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
 # MODULE_MAGIC_NUMBER_MAJOR from apache2/include/ap_mmn.h
-Provides: ${apache2:API}, httpd, httpd-cgi
+Provides: ${apache2:API}
 Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom
 Replaces: apache2.2-bin (<< 2.3~), apache2.2-common (<< 2.3~), apache2-mpm-prefork (<< 2.3~),
  apache2-mpm-itk (<< 2.3~), apache2-mpm-worker (<< 2.3~), apache2-mpm-event (<< 2.3~),
