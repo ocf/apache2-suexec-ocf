@@ -462,11 +462,19 @@ apache2_reload()
 		;;
 	esac
 
-	if apache2ctl configtest 2>/dev/null; then
+	local tmpfile=$(mktemp)
+	if apache2ctl configtest > $tmpfile 2>&1; then
 		invoke-rc.d apache2 $action || true
 	else
 		apache2_msg "err" "apache2_reload: Your configuration is broken. Not ${action}ing Apache 2"
+		grep -v -e "Action 'configtest' failed." \
+			-e "The Apache error log may have more information." \
+			$tmpfile |
+			while read LINE ; do
+				apache2_msg "err" "apache2_reload: $LINE"
+			done
 	fi
+	rm -f $tmpfile
 }
 
 # vim: syntax=sh sw=8 sts=8 sr noet

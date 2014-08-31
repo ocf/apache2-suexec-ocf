@@ -7,6 +7,8 @@ apache2 (2.4.10-2) UNRELEASED; urgency=medium
     logs. The daily rotation also has the advantage of regenerating things
     like TLS session ticket keys more often. Closes: #759382
   * Clarify description of apache2 package. Closes: #755976
+  * In the maintainer script helper, print out Apache's error message if
+    the config check fails.
 
  -- Stefan Fritsch <sf@debian.org>  Wed, 27 Aug 2014 07:22:55 +0200
 
