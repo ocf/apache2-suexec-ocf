@@ -392,6 +392,77 @@ warn_itk_users()
 	fi
 }
 
+msg ()
+{
+	local PRIORITY="$1"
+	local MSG="$2"
+	echo "$PRIORITY: $MSG"
+	if [ -x /usr/bin/logger ]; then
+		/usr/bin/logger -p daemon.$PRIORITY -t apache2.postinst "$MSG" || true
+	fi
+}
+
+execute_deferred_actions ()
+{
+	if [ ! -e /var/lib/apache2/deferred_actions ]; then
+		return 0
+	fi
+
+	local error=false
+
+	cat /var/lib/apache2/deferred_actions |
+	while read PACKAGE FUNCTION ARG1 ARG2 ARG3
+	do
+		if ! dpkg-query -f '${Status}' -W "$PACKAGE"|grep -q installed ; then
+			# If the package has been removed again, skip the actions
+			continue
+		fi
+		case "$FUNCTION" in
+		apache2_invoke)
+			case "$ARG1" in
+			enmod|dismod|enconf|disconf|ensite|dissite)
+				# We can ignore reload/restart in ARG3 because apache2 has not
+				# been started, yet.
+				msg "info" "Executing deferred 'a2$ARG1 $ARG2' for package $PACKAGE"
+				a2$ARG1 -m -q "$ARG2"
+				;;
+			*)
+				msg "error" "'apache2_invoke $ARG1' in /var/lib/apache2/deferred_actions invalid"
+				error=true
+			esac
+			;;
+		apache2_switch_mpm)
+			local MPM="mpm_$ARG1"
+			local CUR_MPM="$(ls /etc/apache2/mods-enabled/mpm_*.load)"
+			CUR_MPM="${CUR_MPM##*/}"
+			CUR_MPM="${CUR_MPM%.load}"
+			if [ ! -e /etc/apache2/mods-available/$MPM.load ] ; then
+				msg "error" "$MPM not found in 'apache2_switch_mpm $ARG1' for package $PACKAGE"
+				error=true
+			elif [ ! -e /etc/apache2/mods-enabled/$MPM.load ] ; then
+				msg "info" "$MPM: No action required"
+			else
+				msg "info" "Switch to $MPM for package $PACKAGE"
+				if ! a2dismod -m -q "mpm_$CUR_MPM" ||
+				   ! a2enmod -m -q "mpm_$MPM"
+				then
+					msg "error" "Switching to $MPM failed"
+					error=true
+				fi
+			fi
+			;;
+		*)
+			msg "ERROR: function '$FUNCTION' in /var/lib/apache2/deferred_actions invalid"
+			;;
+		esac
+	done
+
+	if $error ; then
+		msg "error" "Some deferred actions failed. You will need to fix the configuration manually."
+	fi
+	rm /var/lib/apache2/deferred_actions
+}
+
 #XXX: Deal with the sites-available/sites-enabled *.conf transition, e.g. rename
 #     all files which look like site configuration?
 
@@ -409,6 +480,7 @@ case "$1" in
 		move_httpd_conf $@
 		migrate_data $@
 		warn_itk_users $@
+		execute_deferred_actions
 
 		# post installation cleanup
 		if [ -e /etc/apache2/.apache2_mpm_selected ] ; then

@@ -75,6 +75,11 @@ else
 		fi
 	fi
 
+	APACHE2_MAINTSCRIPT_DEFER=
+	if ! dpkg-query -f '${Status}' -W apache2|grep -q installed; then
+		echo "Package apache2 is not configured yet. Will defer actions by package $DPKG_MAINTSCRIPT_PACKAGE."
+		APACHE2_MAINTSCRIPT_DEFER=/var/lib/apache2/deferred_actions
+	fi
 
 	if [ -z "$1" ] ; then
 		echo "You must invoke apache2-maintscript-helper with an unmodified environment when sourcing it" >&2
@@ -127,8 +132,6 @@ fi
 #
 # FUNCTIONS
 #
-
-
 
 
 #
@@ -273,6 +276,10 @@ apache2_switch_mpm()
 	local MPM="$1"
 	MPM="${MPM#mpm_}"
 
+	if [ -n "$APACHE2_MAINTSCRIPT_DEFER" ] ; then
+		echo "$APACHE2_MAINTSCRIPT_PACKAGE apache2_switch_mpm $*" >> $APACHE2_MAINTSCRIPT_DEFER
+		return 0
+	fi
 
 	if [ ! -e "/etc/apache2/mods-available/mpm_$MPM.load" ] ; then
 		apache2_msg "err" "apache2_switch_mpm: MPM $MPM not found"
@@ -340,6 +347,11 @@ apache2_invoke()
 
 	[ -x "/usr/sbin/a2$CMD" ] || return 1
 	[ -x "/usr/sbin/a2query" ] || return 1
+
+	if [ -n "$APACHE2_MAINTSCRIPT_DEFER" ] ; then
+		echo "$APACHE2_MAINTSCRIPT_PACKAGE apache2_invoke $*" >> $APACHE2_MAINTSCRIPT_DEFER
+		return 0
+	fi
 
 	case "${RCD_ACTION:-}" in
 		""|reload|restart)
@@ -449,6 +461,10 @@ apache2_reload()
 	if ! apache2_needs_action ; then
 		return 0
 	fi
+	if [ -n "$APACHE2_MAINTSCRIPT_DEFER" ] ; then
+		return 0
+	fi
+
 	local action
 	case "${1:-}" in
 	""|reload)
