@@ -1,5 +1,11 @@
 apache2 (2.4.10-2) UNRELEASED; urgency=medium
 
+  * Pull changes from upstream 2.4.x branch up to r1626207
+    + Security Fix for CVE-2013-5704: HTTP trailers could be used to
+      replace HTTP headers late during request processing, potentially
+      undoing or otherwise confusing modules that examined or modified
+      request headers earlier.
+      Adds "MergeTrailers" directive to restore legacy behavior.
   * Switch to apache2 providing the httpd and httpd-cgi virtual packages.
     The previously providing apache2-bin package lacks the configuration
     files. Closes: #756361
