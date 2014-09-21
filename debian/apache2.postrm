@@ -27,7 +27,6 @@ OBSOLETE_CONFFILES="/etc/apache2/mods-available/authz_default.load
 /etc/apache2/mods-available/cern_meta.load
 /etc/apache2/mods-available/disk_cache.load
 /etc/apache2/mods-available/disk_cache.conf
-/etc/apache2/mods-available/ident.load
 /etc/apache2/mods-available/imagemap.load
 /etc/apache2/mods-available/version.load"
 

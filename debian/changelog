@@ -9,6 +9,7 @@ apache2 (2.4.10-2) UNRELEASED; urgency=medium
   * Clarify description of apache2 package. Closes: #755976
   * In the maintainer script helper, print out Apache's error message if
     the config check fails.
+  * Re-add mod_ident. It has still at least one user. LP: #1333388
 
  -- Stefan Fritsch <sf@debian.org>  Wed, 27 Aug 2014 07:22:55 +0200
 
