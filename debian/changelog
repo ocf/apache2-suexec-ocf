@@ -6,12 +6,13 @@ apache2 (2.4.10-2) UNRELEASED; urgency=medium
       undoing or otherwise confusing modules that examined or modified
       request headers earlier.
       Adds "MergeTrailers" directive to restore legacy behavior.
+
   * Switch to apache2 providing the httpd and httpd-cgi virtual packages.
     The previously providing apache2-bin package lacks the configuration
     files. Closes: #756361
-  * Keep fewer logs by default. Instead of 52 weekly logs, keep 31 daily
-    logs. The daily rotation also has the advantage of regenerating things
-    like TLS session ticket keys more often. Closes: #759382
+  * Keep fewer logs by default. Instead of 52 weekly logs, keep 14 daily
+    logs. The daily graceful restart also has the advantage of regenerating
+    things like TLS session ticket keys more often. Closes: #759382
   * Clarify description of apache2 package. Closes: #755976
   * In the maintainer script helper, print out Apache's error message if
     the config check fails.
