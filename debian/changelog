@@ -1,6 +1,7 @@
 apache2 (2.4.10-3) UNRELEASED; urgency=medium
 
   * Add NEWS entry for the logrotate change in 2.4.10-2.
+  * Bump Standards-version (no changes).
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 23 Sep 2014 22:26:50 +0200
 
