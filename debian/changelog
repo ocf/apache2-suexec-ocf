@@ -1,3 +1,9 @@
+apache2 (2.4.10-3) UNRELEASED; urgency=medium
+
+  * Add NEWS entry for the logrotate change in 2.4.10-2.
+
+ -- Stefan Fritsch <sf@debian.org>  Tue, 23 Sep 2014 22:26:50 +0200
+
 apache2 (2.4.10-2) unstable; urgency=medium
 
   * Pull changes from upstream 2.4.x branch up to r1626207
