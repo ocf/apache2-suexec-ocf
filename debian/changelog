@@ -4,6 +4,8 @@ apache2 (2.4.10-3) UNRELEASED; urgency=medium
   * If apache2 is not configured yet, defer actions executed via
     apache2-maintscript-helper. This fixes installation failures if a
     module package is configured first. Closes: #745834
+  * Don't use a2query in preinst, as it may not be available yet.
+    Closes: #745812
   * Include mod_authnz_fcgi. Closes: #762908
   * Add some comments about SSLHonorCipherOrder in ssl.conf. Closes: #746359
   * Remove misleading sentence in apache2-bin's description. Closes: #762645
