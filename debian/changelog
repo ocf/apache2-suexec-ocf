@@ -1,4 +1,4 @@
-apache2 (2.4.10-3) UNRELEASED; urgency=medium
+apache2 (2.4.10-3) unstable; urgency=medium
 
   * CVE-2014-3581: Fix a DoS in mod_cache.
   * If apache2 is not configured yet, defer actions executed via
@@ -14,7 +14,7 @@ apache2 (2.4.10-3) UNRELEASED; urgency=medium
   * Bump Standards-version (no changes).
   * Fix lintian warning: Tweak licence short names in copyright file.
 
- -- Stefan Fritsch <sf@debian.org>  Tue, 23 Sep 2014 22:26:50 +0200
+ -- Stefan Fritsch <sf@debian.org>  Sun, 28 Sep 2014 22:37:02 +0200
 
 apache2 (2.4.10-2) unstable; urgency=medium
 
