@@ -4,5 +4,6 @@ suexec-CVE-2007-1742.patch
 customize_apxs.patch
 build_suexec-custom.patch
 pull_upstream_2.4.x_branch.patch
+CVE-2014-3581.patch
 # This patch is applied manually
 #suexec-custom.patch

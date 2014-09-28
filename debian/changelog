@@ -1,5 +1,6 @@
 apache2 (2.4.10-3) UNRELEASED; urgency=medium
 
+  * CVE-2014-3581: Fix a DoS in mod_cache.
   * If apache2 is not configured yet, defer actions executed via
     apache2-maintscript-helper. This fixes installation failures if a
     module package is configured first. Closes: #745834
