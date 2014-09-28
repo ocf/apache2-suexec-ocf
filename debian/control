@@ -57,15 +57,14 @@ Replaces: apache2.2-bin (<< 2.3~), apache2.2-common (<< 2.3~), apache2-mpm-prefo
  libapache2-mod-proxy-html (<< 1:2.4.4-2~), libapache2-mod-macro (<< 1:2.4.6-1~)
 Conflicts: apache2.2-bin (<< 2.3~), apache2.2-common (<< 2.3~)
 Breaks: libapache2-mod-proxy-html (<< 1:2.4.4-2~), libapache2-mod-macro (<< 1:2.4.6-1~)
-Description: Apache HTTP Server (binary files and modules)
+Description: Apache HTTP Server (modules and other binary files)
  The Apache Software Foundation's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
  result has long been the number one web server on the Internet.
  .
  This package contains the binaries only and does not set up a working
  web-server instance. Install the "apache2" package to get a fully working
- instance. Do not install this package unless you want to set-up the Apache
- HTTP server entirely on your own.
+ instance.
 
 Package: apache2-mpm-worker
 Architecture: any
