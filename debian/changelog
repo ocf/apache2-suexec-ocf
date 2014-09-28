@@ -1,6 +1,7 @@
 apache2 (2.4.10-3) UNRELEASED; urgency=medium
 
   * Include mod_authnz_fcgi. Closes: #762908
+  * Add some comments about SSLHonorCipherOrder in ssl.conf. Closes: #746359
   * Remove misleading sentence in apache2-bin's description. Closes: #762645
   * Remove trailing space in apache2/suexec/www-data. Closes: #719930
   * Add NEWS entry for the logrotate change in 2.4.10-2.
