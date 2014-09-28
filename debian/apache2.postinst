@@ -397,8 +397,8 @@ msg ()
 	local PRIORITY="$1"
 	local MSG="$2"
 	echo "$PRIORITY: $MSG"
-	if [ -x /usr/bin/logger ]; then
-		/usr/bin/logger -p daemon.$PRIORITY -t apache2.postinst "$MSG" || true
+	if type logger > /dev/null 2>&1 ; then
+		logger -p daemon.$PRIORITY -t apache2.postinst "$MSG" || true
 	fi
 }
 
