@@ -4,12 +4,12 @@ Source: http://httpd.apache.org/
 
 Files: *
 Copyright: Copyright 2009 The Apache Software Foundation
-License: Apache 2.0
+License: Apache-2.0
 
 Files: include/ap_regex.h
 Copyright: 2009 The Apache Software Foundation
  Copyright: 1997-2004 University of Cambridge
-License: Apache 2.0 and BSD-3-clause (Cambridge)
+License: Apache-2.0 and BSD-3-clause-Cambridge
 
 Files: server/util_pcre.c
 Copyright:  1997-2001 University of Cambridge
@@ -21,38 +21,38 @@ License: GPL-3+ or Custom
 
 Files: test/test_limits.c
 Copyright: 1998 Dag-Erling Codan Smrgrav
-License: BSD-3-clause (Smrgrav)
+License: BSD-3-clause-Smrgrav
 
 Files: modules/metadata/mod_mime_magic.c
 Copyright: 2009 The Apache Software Foundation
  1996-1997 Cisco Systems, Inc.
  1987 Ian F. Darwin.
-License: Apache 2.0 and Cisco
+License: Apache-2.0 and Cisco
 
 Files: docs/conf/magic debian/config-dir/magic
 Copyright: Ian F. Darwin 1986, 1987, 1989, 1990, 1991, 1992, 1994, 1995.
-License: BSD-2-clause (Darwin)
+License: BSD-2-clause-Darwin
 
 Files: modules/mappers/mod_imagemap.c
 Copyright: 2009 The Apache Software Foundation
  1992 by Eric Haines, erich@eye.com
-License: Apache 2.0 and Haines
+License: Apache-2.0 and Haines
 
 Files: server/util_md5.c
 Copyright: 2009 The Apache Software Foundation
  1995, Board of Trustees of the University of Illinois
  1993,1994 by Carnegie Mellon University
  1991 Bell Communications Research, Inc. (Bellcore)
-License: Apache 2.0 and MD5
+License: Apache-2.0 and MD5
 
 Files: support/ab.c
 Copyright: 2009 The Apache Software Foundation
  1996 by Zeus Technology Ltd. http://www.zeustech.net/
-License: Apache 2.0 and Zeus
+License: Apache-2.0 and Zeus
 
 Files: debian/a2query.in debian/debhelper/dh_apache2
 Copyright: 2012 Arno Töll
-License: Apache 2.0 or GPL-2+
+License: Apache-2.0 or GPL-2+
 
 Files: debian/debhelper/apache2-maintscript-helper
 Copyright: 2012 Arno Töll
@@ -60,13 +60,13 @@ License: MIT
 
 Files: debian/a2enmod
 Copyright: 2008 Stefan Fritsch
-License: Apache 2.0
+License: Apache-2.0
 
 Files: debian/patches/itk/*
 Copyright: 2005-2012 Steinar H. Gunderson, 2008 Knut Auvor Grythe
-License: Apache 2.0
+License: Apache-2.0
 
-License: Apache 2.0
+License: Apache-2.0
  Licensed to the Apache Software Foundation (ASF) under one or more
  contributor license agreements.  See the NOTICE file distributed with
  this work for additional information regarding copyright ownership.
@@ -270,7 +270,7 @@ License: Haines
  Mark Cox, mark@ukweb.com, Allow relative URLs even when no base specified
 
 
-License: BSD-2-clause (Darwin)
+License: BSD-2-clause-Darwin
  Software written by Ian F. Darwin and others;
  maintained 1994-2004 Christos Zoulas.
  .
@@ -364,7 +364,7 @@ License: Cisco
  Submission to Apache Software Foundation    July 1997
 
 
-License: BSD-3-clause (Smrgrav)
+License: BSD-3-clause-Smrgrav
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions
  are met:
@@ -389,7 +389,7 @@ License: BSD-3-clause (Smrgrav)
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-License: BSD-3-clause (Cambridge)
+License: BSD-3-clause-Cambridge
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
  .

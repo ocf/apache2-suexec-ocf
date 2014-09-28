@@ -12,6 +12,7 @@ apache2 (2.4.10-3) UNRELEASED; urgency=medium
   * Remove trailing space in apache2/suexec/www-data. Closes: #719930
   * Add NEWS entry for the logrotate change in 2.4.10-2.
   * Bump Standards-version (no changes).
+  * Fix lintian warning: Tweak licence short names in copyright file.
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 23 Sep 2014 22:26:50 +0200
 
