@@ -1,3 +1,10 @@
+apache2 (2.4.10-4) UNRELEASED; urgency=medium
+
+  * Make apache2 depend on apache2-utils. This got lost somewhere in the
+    2.4 update.
+
+ -- Stefan Fritsch <sf@debian.org>  Mon, 29 Sep 2014 22:25:49 +0200
+
 apache2 (2.4.10-3) unstable; urgency=medium
 
   * CVE-2014-3581: Fix a DoS in mod_cache.

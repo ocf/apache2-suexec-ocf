@@ -17,6 +17,7 @@ Package: apache2
 Architecture: any
 Depends: ${misc:Depends}, lsb-base, procps [!hurd-i386],
  perl, mime-support, apache2-bin (= ${binary:Version}),
+ apache2-utils (>= 2.4)
  apache2-data (= ${source:Version}), ${perl:Depends}
 Replaces: apache2.2-common
 Conflicts: apache2.2-common (<< 2.3~)
