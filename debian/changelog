@@ -1,9 +1,13 @@
 apache2 (2.4.10-4) UNRELEASED; urgency=medium
 
+  [ Stefan Fritsch ]
   * Make apache2 depend on apache2-utils. This got lost somewhere in the
     2.4 update.
+  [ Arno Töll ]
+  * Add proper return codes to fail() conditions in a2query. Thanks to Ondřej
+    Surý for providing a patch.
 
- -- Stefan Fritsch <sf@debian.org>  Mon, 29 Sep 2014 22:25:49 +0200
+ -- Arno Töll <arno@debian.org>  Tue, 07 Oct 2014 03:48:39 -1100
 
 apache2 (2.4.10-3) unstable; urgency=medium
 

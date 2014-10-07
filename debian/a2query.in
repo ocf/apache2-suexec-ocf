@@ -4,7 +4,7 @@
 # Copyright (C) 2012 Arno Töll <debian@toell.net>
 #
 # This program is licensed at your choice under the terms of the GNU General
-# Public License vserion 2+ or under the terms of the Apache Software License
+# Public License version 2+ or under the terms of the Apache Software License
 # 2.0.
 #
 # For GPL-2+:
@@ -203,7 +203,7 @@ sub load_defaults
 sub load_modules
 {
 	my $conf_dir = $CONFIG_DIR . "/mods-enabled";
-	opendir(DIR, $conf_dir) || fail("$conf_dir: $!");
+	opendir(DIR, $conf_dir) || fail("$conf_dir: $!", 1);
 	while( readdir(DIR) )
 	{
 		my $file = $_;
@@ -214,7 +214,7 @@ sub load_modules
 			$MPM = $1 if $MPM eq 'invalid';
 			if(grep { $_ =~ m/^mpm_/ } @MODULES)
 			{
-				fail("There is more than one MPM loaded. Do not proceed due to undefined results");
+				fail("There is more than one MPM loaded. Do not proceed due to undefined results", 1);
 			}
 		}
 		push @MODULES, $file;
@@ -230,7 +230,7 @@ sub load_conf
 		return;
 	}
 	my $conf_dir = $CONFIG_DIR . "/conf-enabled";
-	opendir(DIR, $conf_dir) || fail("$conf_dir: $!");
+	opendir(DIR, $conf_dir) || fail("$conf_dir: $!", 1);
 	while( readdir(DIR) )
 	{
 		my $file = $_;
@@ -249,7 +249,7 @@ sub load_sites
 		return;
 	}
 	my $conf_dir = $CONFIG_DIR . "/sites-enabled";
-	opendir(DIR, $conf_dir) || fail("$conf_dir: $!");
+	opendir(DIR, $conf_dir) || fail("$conf_dir: $!", 1);
 	while( readdir(DIR) )
 	{
 		my $file = $_;
