@@ -1,8 +1,8 @@
-apache2 (2.4.10-5) UNRELEASED; urgency=medium
+apache2 (2.4.10-5) unstable; urgency=medium
 
   * Remove one forgotten instance of ident.load in the preinst.
 
- -- Stefan Fritsch <sf@debian.org>  Fri, 10 Oct 2014 00:18:48 +0200
+ -- Stefan Fritsch <sf@debian.org>  Fri, 10 Oct 2014 00:20:09 +0200
 
 apache2 (2.4.10-4) unstable; urgency=medium
 
