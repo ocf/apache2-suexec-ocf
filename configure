@@ -33031,17 +33031,17 @@ ap_prefix="${ap_cur}"
 
 
 cat >>confdefs.h <<_ACEOF
-#define HTTPD_ROOT "${ap_prefix}"
+#define HTTPD_ROOT "/etc/apache2"
 _ACEOF
 
 
 cat >>confdefs.h <<_ACEOF
-#define SERVER_CONFIG_FILE "${rel_sysconfdir}/${progname}.conf"
+#define SERVER_CONFIG_FILE "${progname}.conf"
 _ACEOF
 
 
 cat >>confdefs.h <<_ACEOF
-#define AP_TYPES_CONFIG_FILE "${rel_sysconfdir}/mime.types"
+#define AP_TYPES_CONFIG_FILE "mime.types"
 _ACEOF
 
 

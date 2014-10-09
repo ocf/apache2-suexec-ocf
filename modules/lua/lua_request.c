@@ -2086,13 +2086,13 @@ static int lua_set_cookie(lua_State *L)
     if (expires > 0) {
         rv = apr_rfc822_date(cdate, apr_time_from_sec(expires));
         if (rv == APR_SUCCESS) {
-            strexpires = apr_psprintf(r->pool, "Expires=\"%s\";", cdate);
+            strexpires = apr_psprintf(r->pool, "Expires=%s;", cdate);
         }
     }
     
     /* Create path segment */
     if (path != NULL && strlen(path) > 0) {
-        strpath = apr_psprintf(r->pool, "Path=\"%s\";", path);
+        strpath = apr_psprintf(r->pool, "Path=%s;", path);
     }
     
     /* Create domain segment */
@@ -2171,13 +2171,13 @@ static int lua_websocket_greet(lua_State *L)
             r->read_chunked = 0;
             ap_rflush(r);
             ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, 
-                    "Websocket: Upgraded from HTTP to Websocket");
+                          "Websocket: Upgraded from HTTP to Websocket");
             lua_pushboolean(L, 1);
             return 1;
         }
     }
-    ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, 
-                    "Websocket: Upgrade from HTTP to Websocket failed");
+    ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, APLOGNO(02666)
+                  "Websocket: Upgrade from HTTP to Websocket failed");
     return 0;
 }
 

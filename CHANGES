@@ -1,15 +1,52 @@
                                                          -*- coding: utf-8 -*-
 
+Changes with Apache 2.4.11
+
+  *) cmake-based build for Windows: Fix incompatibility with cmake 2.8.12
+     and later.  PR 56615.  [Chuck Liu <cliu81 gmail.com>, Jeff Trawick]
+
+  *) mod_ratelimit: Drop severity of AH01455 and AH01457 (ap_pass_brigade
+     failed) messages from ERROR to TRACE1.  Other filters do not bother 
+     re-reporting failures from lower level filters.  PR56832.  [Eric Covener]
+
+  *) core: Avoid useless warning message when parsing a section guarded by
+     <IfDefine foo> if $(foo) is used within the section.
+     PR 56503 [Christophe Jaillet]
+
+  *) mod_proxy_fcgi: Fix faulty logging of large amounts of stderr from the
+     application.  PR 56858.  [Manuel Mausz <manuel-asf mausz.at>]
+
+  *) mod_proxy_http: Proxy responses with error status and
+     "ProxyErrorOverride On" hang until proxy timeout.
+     PR53420 [Rainer Jung]
+
+  *) SECURITY: CVE-2013-5704 (cve.mitre.org)
+     core: HTTP trailers could be used to replace HTTP headers
+     late during request processing, potentially undoing or
+     otherwise confusing modules that examined or modified
+     request headers earlier.  Adds "MergeTrailers" directive to restore
+     legacy behavior.  [Edward Lu, Yann Ylavic, Joe Orton, Eric Covener]
+
+  *) mod_log_config: Allow three character log formats to be registered. For
+     backwards compatibility, the first character of a three-character format
+     must be the '^' (caret) character.  [Eric Covener]
+
+  *) mod_lua: Don't quote Expires and Path values. PR 56734.
+     [Keith Mashinter, <kmashint yahoo com>]
+
+  *) mod_authz_core: Allow <AuthzProviderAlias>'es to be seen from auth
+     stanzas under virtual hosts. PR 56870. [Eric Covener]
+
 Changes with Apache 2.4.10
 
   *) SECURITY: CVE-2014-0117 (cve.mitre.org)
-     mod_proxy: Fix crash in Connection header handling which 
-     allowed a denial of service attack against a reverse proxy
-     with a threaded MPM.  [Ben Reser]
+     mod_proxy: Fix crash in Connection header handling which allowed a denial
+     of service attack against a reverse proxy with a threaded MPM.
+     [Ben Reser]
 
   *) SECURITY: CVE-2014-3523 (cve.mitre.org)
-     Fix a memory consumption denial of service in the WinNT MPM (used in all Windows
-     installations). Workaround: AcceptFilter <protocol> {none|connect}
+     Fix a memory consumption denial of service in the WinNT MPM, used in all
+     Windows installations. Workaround: AcceptFilter <protocol> {none|connect}
      [Jeff Trawick]
 
   *) SECURITY: CVE-2014-0226 (cve.mitre.org)
@@ -18,8 +55,8 @@ Changes with Apache 2.4.10
 
   *) SECURITY: CVE-2014-0118 (cve.mitre.org)
      mod_deflate: The DEFLATE input filter (inflates request bodies) now
-     limits the length and compression ratio of inflated request bodies to avoid
-     denial of sevice via highly compressed bodies.  See directives
+     limits the length and compression ratio of inflated request bodies to
+     avoid denial of service via highly compressed bodies.  See directives
      DeflateInflateLimitRequestBody, DeflateInflateRatioLimit,
      and DeflateInflateRatioBurst. [Yann Ylavic, Eric Covener]
 
@@ -243,7 +280,6 @@ Changes with Apache 2.4.10
 
   *) mod_lua: More verbose error logging when a handler function cannot be
      found. [Daniel Gruno]
-
 
 Changes with Apache 2.4.9
 
@@ -536,7 +572,8 @@ Changes with Apache 2.4.7
        - Avoid some memory allocation and work when TRACE1 is not activated
        - fix typo in include guard
        - indent
-       - No need to lower the string before removing the path, it is just a waste of time...
+       - No need to lower the string before removing the path, it is just 
+         a waste of time...
        - Save a few cycles
      [Christophe Jaillet <christophe.jaillet wanadoo.fr>]
 

@@ -3,6 +3,9 @@ apache2 (2.4.10-4) UNRELEASED; urgency=medium
   [ Stefan Fritsch ]
   * Make apache2 depend on apache2-utils. This got lost somewhere in the
     2.4 update.
+  * Fix possible installation failure because of broken preinst script.
+    Closes: #764498
+
   [ Arno Töll ]
   * Add proper return codes to fail() conditions in a2query. Thanks to Ondřej
     Surý for providing a patch.
