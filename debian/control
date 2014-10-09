@@ -26,7 +26,7 @@ Recommends: ssl-cert
 Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom,
  apache2-utils
 Description: Apache HTTP Server
- The Apache Software Foundation's goal is to build a secure, efficient and
+ The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
  result has long been the number one web server on the Internet.
  .
@@ -40,7 +40,7 @@ Replaces: apache2.2-common
 Conflicts: apache2.2-common (<< 2.3~)
 Multi-Arch: foreign
 Description: Apache HTTP Server (common files)
- The Apache Software Foundation's goal is to build a secure, efficient and
+ The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
  result has long been the number one web server on the Internet.
  .
@@ -59,7 +59,7 @@ Replaces: apache2.2-bin (<< 2.3~), apache2.2-common (<< 2.3~), apache2-mpm-prefo
 Conflicts: apache2.2-bin (<< 2.3~), apache2.2-common (<< 2.3~)
 Breaks: libapache2-mod-proxy-html (<< 1:2.4.4-2~), libapache2-mod-macro (<< 1:2.4.6-1~)
 Description: Apache HTTP Server (modules and other binary files)
- The Apache Software Foundation's goal is to build a secure, efficient and
+ The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
  result has long been the number one web server on the Internet.
  .
@@ -297,7 +297,7 @@ Pre-Depends: ${misc:Pre-Depends}
 Recommends: apache2
 Depends: ${misc:Depends}
 Description: Apache HTTP Server (on-site documentation)
- The Apache Software Foundation's goal is to build a secure, efficient and
+ The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
  result has long been the number one web server on the Internet.
  .
@@ -313,12 +313,12 @@ Provides: apache2-prefork-dev, apache2-threaded-dev, dh-apache2
 Replaces: apache2-prefork-dev, apache2-threaded-dev
 Conflicts: apache2-prefork-dev, apache2-threaded-dev
 Description: Apache HTTP Server (development headers)
- The Apache Software Foundation's goal is to build a secure, efficient and
+ The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
  result has long been the number one web server on the Internet.
  .
- This package provides development headers and the apxs2 binary for the Apache 2
- HTTP server useful to develop and link third party additions to the Debian
+ This package provides development headers and the apxs2 binary for the Apache
+ 2 HTTP server, useful to develop and link third party additions to the Debian
  Apache HTTP server package.
  .
  It also provides dh_apache2 and dh sequence addons useful to install various
@@ -333,7 +333,7 @@ Priority: extra
 Architecture: any
 Depends: ${misc:Depends}, apache2-bin (= ${binary:Version})
 Description: Apache debugging symbols
- The Apache Software Foundation's goal is to build a secure, efficient and
+ The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
  result has long been the number one web server on the Internet.
  .

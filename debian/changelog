@@ -5,6 +5,7 @@ apache2 (2.4.10-4) UNRELEASED; urgency=medium
     2.4 update.
   * Fix possible installation failure because of broken preinst script.
     Closes: #764498
+  * Improve package descriptions. Closes: #763676
 
   [ Arno Töll ]
   * Add proper return codes to fail() conditions in a2query. Thanks to Ondřej
