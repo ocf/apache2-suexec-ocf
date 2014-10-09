@@ -141,6 +141,29 @@ static int proxy_wstunnel_transfer(request_rec *r, conn_rec *c_i, conn_rec *c_o,
     return rv;
 }
 
+/* Search thru the input filters and remove the reqtimeout one */
+static void remove_reqtimeout(ap_filter_t *next)
+{
+    ap_filter_t *reqto = NULL;
+    ap_filter_rec_t *filter;
+
+    filter = ap_get_input_filter_handle("reqtimeout");
+    if (!filter) {
+        return;
+    }
+
+    while (next) {
+        if (next->frec == filter) {
+            reqto = next;
+            break;
+        }
+        next = next->next;
+    }
+    if (reqto) {
+        ap_remove_input_filter(reqto);
+    }
+}
+
 /*
  * process the request and write the response.
  */
@@ -213,7 +236,7 @@ static int ap_proxy_wstunnel_request(apr_pool_t *p, request_rec *r,
     pollfd.desc.s = client_socket;
     apr_pollset_add(pollset, &pollfd);
 
-    ap_remove_input_filter_byhandle(c->input_filters, "reqtimeout");
+    remove_reqtimeout(c->input_filters);
 
     r->output_filters = c->output_filters;
     r->proto_output_filters = c->output_filters;

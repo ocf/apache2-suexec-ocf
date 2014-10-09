@@ -89,7 +89,6 @@ disponibles</td></tr>
 <li><img alt="" src="../images/down.gif" /> <a href="#maxrangeoverlaps">MaxRangeOverlaps</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#maxrangereversals">MaxRangeReversals</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#maxranges">MaxRanges</a></li>
-<li><img alt="" src="../images/down.gif" /> <a href="#mergetrailers">MergeTrailers</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#mutex">Mutex</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#namevirtualhost">NameVirtualHost</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#options">Options</a></li>
@@ -3256,30 +3255,6 @@ Apache</td></tr>
       <dd>Un nombre positif représentera la nombre de segments de
       données maximal que le serveur renverra au client.</dd>
     </dl>
-
-</div>
-<div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
-<div class="directive-section"><h2><a name="MergeTrailers" id="MergeTrailers">MergeTrailers</a> <a name="mergetrailers" id="mergetrailers">Directive</a></h2>
-<table class="directive">
-<tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Détermine si les données supplémentaires (trailers) sont
-fusionnées avec les en-têtes</td></tr>
-<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>MergeTrailers [on|off]</code></td></tr>
-<tr><th><a href="directive-dict.html#Default">Défaut:</a></th><td><code>MergeTrailers off</code></td></tr>
-<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration du serveur, serveur virtuel</td></tr>
-<tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Core</td></tr>
-<tr><th><a href="directive-dict.html#Module">Module:</a></th><td>core</td></tr>
-<tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>Disponible à partir de la version 2.4.10 du serveur HTTP
-Apache</td></tr>
-</table>
-    <p>Cette directive permet de contrôler la fusion des données HTTP
-    supplémentaires (trailers) avec la représentation interne des
-    en-têtes. Cette fusion intervient lorsque le corps de la requête a
-    été entièrement reçu, bien longtemps après que la majeure partie du
-    traitement des en-têtes ait une chance de pouvoir examiner ou
-    modifier les en-têtes de la requête.</p>
-    <p>Cette option a été introduite dans un souci de compatibilité avec
-    les versions antérieures à 2.4.10, où les données supplémentaires
-    étaient systématiquement fusionnées avec les en-têtes de la requête.</p>
 
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>

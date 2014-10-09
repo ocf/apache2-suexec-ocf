@@ -275,7 +275,8 @@ static apr_status_t ftp_string_read(conn_rec *c, apr_bucket_brigade *bb,
                     pos += len;
                 }
             }
-            apr_bucket_delete(e);
+            APR_BUCKET_REMOVE(e);
+            apr_bucket_destroy(e);
         }
         *pos = '\0';
     }
@@ -447,7 +448,7 @@ static apr_status_t proxy_send_dir_filter(ap_filter_t *f,
     apr_bucket_brigade *out = apr_brigade_create(p, c->bucket_alloc);
     apr_status_t rv;
 
-    int n;
+    register int n;
     char *dir, *path, *reldir, *site, *str, *type;
 
     const char *pwd = apr_table_get(r->notes, "Directory-PWD");
@@ -633,7 +634,8 @@ static apr_status_t proxy_send_dir_filter(ap_filter_t *f,
             /* len+1 to leave space for the trailing nil char */
             apr_cpystrn(ctx->buffer+strlen(ctx->buffer), response, len+1);
 
-            apr_bucket_delete(e);
+            APR_BUCKET_REMOVE(e);
+            apr_bucket_destroy(e);
         }
 
         /* EOS? jump to footer */

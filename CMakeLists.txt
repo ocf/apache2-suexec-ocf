@@ -80,11 +80,11 @@ FOREACH(onelib ${APR_LIBRARIES})
 ENDFOREACH()
 
 MACRO(DEFINE_WITH_BLANKS output_definition input_symbol input_value)
-  IF(MSVC_IDE OR ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.11)
+  IF(MSVC_IDE)
     SET(${output_definition} "-D${input_symbol}=\"${input_value}\"")
   ELSE()
-    # command-line tool + older cmake, where extra quotes must be added and
-    # escaped to survive
+    # assume command-line tool, where extra quotes must be added and escaped to
+    # survive
     SET(${output_definition} "-D${input_symbol}=\"\\\"${input_value}\\\"\"")
   ENDIF()
 ENDMACRO()

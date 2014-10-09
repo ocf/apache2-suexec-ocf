@@ -42,7 +42,6 @@
 #if APR_HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#include <fcntl.h>
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -257,12 +256,11 @@ int main(int argc, char *argv[])
     char *actual_gname;     /* actual group name         */
     char *cmd;              /* command to be executed    */
     char cwd[AP_MAXPATH];   /* current working directory */
-    char dwd[AP_MAXPATH+1]; /* docroot working directory */
+    char dwd[AP_MAXPATH];   /* docroot working directory */
     struct passwd *pw;      /* password entry holder     */
     struct group *gr;       /* group entry holder        */
     struct stat dir_info;   /* directory info holder     */
     struct stat prg_info;   /* program info holder       */
-    int cwdh;               /* handle to cwd             */
 
     /*
      * Start with a "clean" environment
@@ -504,16 +502,11 @@ int main(int argc, char *argv[])
         exit(111);
     }
 
-    if ( (cwdh = open(".", O_RDONLY)) == -1 ) {
-        log_err("cannot open current working directory\n");
-        exit(111);
-    }
-
     if (userdir) {
         if (((chdir(target_homedir)) != 0) ||
             ((chdir(AP_USERDIR_SUFFIX)) != 0) ||
             ((getcwd(dwd, AP_MAXPATH)) == NULL) ||
-            ((fchdir(cwdh)) != 0)) {
+            ((chdir(cwd)) != 0)) {
             log_err("cannot get docroot information (%s)\n", target_homedir);
             exit(112);
         }
@@ -521,16 +514,12 @@ int main(int argc, char *argv[])
     else {
         if (((chdir(AP_DOC_ROOT)) != 0) ||
             ((getcwd(dwd, AP_MAXPATH)) == NULL) ||
-            ((fchdir(cwdh)) != 0)) {
+            ((chdir(cwd)) != 0)) {
             log_err("cannot get docroot information (%s)\n", AP_DOC_ROOT);
             exit(113);
         }
     }
 
-    close(cwdh);
-
-    if (strlen(cwd) > strlen(dwd))
-        strncat(dwd, "/", 1);
     if ((strncmp(cwd, dwd, strlen(dwd))) != 0) {
         log_err("command not in docroot (%s/%s)\n", cwd, cmd);
         exit(114);

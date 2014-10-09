@@ -60,6 +60,5 @@
 #define DEFAULT_REL_LOGFILEDIR "@rel_logfiledir@"
 #define DEFAULT_EXP_PROXYCACHEDIR "@exp_proxycachedir@"
 #define DEFAULT_REL_PROXYCACHEDIR "@rel_proxycachedir@"
-#define DEFAULT_PIDLOG "/var/run/apache2.pid"
 
 #endif /* AP_CONFIG_LAYOUT_H */

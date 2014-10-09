@@ -718,8 +718,6 @@ AP_DECLARE(void) ap_get_mime_headers_core(request_rec *r, apr_bucket_brigade *bb
                 r->status = HTTP_REQUEST_TIME_OUT;
             }
             else {
-                ap_log_rerror(APLOG_MARK, APLOG_DEBUG, rv, r, 
-                              "Failed to read request header line %s", field);
                 r->status = HTTP_BAD_REQUEST;
             }
 
@@ -919,11 +917,9 @@ request_rec *ap_read_request(conn_rec *conn)
     r->allowed_methods = ap_make_method_list(p, 2);
 
     r->headers_in      = apr_table_make(r->pool, 25);
-    r->trailers_in     = apr_table_make(r->pool, 5);
     r->subprocess_env  = apr_table_make(r->pool, 25);
     r->headers_out     = apr_table_make(r->pool, 12);
     r->err_headers_out = apr_table_make(r->pool, 5);
-    r->trailers_out    = apr_table_make(r->pool, 5);
     r->notes           = apr_table_make(r->pool, 5);
 
     r->request_config  = ap_create_request_config(r->pool);
@@ -1189,7 +1185,6 @@ AP_DECLARE(void) ap_set_sub_req_protocol(request_rec *rnew,
     rnew->status          = HTTP_OK;
 
     rnew->headers_in      = apr_table_copy(rnew->pool, r->headers_in);
-    rnew->trailers_in     = apr_table_copy(rnew->pool, r->trailers_in);
 
     /* did the original request have a body?  (e.g. POST w/SSI tags)
      * if so, make sure the subrequest doesn't inherit body headers
@@ -1201,7 +1196,6 @@ AP_DECLARE(void) ap_set_sub_req_protocol(request_rec *rnew,
     rnew->subprocess_env  = apr_table_copy(rnew->pool, r->subprocess_env);
     rnew->headers_out     = apr_table_make(rnew->pool, 5);
     rnew->err_headers_out = apr_table_make(rnew->pool, 5);
-    rnew->trailers_out    = apr_table_make(rnew->pool, 5);
     rnew->notes           = apr_table_make(rnew->pool, 5);
 
     rnew->expecting_100   = r->expecting_100;
@@ -1256,8 +1250,8 @@ AP_DECLARE(void) ap_note_auth_failure(request_rec *r)
         ap_run_note_auth_failure(r, type);
     }
     else {
-        ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, APLOGNO(00571)
-                      "need AuthType to note auth failure: %s", r->uri);
+        ap_log_rerror(APLOG_MARK, APLOG_ERR,
+                      0, r, APLOGNO(00571) "need AuthType to note auth failure: %s", r->uri);
     }
 }
 
@@ -1283,8 +1277,8 @@ AP_DECLARE(int) ap_get_basic_auth_pw(request_rec *r, const char **pw)
         return DECLINED;
 
     if (!ap_auth_name(r)) {
-        ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, APLOGNO(00572) 
-                      "need AuthName: %s", r->uri);
+        ap_log_rerror(APLOG_MARK, APLOG_ERR,
+                      0, r, APLOGNO(00572) "need AuthName: %s", r->uri);
         return HTTP_INTERNAL_SERVER_ERROR;
     }
 

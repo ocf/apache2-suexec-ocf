@@ -826,11 +826,11 @@ rm -f modules.c
 echo $MODLIST | $AWK -f $srcdir/build/build-modules-c.awk > modules.c
 
 APR_EXPAND_VAR(ap_prefix, $prefix)
-AC_DEFINE_UNQUOTED(HTTPD_ROOT, "/etc/apache2",
+AC_DEFINE_UNQUOTED(HTTPD_ROOT, "${ap_prefix}",
 	[Root directory of the Apache install area])
-AC_DEFINE_UNQUOTED(SERVER_CONFIG_FILE, "${progname}.conf",
+AC_DEFINE_UNQUOTED(SERVER_CONFIG_FILE, "${rel_sysconfdir}/${progname}.conf",
 	[Location of the config file, relative to the Apache root directory])
-AC_DEFINE_UNQUOTED(AP_TYPES_CONFIG_FILE, "mime.types",
+AC_DEFINE_UNQUOTED(AP_TYPES_CONFIG_FILE, "${rel_sysconfdir}/mime.types",
 	[Location of the MIME types config file, relative to the Apache root directory])
 
 perlbin=`$ac_aux_dir/PrintPath perl`
