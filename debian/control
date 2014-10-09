@@ -23,8 +23,7 @@ Replaces: apache2.2-common
 Conflicts: apache2.2-common (<< 2.3~)
 Provides: httpd, httpd-cgi
 Recommends: ssl-cert
-Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom,
- apache2-utils
+Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom
 Description: Apache HTTP Server
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
