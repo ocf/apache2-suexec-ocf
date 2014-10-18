@@ -1,6 +1,6 @@
 apache2 (2.4.10-6) UNRELEASED; urgency=medium
 
-  * Disable SSL 3.0 in default config. Closes: #765347
+  * Disable SSLv3 in default config. Closes: #765347
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 14 Oct 2014 22:23:40 +0200
 
