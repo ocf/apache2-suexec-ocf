@@ -1,6 +1,11 @@
 apache2 (2.4.10-6) UNRELEASED; urgency=medium
 
   * Disable SSLv3 in default config. Closes: #765347
+  * Pull changes from upstream 2.4.x branch up to r1632831
+    - Fixes an LDAP regression in 2.4.10
+    - mod_cache: Avoid sending 304 responses during failed revalidations.
+      PR 56881
+    - mod_status: Honor client IP address using mod_remoteip. PR 55886
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 14 Oct 2014 22:23:40 +0200
 
