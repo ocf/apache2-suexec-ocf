@@ -1,7 +1,7 @@
 Description: pull changes from upstream svn 2.4 branch up to r1632831
 Forwarded: not-needed
 Author: Stefan Fritsch <sf@debian.org>
-Last-Update: 2014-09-20
+Last-Update: 2014-10-18
 
 --- apache2.orig/CHANGES
 +++ apache2/CHANGES
