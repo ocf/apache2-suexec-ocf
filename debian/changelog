@@ -6,6 +6,7 @@ apache2 (2.4.10-6) UNRELEASED; urgency=medium
     - mod_cache: Avoid sending 304 responses during failed revalidations.
       PR 56881
     - mod_status: Honor client IP address using mod_remoteip. PR 55886
+  * Fix typo in package description. Closes: #765500
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 14 Oct 2014 22:23:40 +0200
 

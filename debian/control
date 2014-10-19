@@ -241,7 +241,7 @@ Description: Apache HTTP Server (utility programs for web servers)
  Provides some add-on programs useful for any web server.  These include:
   - ab (Apache benchmark tool)
   - fcgistarter (Start a FastCGI program)
-  - logresolve (Resolve IP addresses to hostname in logfiles)
+  - logresolve (Resolve IP addresses to hostnames in logfiles)
   - htpasswd (Manipulate basic authentication files)
   - htdigest (Manipulate digest authentication files)
   - htdbm (Manipulate basic authentication files in DBM format, using APR)
