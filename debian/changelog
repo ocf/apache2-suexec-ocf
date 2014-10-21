@@ -1,4 +1,4 @@
-apache2 (2.4.10-6) UNRELEASED; urgency=medium
+apache2 (2.4.10-6) unstable; urgency=medium
 
   * Disable SSLv3 in default config. Closes: #765347
   * Pull changes from upstream 2.4.x branch up to r1632831
@@ -8,7 +8,7 @@ apache2 (2.4.10-6) UNRELEASED; urgency=medium
     - mod_status: Honor client IP address using mod_remoteip. PR 55886
   * Fix typo in package description. Closes: #765500
 
- -- Stefan Fritsch <sf@debian.org>  Tue, 14 Oct 2014 22:23:40 +0200
+ -- Stefan Fritsch <sf@debian.org>  Tue, 21 Oct 2014 22:42:06 +0200
 
 apache2 (2.4.10-5) unstable; urgency=medium
 
