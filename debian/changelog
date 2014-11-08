@@ -1,3 +1,11 @@
+apache2 (2.4.10-7) UNRELEASED; urgency=medium
+
+  * Handle transitions of doc dirs and symlinks correctly during upgrade.
+    Use dpkg-maintscript-helper for this and remove existing explicit logic.
+    Closes: #767850
+
+ -- Stefan Fritsch <sf@debian.org>  Sat, 08 Nov 2014 11:46:31 +0100
+
 apache2 (2.4.10-6) unstable; urgency=medium
 
   * Disable SSLv3 in default config. Closes: #765347

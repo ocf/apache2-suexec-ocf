@@ -15,6 +15,7 @@ Homepage: http://httpd.apache.org/
 
 Package: apache2
 Architecture: any
+Pre-Depends: dpkg (>= 1.17.5)
 Depends: ${misc:Depends}, lsb-base, procps [!hurd-i386],
  perl, mime-support, apache2-bin (= ${binary:Version}),
  apache2-utils (>= 2.4), apache2-data (= ${source:Version}),
@@ -111,6 +112,7 @@ Architecture: any
 Section: oldlibs
 Priority: extra
 Breaks: gnome-user-share (<< 3.8.0-2~), libapache2-mod-dnssd (<< 0.6-3.1~)
+Pre-Depends: dpkg (>= 1.17.5)
 Depends: ${misc:Depends}, apache2-bin (>= 2.3~)
 Description: Transitional package for apache2-bin
  This is a transitional package for apache2-bin, and can be safely removed
@@ -218,6 +220,7 @@ Package: libapache2-mod-proxy-html
 Architecture: any
 Section: oldlibs
 Priority: extra
+Pre-Depends: dpkg (>= 1.17.5)
 Depends: ${misc:Depends}, apache2-bin (>= 2.3~)
 Description: Transitional package for apache2-bin
  This is a transitional package for apache2-bin, and can be safely removed
@@ -227,6 +230,7 @@ Package: libapache2-mod-macro
 Architecture: any
 Section: oldlibs
 Priority: extra
+Pre-Depends: dpkg (>= 1.17.5)
 Depends: ${misc:Depends}, apache2-bin (>= 2.3~)
 Description: Transitional package for apache2-bin
  This is a transitional package for apache2-bin, and can be safely removed
@@ -256,6 +260,7 @@ Package: apache2-suexec
 Architecture: any
 Section: oldlibs
 Priority: extra
+Pre-Depends: dpkg (>= 1.17.5)
 Depends: ${misc:Depends},
  apache2-suexec-pristine (= ${binary:Version})
 Description: transitional package for apache2-suexec-pristine
