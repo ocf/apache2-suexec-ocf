@@ -3,6 +3,8 @@ apache2 (2.4.10-7) UNRELEASED; urgency=medium
   * Handle transitions of doc dirs and symlinks correctly during upgrade.
     Use dpkg-maintscript-helper for this and remove existing explicit logic.
     Closes: #767850
+  * Remove obsolete conffiles in apache2.2-common, instead doing this only in
+    apache2. This partially fixes #768815
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 08 Nov 2014 11:46:31 +0100
 
