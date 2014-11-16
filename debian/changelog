@@ -1,3 +1,10 @@
+apache2 (2.4.10-8) UNRELEASED; urgency=medium
+
+  * Bump dpkg Pre-Depends to version that supports relative symlinks in
+    dpkg-maintscript-helper's symlink_to_dir. Closes: #769821
+
+ -- Stefan Fritsch <sf@debian.org>  Mon, 17 Nov 2014 00:38:07 +0100
+
 apache2 (2.4.10-7) unstable; urgency=medium
 
   * Handle transitions of doc dirs and symlinks correctly during upgrade.
