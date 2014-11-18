@@ -1,4 +1,4 @@
-apache2 (2.4.10-8) UNRELEASED; urgency=medium
+apache2 (2.4.10-8) unstable; urgency=medium
 
   * Bump dpkg Pre-Depends to version that supports relative symlinks in
     dpkg-maintscript-helper's symlink_to_dir. Closes: #769821
@@ -10,7 +10,7 @@ apache2 (2.4.10-8) UNRELEASED; urgency=medium
   * mod_ssl: Avoid crashes during startup or graceful restart due to
     openssl using a callback to invalid memory. LP: #1366174
 
- -- Stefan Fritsch <sf@debian.org>  Mon, 17 Nov 2014 00:38:07 +0100
+ -- Stefan Fritsch <sf@debian.org>  Tue, 18 Nov 2014 15:18:18 +0100
 
 apache2 (2.4.10-7) unstable; urgency=medium
 
