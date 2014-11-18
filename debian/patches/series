@@ -7,3 +7,4 @@ pull_upstream_2.4.x_branch.patch
 # This patch is applied manually
 #suexec-custom.patch
 CVE-2014-3583_mod_proxy_fcgi.diff
+mpm_event_use_after_free.diff
