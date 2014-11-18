@@ -6,6 +6,7 @@ apache2 (2.4.10-8) UNRELEASED; urgency=medium
     script. (CVE-2014-3583). Fix similar bug in mod_authnz_fcgi even
     though it does not seem to be exploitable.
   * mpm_event: Fix use-after-free that may lead to a server crash.
+  * mod_ssl: Fix memory leak on graceful restart. Closes: #754492
 
  -- Stefan Fritsch <sf@debian.org>  Mon, 17 Nov 2014 00:38:07 +0100
 
