@@ -9,3 +9,4 @@ pull_upstream_2.4.x_branch.patch
 CVE-2014-3583_mod_proxy_fcgi.diff
 mpm_event_use_after_free.diff
 mod_ssl_memleak.diff
+mod_ssl-oscp_stapling_crash.diff
