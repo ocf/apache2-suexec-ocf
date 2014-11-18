@@ -2,6 +2,9 @@ apache2 (2.4.10-8) UNRELEASED; urgency=medium
 
   * Bump dpkg Pre-Depends to version that supports relative symlinks in
     dpkg-maintscript-helper's symlink_to_dir. Closes: #769821
+  * mod_proxy_fcgi: Fix potential denial of service by malicious fcgi
+    script. (CVE-2014-3583). Fix similar bug in mod_authnz_fcgi even
+    though it does not seem to be exploitable.
 
  -- Stefan Fritsch <sf@debian.org>  Mon, 17 Nov 2014 00:38:07 +0100
 
