@@ -1,6 +1,7 @@
 apache2 (2.4.10-9) UNRELEASED; urgency=medium
 
-  * Also add a build-depends on dpkg 1.17.14. Closes: #770421
+  * Also bump debhelper build-depends to get dh_installdeb with support for
+    symlink_to_dir. Closes: #770421
 
  -- Stefan Fritsch <sf@debian.org>  Fri, 21 Nov 2014 10:17:05 +0100
 
