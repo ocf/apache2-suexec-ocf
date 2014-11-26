@@ -76,7 +76,7 @@ else
 	fi
 
 	APACHE2_MAINTSCRIPT_DEFER=
-	if ! dpkg-query -f '${Status}' -W apache2|grep -q installed; then
+	if ! dpkg-query -f '${Status}' -W apache2|egrep -q 'installed|triggers-awaited|triggers-pending'; then
 		echo "Package apache2 is not configured yet. Will defer actions by package $DPKG_MAINTSCRIPT_PACKAGE."
 		APACHE2_MAINTSCRIPT_DEFER=/var/lib/apache2/deferred_actions
 	fi

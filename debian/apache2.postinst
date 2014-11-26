@@ -132,7 +132,7 @@ execute_deferred_actions ()
 	cat /var/lib/apache2/deferred_actions |
 	while read PACKAGE FUNCTION ARG1 ARG2 ARG3
 	do
-		if ! dpkg-query -f '${Status}' -W "$PACKAGE"|grep -q installed ; then
+		if ! dpkg-query -f '${Status}' -W "$PACKAGE"|egrep -q 'installed|triggers-awaited|triggers-pending' ; then
 			# If the package has been removed again, skip the actions
 			continue
 		fi
