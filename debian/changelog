@@ -1,5 +1,8 @@
 apache2 (2.4.10-9) UNRELEASED; urgency=medium
 
+  * CVE-2014-8109: mod_lua: Fix handling of the Require line when a
+    LuaAuthzProvider is used in multiple Require directives with different
+    arguments.
   * Also bump debhelper build-depends to get dh_installdeb with support for
     symlink_to_dir. Closes: #770421
 
