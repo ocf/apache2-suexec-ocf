@@ -15,10 +15,11 @@ apache2 (2.4.1-1) unstable; urgency=low
   modules, you have to re-compile them for apache2 2.4.
 
   The authorization and authentication system has changed. Existing
-  configurations using deprecated Order/Allow/Deny directives should be
+  configurations using deprecated Order/Allow/Deny directives need to be
   upgraded to the new system. Please review upstream's "Authentication,
-  Authorization and Access Control Howto" [1]. However, "mod_access_compat" is
-  loaded by default to provide backward compatibility.
+  Authorization and Access Control Howto" [1]. There is a new module
+  "mod_access_compat", which is supposed to provide backward compatibility,
+  but it does not work well in practice.
 
   Furthermore, MPMs are simple modules now. Thus, the MPM can be changed
   at any time by (un-)loading a specific module. Be careful when upgrading. An

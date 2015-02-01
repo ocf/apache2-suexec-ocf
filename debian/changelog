@@ -1,3 +1,10 @@
+apache2 (2.4.10-10) UNRELEASED; urgency=medium
+
+  * Tweak mention of mod_access_compat in NEWS.Debian. The module does
+    not really work in practice.
+
+ -- Stefan Fritsch <sf@debian.org>  Sun, 01 Feb 2015 09:25:29 +0100
+
 apache2 (2.4.10-9) unstable; urgency=medium
 
   * CVE-2014-8109: mod_lua: Fix handling of the Require line when a
