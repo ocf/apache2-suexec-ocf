@@ -11,3 +11,4 @@ mpm_event_use_after_free.diff
 mod_ssl_memleak.diff
 mod_ssl-oscp_stapling_crash.diff
 CVE-2014-8109_mod_lua.diff
+CVE-2015-0228_mod_lua.diff

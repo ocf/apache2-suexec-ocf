@@ -1,5 +1,7 @@
 apache2 (2.4.10-10) UNRELEASED; urgency=medium
 
+  * CVE-2015-0228: mod_lua: Fix denial of service vulnerability in
+    wsupgrade().
   * Tweak mention of mod_access_compat in NEWS.Debian. The module does
     not really work in practice.
 
