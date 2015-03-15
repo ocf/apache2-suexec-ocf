@@ -25,7 +25,7 @@ perl -p -i -e s,XXX,$SUFFIX, /etc/init.d/apache2-$SUFFIX
 chmod 755 /etc/init.d/apache2-$SUFFIX
 
 echo -n Setting up symlinks: 
-for a in a2enmod a2dismod a2ensite a2dissite apache2ctl ; do
+for a in a2enmod a2dismod a2ensite a2dissite a2enconf a2disconf apache2ctl ; do
 	echo -n " $a-$SUFFIX"
 	ln -s /usr/sbin/$a /usr/local/sbin/$a-$SUFFIX
 done
