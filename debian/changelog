@@ -1,3 +1,10 @@
+apache2 (2.4.10-11) UNRELEASED; urgency=medium
+
+  * core: Fix -D[efined] or <Define>[d] variables lifetime accross restarts.
+    This could cause all kinds of strange behavior. PR 56008. PR 57328
+
+ -- Stefan Fritsch <sf@debian.org>  Tue, 31 Mar 2015 22:02:14 +0200
+
 apache2 (2.4.10-10) unstable; urgency=medium
 
   * CVE-2015-0228: mod_lua: Fix denial of service vulnerability in
