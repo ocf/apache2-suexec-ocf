@@ -3,6 +3,7 @@ apache2 (2.4.10-11) UNRELEASED; urgency=medium
   * core: Fix -D[efined] or <Define>[d] variables lifetime accross restarts.
     This could cause all kinds of strange behavior. PR 56008. PR 57328
   * mpm_event: Fix process deadlock when shutting down a worker. PR 56960
+  * mpm_event: Fix crashes due to various race conditions. Closes: #779078
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 31 Mar 2015 22:02:14 +0200
 
