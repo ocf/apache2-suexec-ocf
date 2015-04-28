@@ -1,5 +1,6 @@
-apache2 (2.4.10-12) UNRELEASED; urgency=medium
+apache2 (2.4.12-1) UNRELEASED; urgency=medium
 
+  * New upstream version
   * Ship mod_proxy_html's default config file. Closes: #782022
   * Fix typo in dh_apache2 man page. Closes: #781032
 
