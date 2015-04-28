@@ -1,6 +1,8 @@
 apache2 (2.4.12-1) UNRELEASED; urgency=medium
 
   * New upstream version
+  * Add a patch for CVE-2015-0253 which was introduced in 2.4.11 which
+    was never shipped in Debian.
   * Ship mod_proxy_html's default config file. Closes: #782022
   * Fix typo in dh_apache2 man page. Closes: #781032
 
