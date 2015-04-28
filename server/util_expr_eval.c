@@ -236,10 +236,8 @@ static int ap_expr_eval_comp(ap_expr_eval_ctx_t *ctx, const ap_expr_t *node)
                 do {
                     const ap_expr_t *val = e2->node_arg1;
                     AP_DEBUG_ASSERT(e2->node_op == op_ListElement);
-                    if (strcmp(needle, ap_expr_eval_word(ctx, val)) == 0) {
+                    if (strcmp(needle, ap_expr_eval_word(ctx, val)) == 0)
                         return 1;
-                        break;
-                    }
                     e2 = e2->node_arg2;
                 } while (e2 != NULL);
             }
@@ -1475,7 +1473,7 @@ static const char *misc_var_fn(ap_expr_eval_ctx_t *ctx, const void *data)
     case 8:
         return ap_get_server_banner();
     case 9:
-        return apr_itoa(ctx->p, MODULE_MAGIC_NUMBER);
+        return apr_itoa(ctx->p, MODULE_MAGIC_NUMBER_MAJOR);
     default:
         ap_assert(0);
     }

@@ -175,13 +175,8 @@ ProxyPassReverse /apps/foo http://www.example.com/foo</pre>
 <h2><a name="basppacketstruct" id="basppacketstruct">Structure de base des paquets</a></h2>
     <p>Ce protocole hérite en partie de XDR, mais il diffère sur de
     nombreux points (pas d'alignement sur 4 bits, par exemple).</p>
-    <p>Ordre des octets : je ne suis pas sûr du type endian des octets
-    individuels. Je suppose qu'ils sont de type little-endian, car cela
-    correspond à la spécification XDR, et je suppose aussi que la
-    bibliothèque sys/socket fonctionne ainsi automatiquement (du point
-    de vue du langage C). Il serait souhaitable que quelqu'un possèdant
-    une meilleure connaissance des appels socket puisse prendre le
-    relai.</p>
+    <p>AJP13 utilise les octets selon leur ordre d'arrivée par le réseau
+    pour tous les types de données.</p>
     <p>Le protocole comporte quatre types de données : octets, booléens,
     entiers et chaînes de caractères.</p>
     <dl>
@@ -626,11 +621,11 @@ AJP13_GET_BODY_CHUNK :=
   
   <h3>Fin de la réponse</h3>
     <p>Signale la fin de ce cycle de traitement de requête. Si le
-    drapeau <code>reuse</code> est à true <code>(==1)</code>, cette
+    drapeau <code>reuse</code> est à true <code>(toute valeur autre que
+    0 en langage C pur)</code>, cette
     connexion TCP peut être réutilisée pour traiter de nouvelles
-    requêtes entrantes. Si <code>reuse</code> est à false (toute autre
-    valeur que 1 dans le véritable code C), la connexion sera
-    fermée.</p>
+    requêtes entrantes. Si <code>reuse</code> est à false
+    (==0), la connexion sera fermée.</p>
   
   <h3>Réception d'un tronçon de corps</h3>
     <p>Le conteneur réclame la suite des données de la requête (dans le
@@ -671,7 +666,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_proxy_ajp.ht
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

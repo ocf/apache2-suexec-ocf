@@ -1128,6 +1128,12 @@ ProxyPass /mirror/foo http://backend.example.com</pre>
     robin DNS. To disable connection pooling reuse,
     set this property value to <code>On</code>.
     </td></tr>
+    <tr><td>enablereuse</td>
+        <td>On</td>
+        <td>This is the inverse of 'disablereuse' above, provided as a
+        convenience for scheme handlers that require opt-in for connection
+        reuse (such as <code class="module"><a href="../mod/mod_proxy_fcgi.html">mod_proxy_fcgi</a></code>).  2.4.11 and later only.
+    </td></tr>
     <tr><td>flushpackets</td>
         <td>off</td>
         <td>Determines whether the proxy module will auto-flush the output
@@ -1493,7 +1499,7 @@ ProxyPassReverse  /mirror/foo/ https://backend.example.com/</pre>
     <p>Suppose the local server has address <code>http://example.com/</code>;
     then</p>
 
-    <pre class="prettyprint lang-config">ProxyPassMatch ^(/.*\.gif)$ http://backend.example.com$1</pre>
+    <pre class="prettyprint lang-config">ProxyPassMatch ^/(.*\.gif)$ http://backend.example.com/$1</pre>
 
 
     <p>will cause a local request for
@@ -1520,6 +1526,13 @@ ProxyPassReverse  /mirror/foo/ https://backend.example.com/</pre>
     <p>If you require a more flexible reverse-proxy configuration, see the
     <code class="directive"><a href="../mod/mod_rewrite.html#rewriterule">RewriteRule</a></code> directive with the
     <code>[P]</code> flag.</p>
+
+    <div class="note">
+      <h3>Default Substitution</h3>
+      <p>When the URL parameter doesn't use any backreferences into the regular
+      expression, the original URL will be appended to the URL parameter.
+      </p>
+    </div>
 
     <div class="warning">
       <h3>Security Warning</h3>
@@ -1937,7 +1950,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_proxy.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossary</a> | <a href="../sitemap.html">Sitemap</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

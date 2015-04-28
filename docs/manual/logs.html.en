@@ -617,7 +617,7 @@ CustomLog logs/access_log comonvhost</pre>
 
 
     <p>The <code>%v</code> is used to log the name of the virtual
-    host that is serving the request. Then a program like <a href="programs/other.html">split-logfile</a> can be used to
+    host that is serving the request. Then a program like <a href="programs/split-logfile.html">split-logfile</a> can be used to
     post-process the access log in order to split it into one file
     per virtual host.</p>
   </div><div class="top"><a href="#page-header"><img alt="top" src="./images/up.gif" /></a></div>
@@ -694,7 +694,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/logs.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="./mod/">Modules</a> | <a href="./mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="./glossary.html">Glossary</a> | <a href="./sitemap.html">Sitemap</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

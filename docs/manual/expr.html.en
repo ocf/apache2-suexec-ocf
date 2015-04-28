@@ -197,7 +197,7 @@ listfunction ::= listfuncname "<strong>(</strong>" word "<strong>)</strong>"</pr
 <tr><td><code>REMOTE_HOST</code></td>
         <td>The host name of the remote host</td></tr>
 <tr class="odd"><td><code>REMOTE_USER</code></td>
-        <td>The name of the authenticated user (if any)</td></tr>
+        <td>The name of the authenticated user, if any (not available during <code class="directive">&lt;If &gt;</code>)</td></tr>
 <tr><td><code>REMOTE_IDENT</code></td>
         <td>The user name set by <code class="module"><a href="./mod/mod_ident.html">mod_ident</a></code></td></tr>
 <tr class="odd"><td><code>SERVER_NAME</code></td>
@@ -218,7 +218,7 @@ listfunction ::= listfuncname "<strong>(</strong>" word "<strong>)</strong>"</pr
         <td>The configured <code class="directive"><a href="./mod/mod_authn_core.html#authtype">AuthType</a></code> (e.g.
         "<code>basic</code>")</td></tr>
 <tr class="odd"><td><code>CONTENT_TYPE</code></td>
-        <td>The content type of the response</td></tr>
+        <td>The content type of the response (not available during <code class="directive">&lt;If &gt;</code>)</td></tr>
 <tr><td><code>HANDLER</code></td>
         <td>The name of the <a href="handler.html">handler</a> creating
             the response</td></tr>
@@ -229,7 +229,7 @@ listfunction ::= listfuncname "<strong>(</strong>" word "<strong>)</strong>"</pr
         <td>"<code>on</code>" if the connection uses IPv6,
             "<code>off</code>" otherwise</td></tr>
 <tr class="odd"><td><code>REQUEST_STATUS</code></td>
-        <td>The HTTP error status of the request</td></tr>
+        <td>The HTTP error status of the request (not available during <code class="directive">&lt;If &gt;</code>)</td></tr>
 <tr><td><code>REQUEST_LOG_ID</code></td>
         <td>The error log id of the request (see
             <code class="directive"><a href="./mod/core.html#errorlogformat">ErrorLogFormat</a></code>)</td></tr>
@@ -454,7 +454,8 @@ listfunction ::= listfuncname "<strong>(</strong>" word "<strong>)</strong>"</pr
         <td>Hash the string using SHA1, then encode the hash with hexadecimal
             encoding</td><td /></tr>
 <tr class="odd"><td><code>file</code></td>
-        <td>Read contents from a file</td><td>yes</td></tr>
+        <td>Read contents from a file (including line endings, when present)
+        </td><td>yes</td></tr>
 <tr><td><code>filesize</code></td>
         <td>Return size of a file (or 0 if file does not exist or is not
             regular file)</td><td>yes</td></tr>
@@ -502,7 +503,36 @@ listfunction ::= listfuncname "<strong>(</strong>" word "<strong>)</strong>"</pr
 # Only allow access to this content during business hours
 &lt;Directory "/foo/bar/business"&gt;
     Require expr %{TIME_HOUR} -gt 9 &amp;&amp; %{TIME_HOUR} -lt 17
-&lt;/Directory&gt;</pre>
+&lt;/Directory&gt;	
+
+# Check a HTTP header for a list of values
+&lt;If "%{HTTP:X-example-header} in { 'foo', 'bar', 'baz' }"&gt;
+    Header set matched true
+&lt;/If&gt;
+
+# Check an environment variable for a regular expression, negated.
+&lt;If "! reqenv('REDIRECT_FOO') =~ /bar/"&gt;
+    Header set matched true
+&lt;/If&gt;
+
+# Check result of URI mapping by running in Directory context with -f
+&lt;Directory /var/www&gt;
+    AddEncoding x-gzip gz
+&lt;If "-f '%{REQUEST_FILENAME}.unzipme' &amp;&amp; ! %{HTTP:Accept-Encoding} =~ /gzip/"&gt;
+      SetOutputFilter INFLATE
+&lt;/If&gt;
+&lt;/Directory&gt;
+
+# Function examples in boolean context
+&lt;If "md5('foo') == 'acbd18db4cc2f85cedef654fccc4a4d8'"&gt;
+  Header set checksum-matched true
+&lt;/If&gt;
+&lt;If "md5('foo') == replace('md5:XXXd18db4cc2f85cedef654fccc4a4d8', 'md5:XXX', 'acb')&gt;
+  Header set checksum-matched-2 true
+&lt;/If&gt;
+
+# Function example in string context
+Header set foo-checksum "expr=%{md5:foo}"</pre>
 
 </div><div class="top"><a href="#page-header"><img alt="top" src="./images/up.gif" /></a></div>
 <div class="section">
@@ -512,7 +542,7 @@ listfunction ::= listfuncname "<strong>(</strong>" word "<strong>)</strong>"</pr
     <table class="bordered"><tr class="header"><th>Name</th><th>Alternative</th> <th>Description</th></tr>
 <tr><td><code>-in</code></td>
         <td><code>in</code></td>
-        <td>string contained in string list</td></tr>
+        <td>string contained in wordlist</td></tr>
 <tr class="odd"><td><code>/regexp/</code></td>
         <td><code>m#regexp#</code></td>
         <td>Regular expression (the second form allows different
@@ -569,7 +599,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/expr.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="./mod/">Modules</a> | <a href="./mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="./glossary.html">Glossary</a> | <a href="./sitemap.html">Sitemap</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();
