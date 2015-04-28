@@ -429,6 +429,26 @@ version 2.4.10</td></tr>
       efficace que <code>%s</code>.</p>
     </div>
 
+    <div class="note"><h3>Note à propos des valeurs des expressions</h3>
+    <p>Lorsque le paramètre valeur utilise l'interpréteur <a href="../expr.html">ap_expr</a>, certaines syntaxes d'expressions
+    seront différentes des exemples qui évaluent des expressions
+    <em>booléennes</em> telles que &lt;If&gt; :</p>
+    <ul>
+      <li>Le point de départ de la syntaxe est 'string' au lieu de
+      'expr'.</li>
+      <li>Les appels de fonction utilisent la syntaxe %{funcname:arg} au
+      lieu de funcname(arg).</li>
+      <li>Les fonctions multi-arguments ne sont pas encore disponibles
+      depuis le point de départ 'string'.</li>
+      <li>Il faut mettre entre guillemets l'ensemble du paramètre, comme
+      dans l'exemple suivant : 
+          <pre class="prettyprint lang-config">Header set foo-checksum "expr=%{md5:foo}"</pre>
+
+       </li>
+                   
+    </ul>
+    </div>
+
     <p><code>edit</code>nécessite les deux arguments
     <var>valeur</var>, qui est une <a class="glossarylink" href="../glossary.html#regex" title="voir glossaire">expression
     rationnelle</a>, et une chaîne additionnelle
@@ -609,7 +629,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_headers.html
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

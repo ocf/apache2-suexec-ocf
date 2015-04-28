@@ -132,8 +132,9 @@
 	Suppress</code> pour supprimer les réponses intermédiaires.</dd>
         <dt>proxy-initial-not-pooled</dt>
         <dd>Si cette variable est définie, aucune connexion faisant
-	partie d'un jeu ne sera réutilisée si la connexion client est
-	une connexion initiale. Ceci permet d'éviter le message d'erreur
+	partie d'un jeu ne sera réutilisée si la requête
+	du client est la requête initiale pour une connexion.
+	Ceci permet d'éviter le message d'erreur
 	"proxy: error reading status line from remote server" causé par
 	la situation de compétition au cours de laquelle le serveur
 	cible ferme la connexion du jeu après la vérification de la
@@ -181,7 +182,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_proxy_http.h
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

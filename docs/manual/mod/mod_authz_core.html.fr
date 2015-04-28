@@ -240,9 +240,18 @@ Alias /secure /webpages/secure
   <h3><a name="reqexpr" id="reqexpr">Require expr</a></h3>
 
   <p>Le fournisseur <code>expr</code> permet d'accorder l'autorisation
-  d'accès en fonction d'expressions arbitraires.</p>
+  d'accès de base en fonction d'expressions arbitraires.</p>
 
     <pre class="prettyprint lang-config">Require expr "%{TIME_HOUR} -ge 9 &amp;&amp; %{TIME_HOUR} -le 17"</pre>
+
+
+    <pre class="prettyprint lang-config">&lt;RequireAll&gt;
+    Require expr "!(%{QUERY_STRING} =~ /secret/)"
+    Require expr "%{REQUEST_URI} in { '/example.cgi', '/other.cgi' }" 
+&lt;/RequireAll&gt;</pre>
+
+
+    <pre class="prettyprint lang-config">Require expr "!(%{QUERY_STRING} =~ /secret/) &amp;&amp; %{REQUEST_URI} in { '/example.cgi', '/other.cgi' }"</pre>
 
 
     <p>La syntaxe de l'expression est décrite dans la documentation de <a href="../expr.html">ap_expr</a>.</p>
@@ -652,7 +661,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_authz_core.h
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

@@ -96,6 +96,7 @@ to provide the cryptography engine.</p>
 <li><img alt="" src="../images/down.gif" /> <a href="#sslsessioncache">SSLSessionCache</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#sslsessioncachetimeout">SSLSessionCacheTimeout</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#sslsessionticketkeyfile">SSLSessionTicketKeyFile</a></li>
+<li><img alt="" src="../images/down.gif" /> <a href="#sslsessiontickets">SSLSessionTickets</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#sslsrpunknownuserseed">SSLSRPUnknownUserSeed</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#sslsrpverifierfile">SSLSRPVerifierFile</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#sslstaplingcache">SSLStaplingCache</a></li>
@@ -1073,8 +1074,8 @@ which means that OCSP responses are considered valid as long as their
 </table>
 <p>This option determines whether queries to OCSP responders should contain
 a nonce or not. By default, a query nonce is always used and checked against
-the response's one. When the responder does not use nonces (eg. Microsoft OCSP
-Responder), this option ought to be turned <code>off</code>.</p>
+the response's one. When the responder does not use nonces (e.g. Microsoft OCSP
+Responder), this option should be turned <code>off</code>.</p>
 
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
@@ -2121,6 +2122,7 @@ in the Session Cache</td></tr>
 <tr><th><a href="directive-dict.html#Context">Context:</a></th><td>server config, virtual host</td></tr>
 <tr><th><a href="directive-dict.html#Status">Status:</a></th><td>Extension</td></tr>
 <tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_ssl</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibility:</a></th><td>Applies also to RFC 5077 TLS session resumption in Apache 2.4.10 and later</td></tr>
 </table>
 <p>
 This directive sets the timeout in seconds for the information stored in the
@@ -2165,6 +2167,27 @@ OpenSSL currently doesn't allow to specify a limit for ticket lifetimes.</p>
 <p>The ticket key file contains sensitive keying material and should
 be protected with file permissions similar to those used for
 <code class="directive"><a href="#sslcertificatekeyfile">SSLCertificateKeyFile</a></code>.</p>
+</div>
+
+</div>
+<div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
+<div class="directive-section"><h2><a name="SSLSessionTickets" id="SSLSessionTickets">SSLSessionTickets</a> <a name="sslsessiontickets" id="sslsessiontickets">Directive</a></h2>
+<table class="directive">
+<tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Enable or disable use of TLS session tickets</td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Syntax:</a></th><td><code>SSLSessionTickets on|off</code></td></tr>
+<tr><th><a href="directive-dict.html#Default">Default:</a></th><td><code>SSLSessionTickets on</code></td></tr>
+<tr><th><a href="directive-dict.html#Context">Context:</a></th><td>server config, virtual host</td></tr>
+<tr><th><a href="directive-dict.html#Status">Status:</a></th><td>Extension</td></tr>
+<tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_ssl</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibility:</a></th><td>Available in httpd 2.4.11 and later, if using OpenSSL 0.9.8f
+or later.</td></tr>
+</table>
+<p>This directive allows to enable or disable the use of TLS session tickets
+(RFC 5077).</p>
+<div class="warning">
+<p>TLS session tickets are enabled by default. Using them without restarting
+the web server with an appropriate frequency (e.g. daily) compromises perfect
+forward secrecy.</p>
 </div>
 
 </div>
@@ -2236,6 +2259,10 @@ With the exception of <code>none</code> and <code>nonenotnull</code>,
 the same storage types are supported as with
 <code class="directive"><a href="#sslsessioncache">SSLSessionCache</a></code>.</p>
 
+<p>The <code>ssl-stapling</code> mutex is used to serialize access to the
+OCSP stapling cache to prevent corruption.  This mutex can be configured
+using the <code class="directive"><a href="../mod/core.html#mutex">Mutex</a></code> directive.</p>
+
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
 <div class="directive-section"><h2><a name="SSLStaplingErrorCacheTimeout" id="SSLStaplingErrorCacheTimeout">SSLStaplingErrorCacheTimeout</a> <a name="sslstaplingerrorcachetimeout" id="sslstaplingerrorcachetimeout">Directive</a></h2>
@@ -2283,7 +2310,7 @@ is also enabled.</p>
 </table>
 <p>This directive overrides the URI of an OCSP responder as obtained from
 the authorityInfoAccess (AIA) extension of the certificate.
-Of potential use when going through a proxy for retrieving OCSP queries.</p>
+One potential use is when a proxy is used for retrieving OCSP queries.</p>
 
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
@@ -2554,7 +2581,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_ssl.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossary</a> | <a href="../sitemap.html">Sitemap</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

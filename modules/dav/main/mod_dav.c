@@ -315,6 +315,7 @@ static const char *dav_cmd_davmintimeout(cmd_parms *cmd, void *config,
 static int dav_error_response(request_rec *r, int status, const char *body)
 {
     r->status = status;
+    r->status_line = ap_get_status_line(status);
 
     ap_set_content_type(r, "text/html; charset=ISO-8859-1");
 
@@ -711,8 +712,8 @@ static dav_error *dav_get_resource(request_rec *r, int label_allowed,
     if (conf->provider == NULL) {
         return dav_new_error(r->pool, HTTP_METHOD_NOT_ALLOWED, 0, 0,
                              apr_psprintf(r->pool,
-				          "DAV not enabled for %s",
-					  ap_escape_html(r->pool, r->uri)));
+                             "DAV not enabled for %s",
+                             ap_escape_html(r->pool, r->uri)));
     }
 
     /* resolve the resource */

@@ -141,40 +141,17 @@ static int proxy_wstunnel_transfer(request_rec *r, conn_rec *c_i, conn_rec *c_o,
     return rv;
 }
 
-/* Search thru the input filters and remove the reqtimeout one */
-static void remove_reqtimeout(ap_filter_t *next)
-{
-    ap_filter_t *reqto = NULL;
-    ap_filter_rec_t *filter;
-
-    filter = ap_get_input_filter_handle("reqtimeout");
-    if (!filter) {
-        return;
-    }
-
-    while (next) {
-        if (next->frec == filter) {
-            reqto = next;
-            break;
-        }
-        next = next->next;
-    }
-    if (reqto) {
-        ap_remove_input_filter(reqto);
-    }
-}
-
 /*
  * process the request and write the response.
  */
-static int ap_proxy_wstunnel_request(apr_pool_t *p, request_rec *r,
+static int proxy_wstunnel_request(apr_pool_t *p, request_rec *r,
                                 proxy_conn_rec *conn,
                                 proxy_worker *worker,
                                 proxy_server_conf *conf,
                                 apr_uri_t *uri,
                                 char *url, char *server_portstr)
 {
-    apr_status_t rv = APR_SUCCESS;
+    apr_status_t rv;
     apr_pollset_t *pollset;
     apr_pollfd_t pollfd;
     const apr_pollfd_t *signalled;
@@ -236,7 +213,7 @@ static int ap_proxy_wstunnel_request(apr_pool_t *p, request_rec *r,
     pollfd.desc.s = client_socket;
     apr_pollset_add(pollset, &pollfd);
 
-    remove_reqtimeout(c->input_filters);
+    ap_remove_input_filter_byhandle(c->input_filters, "reqtimeout");
 
     r->output_filters = c->output_filters;
     r->proto_output_filters = c->output_filters;
@@ -271,6 +248,7 @@ static int ap_proxy_wstunnel_request(apr_pool_t *p, request_rec *r,
                 }
                 else if (pollevent & APR_POLLERR) {
                     rv = APR_EPIPE;
+                    backconn->aborted = 1;
                     ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, APLOGNO(02447)
                             "error on backconn");
                 }
@@ -394,7 +372,7 @@ static int proxy_wstunnel_handler(request_rec *r, proxy_worker *worker,
 
 
         /* Step Three: Process the Request */
-        status = ap_proxy_wstunnel_request(p, r, backend, worker, conf, uri, locurl,
+        status = proxy_wstunnel_request(p, r, backend, worker, conf, uri, locurl,
                                       server_portstr);
         break;
     }

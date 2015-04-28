@@ -767,7 +767,19 @@ static void set_signals(void)
 #endif
 }
 
-static int start_lingering_close_common(event_conn_state_t *cs)
+static void notify_suspend(event_conn_state_t *cs)
+{
+    ap_run_suspend_connection(cs->c, cs->r);
+    cs->suspended = 1;
+}
+
+static void notify_resume(event_conn_state_t *cs)
+{
+    cs->suspended = 0;
+    ap_run_resume_connection(cs->c, cs->r);
+}
+
+static int start_lingering_close_common(event_conn_state_t *cs, int in_worker)
 {
     apr_status_t rv;
     struct timeout_queue *q;
@@ -798,8 +810,11 @@ static int start_lingering_close_common(event_conn_state_t *cs)
         cs->pub.state = CONN_STATE_LINGER_NORMAL;
     }
     apr_atomic_inc32(&lingering_count);
-    apr_thread_mutex_lock(timeout_mutex);
     cs->c->sbh = NULL;
+    if (in_worker) { 
+        notify_suspend(cs);
+    }
+    apr_thread_mutex_lock(timeout_mutex);
     TO_QUEUE_APPEND(*q, cs);
     cs->pfd.reqevents = (
             cs->pub.sense == CONN_SENSE_WANT_WRITE ? APR_POLLOUT :
@@ -814,7 +829,6 @@ static int start_lingering_close_common(event_conn_state_t *cs)
         TO_QUEUE_REMOVE(*q, cs);
         apr_thread_mutex_unlock(timeout_mutex);
         apr_socket_close(cs->pfd.desc.s);
-        apr_pool_clear(cs->p);
         ap_push_pool(worker_queue_info, cs->p);
         return 0;
     }
@@ -832,11 +846,12 @@ static int start_lingering_close_common(event_conn_state_t *cs)
 static int start_lingering_close_blocking(event_conn_state_t *cs)
 {
     if (ap_start_lingering_close(cs->c)) {
-        apr_pool_clear(cs->p);
+        cs->c->sbh = NULL;
+        notify_suspend(cs);
         ap_push_pool(worker_queue_info, cs->p);
         return 0;
     }
-    return start_lingering_close_common(cs);
+    return start_lingering_close_common(cs, 1);
 }
 
 /*
@@ -855,13 +870,13 @@ static int start_lingering_close_nonblocking(event_conn_state_t *cs)
     apr_socket_t *csd = cs->pfd.desc.s;
 
     if (c->aborted
+        || ap_shutdown_conn(c, 0) != APR_SUCCESS || c->aborted
         || apr_socket_shutdown(csd, APR_SHUTDOWN_WRITE) != APR_SUCCESS) {
         apr_socket_close(csd);
-        apr_pool_clear(cs->p);
         ap_push_pool(worker_queue_info, cs->p);
         return 0;
     }
-    return start_lingering_close_common(cs);
+    return start_lingering_close_common(cs, 0);
 }
 
 /*
@@ -881,21 +896,8 @@ static int stop_lingering_close(event_conn_state_t *cs)
         ap_log_error(APLOG_MARK, APLOG_ERR, rv, ap_server_conf, APLOGNO(00468) "error closing socket");
         AP_DEBUG_ASSERT(0);
     }
-    apr_pool_clear(cs->p);
     ap_push_pool(worker_queue_info, cs->p);
     return 0;
-}
-
-static void notify_suspend(event_conn_state_t *cs)
-{
-    ap_run_suspend_connection(cs->c, cs->r);
-    cs->suspended = 1;
-}
-
-static void notify_resume(event_conn_state_t *cs)
-{
-    cs->suspended = 0;
-    ap_run_resume_connection(cs->c, cs->r);
 }
 
 /*
@@ -959,8 +961,6 @@ static void process_socket(apr_thread_t *thd, apr_pool_t * p, apr_socket_t * soc
         c = ap_run_create_connection(p, ap_server_conf, sock,
                                      conn_id, sbh, cs->bucket_alloc);
         if (!c) {
-            apr_bucket_alloc_destroy(cs->bucket_alloc);
-            apr_pool_clear(p);
             ap_push_pool(worker_queue_info, p);
             return;
         }
@@ -1012,6 +1012,8 @@ static void process_socket(apr_thread_t *thd, apr_pool_t * p, apr_socket_t * soc
         c->sbh = sbh;
         notify_resume(cs);
         c->current_thread = thd;
+        /* Subsequent request on a conn, and thread number is part of ID */
+        c->id = conn_id;
     }
 
     if (c->clogging_input_filters && !c->aborted) {
@@ -1089,7 +1091,6 @@ read_request:
 
     if (cs->pub.state == CONN_STATE_LINGER) {
         start_lingering_close_blocking(cs);
-        notify_suspend(cs);
     }
     else if (cs->pub.state == CONN_STATE_CHECK_REQUEST_LINE_READABLE) {
         /* It greatly simplifies the logic to use a single timeout value here
@@ -1239,7 +1240,6 @@ static apr_status_t push2worker(const apr_pollfd_t * pfd,
         apr_socket_close(cs->pfd.desc.s);
         ap_log_error(APLOG_MARK, APLOG_CRIT, rc,
                      ap_server_conf, APLOGNO(00471) "push2worker: ap_queue_push failed");
-        apr_pool_clear(cs->p);
         ap_push_pool(worker_queue_info, cs->p);
     }
 
@@ -1271,13 +1271,13 @@ static void get_worker(int *have_idle_worker_p, int blocking, int *all_busy)
     else
         rc = ap_queue_info_try_get_idler(worker_queue_info);
 
-    if (rc == APR_SUCCESS) {
+    if (rc == APR_SUCCESS || APR_STATUS_IS_EOF(rc)) {
         *have_idle_worker_p = 1;
     }
     else if (!blocking && rc == APR_EAGAIN) {
         *all_busy = 1;
     }
-    else if (!APR_STATUS_IS_EOF(rc)) {
+    else {
         ap_log_error(APLOG_MARK, APLOG_ERR, rc, ap_server_conf, APLOGNO(00472)
                      "ap_queue_info_wait_for_idler failed.  "
                      "Attempting to shutdown process gracefully");
@@ -1376,7 +1376,6 @@ static void process_lingering_close(event_conn_state_t *cs, const apr_pollfd_t *
     apr_thread_mutex_unlock(timeout_mutex);
     TO_QUEUE_ELEM_INIT(cs);
 
-    apr_pool_clear(cs->p);
     ap_push_pool(worker_queue_info, cs->p);
 }
 
@@ -1697,7 +1696,6 @@ static void * APR_THREAD_FUNC listener_thread(apr_thread_t * thd, void *dummy)
                             ap_log_error(APLOG_MARK, APLOG_CRIT, rc,
                                          ap_server_conf,
                                          "ap_queue_push failed");
-                            apr_pool_clear(ptrans);
                             ap_push_pool(worker_queue_info, ptrans);
                         }
                         else {
@@ -1705,7 +1703,6 @@ static void * APR_THREAD_FUNC listener_thread(apr_thread_t * thd, void *dummy)
                         }
                     }
                     else {
-                        apr_pool_clear(ptrans);
                         ap_push_pool(worker_queue_info, ptrans);
                     }
                 }

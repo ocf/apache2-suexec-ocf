@@ -272,7 +272,7 @@ apr_status_t ssl_init_Module(apr_pool_t *p, apr_pool_t *plog,
         return HTTP_INTERNAL_SERVER_ERROR;
     }
 #ifdef HAVE_OCSP_STAPLING
-    ssl_stapling_ex_init();
+    ssl_stapling_certinfo_hash_init(p);
 #endif
 
     /*
@@ -550,6 +550,16 @@ static apr_status_t ssl_init_ctx_protocol(server_rec *s,
 #else
         sk_SSL_COMP_zero(SSL_COMP_get_compression_methods());
 #endif
+    }
+#endif
+
+#ifdef SSL_OP_NO_TICKET
+    /*
+     * Configure using RFC 5077 TLS session tickets
+     * for session resumption.
+     */
+    if (sc->session_tickets == FALSE) {
+        SSL_CTX_set_options(ctx, SSL_OP_NO_TICKET);
     }
 #endif
 
@@ -1039,7 +1049,7 @@ static apr_status_t ssl_init_server_certs(server_rec *s,
         if (!(cert = SSL_CTX_get0_certificate(mctx->ssl_ctx))) {
 #else
         ssl = SSL_new(mctx->ssl_ctx);
-	if (ssl) {
+        if (ssl) {
             /* Workaround bug in SSL_get_certificate in OpenSSL 0.9.8y */
             SSL_set_connect_state(ssl);
             cert = SSL_get_certificate(ssl);
@@ -1067,7 +1077,7 @@ static apr_status_t ssl_init_server_certs(server_rec *s,
          * later, we defer to the code in ssl_init_server_ctx.
          */
         if ((mctx->stapling_enabled == TRUE) &&
-            !ssl_stapling_init_cert(s, mctx, cert)) {
+            !ssl_stapling_init_cert(s, p, ptemp, mctx, cert)) {
             ap_log_error(APLOG_MARK, APLOG_ERR, 0, s, APLOGNO(02567)
                          "Unable to configure certificate %s for stapling",
                          key_id);
@@ -1425,7 +1435,8 @@ static apr_status_t ssl_init_server_ctx(server_rec *s,
                                            SSL_CERT_SET_FIRST);
         while (ret) {
             cert = SSL_CTX_get0_certificate(sc->server->ssl_ctx);
-            if (!cert || !ssl_stapling_init_cert(s, sc->server, cert)) {
+            if (!cert || !ssl_stapling_init_cert(s, p, ptemp, sc->server,
+                                                 cert)) {
                 ap_log_error(APLOG_MARK, APLOG_ERR, 0, s, APLOGNO(02604)
                              "Unable to configure certificate %s:%d "
                              "for stapling", sc->vhost_id, i);
@@ -1542,7 +1553,7 @@ apr_status_t ssl_init_CheckServers(server_rec *base_server, apr_pool_t *p)
         klen = strlen(key);
 
         if ((ps = (server_rec *)apr_hash_get(table, key, klen))) {
-            ap_log_error(APLOG_MARK, APLOG_WARNING, 0, base_server,
+            ap_log_error(APLOG_MARK, APLOG_WARNING, 0, base_server, APLOGNO(02662)
                          "Init: SSL server IP/port conflict: "
                          "%s (%s:%d) vs. %s (%s:%d)",
                          ssl_util_vhostid(p, s),

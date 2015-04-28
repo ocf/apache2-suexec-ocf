@@ -54,8 +54,8 @@ static apr_status_t upgrade_connection(request_rec *r)
 
     bb = apr_brigade_create(r->pool, conn->bucket_alloc);
 
-    rv = ap_fputstrs(conn->output_filters, bb, SWITCH_STATUS_LINE, CRLF,
-                     UPGRADE_HEADER, CRLF, CONNECTION_HEADER, CRLF, CRLF, NULL);
+    rv = ap_fputs(conn->output_filters, bb, SWITCH_STATUS_LINE CRLF
+                  UPGRADE_HEADER CRLF CONNECTION_HEADER CRLF CRLF);
     if (rv == APR_SUCCESS) {
         APR_BRIGADE_INSERT_TAIL(bb,
                                 apr_bucket_flush_create(conn->bucket_alloc));
@@ -2049,8 +2049,14 @@ static int ssl_find_vhost(void *servername, conn_rec *c, server_rec *s)
          * we need to set that callback here.
          */
         if (APLOGtrace4(s)) {
-            BIO_set_callback(SSL_get_rbio(ssl), ssl_io_data_cb);
-            BIO_set_callback_arg(SSL_get_rbio(ssl), (void *)ssl);
+            BIO *rbio = SSL_get_rbio(ssl),
+                *wbio = SSL_get_wbio(ssl);
+            BIO_set_callback(rbio, ssl_io_data_cb);
+            BIO_set_callback_arg(rbio, (void *)ssl);
+            if (wbio && wbio != rbio) {
+                BIO_set_callback(wbio, ssl_io_data_cb);
+                BIO_set_callback_arg(wbio, (void *)ssl);
+            }
         }
 
         return 1;

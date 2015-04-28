@@ -163,7 +163,7 @@ RewriteRule ^/product/(.*) /prods.php?id=${product2id:$1|NOTFOUND} [PT]</pre>
 
 
     <p>Nous supposons ici que le script <code>prods.php</code> sait quoi
-    faire lorsqu'il reçoit un argument <code>id=NON-TROUVE</code>, dans
+    faire lorsqu'il reçoit un argument <code>id=NOTFOUND</code>, dans
     le cas où le produit ne se trouve pas dans la table de
     correspondances.</p>
 
@@ -487,7 +487,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/rewrite/rewritemap.h
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

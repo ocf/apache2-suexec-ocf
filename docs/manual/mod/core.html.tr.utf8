@@ -89,6 +89,7 @@
 <li><img alt="" src="../images/down.gif" /> <a href="#maxrangeoverlaps">MaxRangeOverlaps</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#maxrangereversals">MaxRangeReversals</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#maxranges">MaxRanges</a></li>
+<li><img alt="" src="../images/down.gif" /> <a href="#mergetrailers">MergeTrailers</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#mutex">Mutex</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#namevirtualhost">NameVirtualHost</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#options">Options</a></li>
@@ -2526,9 +2527,7 @@ sınırlar.</td></tr>
     <pre class="prettyprint lang-config">LimitRequestLine 4094</pre>
 
 
-    <div class="note">Normal şartlar altında öntanımlı değer değiştirilmemelidir. Ayrıca,
-      kaynak kodu değiştirip yeniden derlemeden bu değeri 8190'dan büyük
-      yapamazsınız.</div>
+    <div class="note">Normal şartlar altında öntanımlı değer değiştirilmemelidir.</div>
 
     <div class="warning"><h3>Uyarı</h3>
     <p>İsme dayalı sanal konaklar kullanıldığında, bu yönergenin değeri,
@@ -3058,6 +3057,25 @@ LogLevel info ssl_module:warn</pre>
       <dd>Sunucunun sağlamaya gönüllü olacağı HTTP Range'lerinin azami
         sayısını ifade eden pozitif bir tamsayı.</dd>
     </dl>
+
+</div>
+<div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
+<div class="directive-section"><h2><a name="MergeTrailers" id="MergeTrailers">MergeTrailers</a> <a name="mergetrailers" id="mergetrailers">Yönergesi</a></h2>
+<table class="directive">
+<tr><th><a href="directive-dict.html#Description">Açıklama:</a></th><td>Trailer alanlarının başlığa dahil edilip edilmeyeceğini belirler</td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Sözdizimi:</a></th><td><code>MergeTrailers [on|off]</code></td></tr>
+<tr><th><a href="directive-dict.html#Default">Öntanımlı:</a></th><td><code>MergeTrailers off</code></td></tr>
+<tr><th><a href="directive-dict.html#Context">Bağlam:</a></th><td>sunucu geneli, sanal konak</td></tr>
+<tr><th><a href="directive-dict.html#Status">Durum:</a></th><td>Çekirdek</td></tr>
+<tr><th><a href="directive-dict.html#Module">Modül:</a></th><td>core</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Uyumluluk:</a></th><td>2.4.10 ve sonrası</td></tr>
+</table>
+    <p>Bu yönerge HTTP Trailer alanlarının dahili HTTP başlıklarına kopyalanıp
+      kopyalanmayacağını belirler. Kopyalama işlemi istek gövdesi tamamen
+      alındığında gerçekleşir, çoğu başlık işleminin çok sonra istek
+      başlıklarını inceleme veya değiştirme şansı olur.</p>
+    <p>Bu seçenek, Trailer alanlarını daima kopyalayan 2.4.10 öncesi
+      dağıtımlarla uyumluluk için vardır.</p>
 
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
@@ -3779,9 +3797,11 @@ kullanılacak konak adları için başka isimler belirtebilmeyi sağlar.
       herhangi bir yerde görünebilirse de her göründüğü yerde bir öncekini
       iptal eder.</p>
 
-    <p>Bir <code class="directive">ServerName</code> ataması yapılmamışsa sunucu IP
-      adresine atanmış sunucu ismi için bir ters DNS sorgusu yapacaktır.
-      <code class="directive">ServerName</code> yönergesinde bir port belirtilmediği
+    <p>Bir <code class="directive">ServerName</code> ataması yapılmamışsa sunucu
+      istemciye görünen sunucu ismi için IP adresine bir ters DNS sorgusu
+      yapacaktır.</p>
+
+    <p><code class="directive">ServerName</code> yönergesinde bir port belirtilmediği
       takdirde sunucu, isteğin geldiği portu kullanacaktır. Öngörülebilirlik ve
       güvenilirlik açısından en iyisi <code class="directive">ServerName</code>
       yönergesini kullanarak açıkça bir konak ismi ve port belirtmektir.</p>
@@ -4425,7 +4445,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/core.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br /><a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a> altında lisanslıdır.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br /><a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a> altında lisanslıdır.</p>
 <p class="menu"><a href="../mod/">Modüller</a> | <a href="../mod/directives.html">Yönergeler</a> | <a href="http://wiki.apache.org/httpd/FAQ">SSS</a> | <a href="../glossary.html">Terimler</a> | <a href="../sitemap.html">Site Haritası</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

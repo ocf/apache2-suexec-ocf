@@ -89,6 +89,7 @@ disponibles</td></tr>
 <li><img alt="" src="../images/down.gif" /> <a href="#maxrangeoverlaps">MaxRangeOverlaps</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#maxrangereversals">MaxRangeReversals</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#maxranges">MaxRanges</a></li>
+<li><img alt="" src="../images/down.gif" /> <a href="#mergetrailers">MergeTrailers</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#mutex">Mutex</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#namevirtualhost">NameVirtualHost</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#options">Options</a></li>
@@ -2670,10 +2671,8 @@ HTTP</td></tr>
     <pre class="prettyprint lang-config">LimitRequestLine 4094</pre>
 
 
-    <div class="note">Dans des conditions normales, la valeur par défaut de cette
-    directive ne doit pas être modifiée. En outre, vous ne
-    pouvez pas spécifier une valeur supérieure à 8190 sans modifier le
-    code source et recompiler.</div>
+    <div class="note">Dans des conditions normales, cette directive doit conserver
+    sa valeur par défaut.</div>
 
     <div class="warning"><h3>Avertissement</h3>
      <p>Dans le cas des serveurs virtuels à base de noms, la valeur de
@@ -3255,6 +3254,30 @@ Apache</td></tr>
       <dd>Un nombre positif représentera la nombre de segments de
       données maximal que le serveur renverra au client.</dd>
     </dl>
+
+</div>
+<div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
+<div class="directive-section"><h2><a name="MergeTrailers" id="MergeTrailers">MergeTrailers</a> <a name="mergetrailers" id="mergetrailers">Directive</a></h2>
+<table class="directive">
+<tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Détermine si les données supplémentaires (trailers) sont
+fusionnées avec les en-têtes</td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>MergeTrailers [on|off]</code></td></tr>
+<tr><th><a href="directive-dict.html#Default">Défaut:</a></th><td><code>MergeTrailers off</code></td></tr>
+<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration du serveur, serveur virtuel</td></tr>
+<tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Core</td></tr>
+<tr><th><a href="directive-dict.html#Module">Module:</a></th><td>core</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>Disponible à partir de la version 2.4.10 du serveur HTTP
+Apache</td></tr>
+</table>
+    <p>Cette directive permet de contrôler la fusion des données HTTP
+    supplémentaires (trailers) avec la représentation interne des
+    en-têtes. Cette fusion intervient lorsque le corps de la requête a
+    été entièrement reçu, bien longtemps après que la majeure partie du
+    traitement des en-têtes ait une chance de pouvoir examiner ou
+    modifier les en-têtes de la requête.</p>
+    <p>Cette option a été introduite dans un souci de compatibilité avec
+    les versions antérieures à 2.4.10, où les données supplémentaires
+    étaient systématiquement fusionnées avec les en-têtes de la requête.</p>
 
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
@@ -4077,8 +4100,11 @@ entièrement qualifié</var>[:<var>port</var>]</code></td></tr>
     annule cependant la précédente (pour ce serveur).</p>
 
     <p>Si la directive <code class="directive">ServerName</code> n'est pas
-    définie, le serveur tente de déterminer le nom d'hôte en effectuant
-    une recherche DNS inverse sur son adresse IP. Si la directive
+    définie, le serveur tente de déterminer le nom
+    d'hôte visible du point de vue du client en effectuant
+    une recherche DNS inverse sur une adresse IP du serveur.</p>
+    
+    <p>Si la directive
     <code class="directive">ServerName</code> ne précise pas de port, le serveur
     utilisera celui de la requête entrante. Il est recommandé de
     spécifier un nom d'hôte et un port spécifiques à l'aide de la
@@ -4790,7 +4816,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/core.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

@@ -1260,6 +1260,14 @@ ProxyPass /mirror/foo http://backend.example.com</pre>
 	(round-robin DNS). Pour désactiver la réutilisation du jeu de
 	connexions, définissez cette clé à <code>On</code>.
     </td></tr>
+    <tr><td>enablereuse</td>
+        <td>On</td>
+        <td>Ce paramètre est utilisé par les gestionnaires de protocole pour
+	lesquels la réutilisation des connexions est optionnelle (comme
+	<code class="module"><a href="../mod/mod_proxy_fcgi.html">mod_proxy_fcgi</a></code>). C'est le contraire du
+	paramètre 'disablereuse' ci-dessus, et il est supporté par les
+	versions 2.4.11 et supérieures du serveur HTTP Apache.
+    </td></tr>
     <tr><td>flushpackets</td>
         <td>off</td>
         <td>Permet de définir si le module mandataire doit vider
@@ -1692,7 +1700,7 @@ du serveur local en utilisant des expressions rationnelles</td></tr>
     <p>Supposons que le serveur local a pour adresse
     <code>http://example.com/</code> ; alors</p>
 
-    <pre class="prettyprint lang-config">ProxyPassMatch ^(/.*\.gif)$ http://backend.example.com$1</pre>
+    <pre class="prettyprint lang-config">ProxyPassMatch ^(/.*\.gif)$ http://backend.example.com/$1</pre>
 
 
     <p>va provoquer la conversion interne de la requête locale
@@ -1724,6 +1732,14 @@ du serveur local en utilisant des expressions rationnelles</td></tr>
     <p>Si vous avez besoin d'une configuration du mandataire inverse
     plus flexible, voyez la directive <code class="directive"><a href="../mod/mod_rewrite.html#rewriterule">RewriteRule</a></code> avec le drapeau
     <code>[P]</code>.</p>
+
+    <div class="note">
+ 	<h3>Substitution par défaut</h3>
+ 	<p>Lorsque le paramètre URL n'utilise pas de références arrières
+	dans l'expression rationnelle, l'URL originale sera ajoutée au
+	paramètre URL.
+ 	</p>
+ 	</div>
 
     <div class="warning">
       <h3>Avertissement à propos de la sécurité</h3>
@@ -2188,7 +2204,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/mod_proxy.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2014 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2015 The Apache Software Foundation.<br />Autorisé sous <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();
