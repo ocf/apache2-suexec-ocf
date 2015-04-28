@@ -116,7 +116,7 @@ B<dh_apache2>. Instead the helper will scan the package installation directory
 for recognized files and guess their purpose depending on their installation
 path in the file system. Use with caution.
 
-=head1 INVOKATION
+=head1 INVOCATION
 
 B<dh_apache2> is not part of debhelper and might require information available
 in the apache2-dev package. Packages making use of B<dh_apache2> should declare

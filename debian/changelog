@@ -1,6 +1,7 @@
 apache2 (2.4.10-12) UNRELEASED; urgency=medium
 
   * Ship mod_proxy_html's default config file. Closes: #782022
+  * Fix typo in dh_apache2 man page. Closes: #781032
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 28 Apr 2015 21:59:37 +0200
 
