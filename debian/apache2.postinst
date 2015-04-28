@@ -329,6 +329,12 @@ refresh_modules()
 			fi
 		done
 	fi
+	if dpkg --compare-versions "$2" lt-nl "2.4.10-12~" ; then
+		if [ -e "/etc/apache2/mods-enabled/proxy_html.load" ]
+		then
+			a2enmod -q proxy_html
+		fi
+	fi
 }
 
 move_httpd_conf()
