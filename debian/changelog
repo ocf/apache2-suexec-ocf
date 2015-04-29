@@ -1,6 +1,8 @@
 apache2 (2.4.12-2) UNRELEASED; urgency=medium
 
-  * d/control: Update Vcs-Browser.
+  * d/control:
+    + Update Vcs-Browser.
+    + Factorize apache2.2-common breaks libapache2-modsecurity.
 
  -- Jean-Michel Nirgal Vourgère <jmv_deb@nirgal.com>  Wed, 29 Apr 2015 12:12:38 +0200
 
