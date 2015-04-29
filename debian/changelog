@@ -3,6 +3,9 @@ apache2 (2.4.12-2) UNRELEASED; urgency=medium
   * d/control:
     + Update Vcs-Browser.
     + Factorize apache2.2-common breaks libapache2-modsecurity.
+  * d/copyright:
+    + Change d/debhelper/dh_apache2 to dh_apache2.in.
+    + Drop paragraph about inexistant itk patches.
 
  -- Jean-Michel Nirgal Vourgère <jmv_deb@nirgal.com>  Wed, 29 Apr 2015 12:12:38 +0200
 
