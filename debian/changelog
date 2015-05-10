@@ -6,6 +6,8 @@ apache2 (2.4.12-2) UNRELEASED; urgency=medium
   * d/copyright:
     + Change d/debhelper/dh_apache2 to dh_apache2.in.
     + Drop paragraph about inexistant itk patches.
+  * d/rules: Fix dependency of mod-proxy-html and mod-macro over apache2-
+    bin to support debhelper>=9.20150501.
 
  -- Jean-Michel Nirgal Vourgère <jmv_deb@nirgal.com>  Wed, 29 Apr 2015 12:12:38 +0200
 

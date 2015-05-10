@@ -126,6 +126,10 @@ override_dh_installdocs-arch:
 	    -plibapache2-mod-macro
 	dh_installdocs --link-doc=apache2-suexec-pristine -papache2-suexec
 	dh_installdocs -a
+	# Fix Depends: so it does not contain epoch, see #784803 :
+	sed -i -e 's/apache2-bin (= $${binary:Version})/apache2-bin (= $(DEBIAN_VERSION))/' \
+		debian/libapache2-mod-proxy-html.substvars \
+		debian/libapache2-mod-macro.substvars
 
 override_dh_installchangelogs:
 	# Do not install changelogs for transitional packages and the -data
