@@ -12,6 +12,8 @@ apache2 (2.4.12-2) UNRELEASED; urgency=medium
     apache2-mpm-worker, apache2-mpm-prefork, apache2-mpm-event,
     apache2-mpm-itk, apache2.2-bin, apache2.2-common,
     libapache2-mod-proxy-html, libapache2-mod-macro, apache2-suexec
+    This also fixes the dependency problems caused by a recent version
+    of debhelper (see #784803).
 
  -- Jean-Michel Nirgal Vourgère <jmv_deb@nirgal.com>  Wed, 29 Apr 2015 12:12:38 +0200
 
