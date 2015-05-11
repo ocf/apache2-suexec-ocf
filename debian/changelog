@@ -1,4 +1,4 @@
-apache2 (2.4.12-2) UNRELEASED; urgency=medium
+apache2 (2.4.12-2) unstable; urgency=medium
 
   [ Jean-Michel Nirgal Vourgère ]
   * d/control:
@@ -15,7 +15,7 @@ apache2 (2.4.12-2) UNRELEASED; urgency=medium
     This also fixes the dependency problems caused by a recent version
     of debhelper (see #784803).
 
- -- Jean-Michel Nirgal Vourgère <jmv_deb@nirgal.com>  Wed, 29 Apr 2015 12:12:38 +0200
+ -- Stefan Fritsch <sf@debian.org>  Mon, 11 May 2015 22:07:26 +0200
 
 apache2 (2.4.12-1) unstable; urgency=medium
 
