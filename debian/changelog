@@ -1,6 +1,8 @@
 apache2 (2.4.12-3) UNRELEASED; urgency=medium
 
   * d/apache2.(pre|post)(inst|rm): Remove 2.2 migration scripts.
+  * Made builds reproducible: d/rules set the date from the changelog in
+    CPPFLAGS, new reproducible_builds.diff patch to use it.
 
  -- Jean-Michel Vourgère <nirgal@debian.org>  Thu, 28 May 2015 16:20:59 +0200
 
