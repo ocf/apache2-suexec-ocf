@@ -1,0 +1,24 @@
+Description: Make builds reproducible
+ Don't use __DATE__ __TIME__.
+ Use changelog date instead.
+Author: Jean-Michel Vourgère <nirgal@debian.org>
+Forwarded: not-needed
+Last-Update: 2015-05-28
+
+Index: apache2/server/buildmark.c
+===================================================================
+--- apache2.orig/server/buildmark.c
++++ apache2/server/buildmark.c
+@@ -17,11 +17,7 @@
+ #include "ap_config.h"
+ #include "httpd.h"
+ 
+-#if defined(__DATE__) && defined(__TIME__)
+-static const char server_built[] = __DATE__ " " __TIME__;
+-#else
+-static const char server_built[] = "unknown";
+-#endif
++static const char server_built[] = BUILD_DATETIME;
+ 
+ AP_DECLARE(const char *) ap_get_server_built()
+ {
