@@ -1,4 +1,4 @@
-debian/bash_completion/apache2			/etc/bash_completion.d/
+debian/bash_completion/a2enmod			/usr/share/bash-completion/completions/
 debian/config-dir/*				/etc/apache2
 debian/a2enmod					/usr/sbin
 debian/apache2ctl				/usr/sbin
