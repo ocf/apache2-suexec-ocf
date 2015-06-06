@@ -1,2 +1,1 @@
-symlink_to_dir /usr/share/doc/apache2 apache2.2-common 2.4.1-1~
 rm_conffile /etc/bash_completion.d/apache2 2.4.12-3~
