@@ -20,8 +20,6 @@ Depends: ${misc:Depends}, lsb-base, procps [!hurd-i386],
  perl, mime-support, apache2-bin (= ${binary:Version}),
  apache2-utils (>= 2.4), apache2-data (= ${source:Version}),
  ${perl:Depends}
-Replaces: apache2.2-common
-Conflicts: apache2.2-common (<< 2.3~)
 Provides: httpd, httpd-cgi
 Recommends: ssl-cert
 Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom
@@ -36,8 +34,6 @@ Description: Apache HTTP Server
 Package: apache2-data
 Architecture: all
 Depends: ${misc:Depends}
-Replaces: apache2.2-common
-Conflicts: apache2.2-common (<< 2.3~)
 Multi-Arch: foreign
 Description: Apache HTTP Server (common files)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
@@ -53,11 +49,6 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
 # MODULE_MAGIC_NUMBER_MAJOR from apache2/include/ap_mmn.h
 Provides: ${apache2:API}
 Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom
-Replaces: apache2.2-bin (<< 2.3~), apache2.2-common (<< 2.3~), apache2-mpm-prefork (<< 2.3~),
- apache2-mpm-itk (<< 2.3~), apache2-mpm-worker (<< 2.3~), apache2-mpm-event (<< 2.3~),
- libapache2-mod-proxy-html (<< 1:2.4.4-2~), libapache2-mod-macro (<< 1:2.4.6-1~)
-Conflicts: apache2.2-bin (<< 2.3~), apache2.2-common (<< 2.3~)
-Breaks: libapache2-mod-proxy-html (<< 1:2.4.4-2~), libapache2-mod-macro (<< 1:2.4.6-1~)
 Description: Apache HTTP Server (modules and other binary files)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
@@ -89,8 +80,6 @@ Description: Apache HTTP Server (utility programs for web servers)
 Package: apache2-suexec-pristine
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}, apache2-bin
-Replaces: apache2-suexec (<< 2.3~)
-Breaks: apache2-suexec (<< 2.3~)
 Provides: apache2-suexec
 Description: Apache HTTP Server standard suexec program for mod_suexec
  Provides the standard suexec helper program for mod_suexec. This version is
@@ -101,8 +90,6 @@ Package: apache2-suexec-custom
 Priority: extra
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}, apache2-bin
-Replaces: apache2-suexec (<< 2.3~)
-Breaks: apache2-suexec (<< 2.3~)
 Provides: apache2-suexec
 Description: Apache HTTP Server configurable suexec program for mod_suexec
  Provides a customizable version of the suexec helper program for mod_suexec.
@@ -132,9 +119,7 @@ Package: apache2-dev
 Architecture: any
 Depends: ${misc:Depends}, openssl,
  libapr1-dev, libaprutil1-dev, debhelper (>= 9), ${perl:Depends}
-Provides: apache2-prefork-dev, apache2-threaded-dev, dh-apache2
-Replaces: apache2-prefork-dev, apache2-threaded-dev
-Conflicts: apache2-prefork-dev, apache2-threaded-dev
+Provides: dh-apache2
 Description: Apache HTTP Server (development headers)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
