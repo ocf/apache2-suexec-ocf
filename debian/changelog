@@ -1,5 +1,8 @@
 apache2 (2.4.12-3) UNRELEASED; urgency=medium
 
+  * Allow "triggers-awaited" and "triggers-pending" states in addition to
+    "installed" when determining whether to defer actions or process
+    deferred actions. Thanks Colin Watson. Closes: #787103
   * Remove pre-Jessie transition scripts, and remaining breaks.
   * Made builds reproducible: d/rules set the date from the changelog in
     CPPFLAGS, new reproducible_builds.diff patch to use it.
