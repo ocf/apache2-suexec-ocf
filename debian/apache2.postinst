@@ -45,29 +45,16 @@ enable_default_modules()
 				status ; do
 			a2enmod -m -q $module
 		done
-	elif dpkg --compare-versions "$2" "le" "2.4.6-1~" ; then
-		# These modules had dependencies missing in the initial 2.4 upload
-		for module in auth_basic auth_digest auth_form cache_disk include ratelimit mpm_event
-		do
-			if [ -e /etc/apache2/mods-enabled/$module.load ] ; then
-				# If module is enabled, enable again to
-				# enable new dependencies
-				a2enmod -m -q $module
-			fi
-		done
 	fi
 }
 
 enable_default_conf()
 {
 	if is_fresh_install $@ ; then
-		for conf in charset localized-error-pages other-vhosts-access-log security ; do
+		for conf in charset localized-error-pages other-vhosts-access-log \
+				security serve-cgi-bin ; do
 			a2enconf -m -q $conf
 		done
-	fi
-	# This line must catch upgrades and fresh installs
-	if dpkg --compare-versions "$2" "le" "2.4.1-4" ; then
-		a2enconf -m -q serve-cgi-bin
 	fi
 }
 
