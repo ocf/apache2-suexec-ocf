@@ -1,6 +1,6 @@
 apache2 (2.4.12-3) UNRELEASED; urgency=medium
 
-  * d/apache2.(pre|post)(inst|rm): Remove 2.2 migration scripts.
+  * Remove pre-Jessie transition scripts, and remaining breaks.
   * Made builds reproducible: d/rules set the date from the changelog in
     CPPFLAGS, new reproducible_builds.diff patch to use it.
   * Moved bash_completion from /etc to /usr/share/bash_completion. Added
