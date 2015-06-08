@@ -131,7 +131,7 @@ sub doit {
 
     my ( $conftgt, $conflink );
     if ( $obj eq 'module' ) {
-        if ( $acton eq 'cgi' && threaded() ) {
+        if ( $act eq 'enable' && $acton eq 'cgi' && threaded() ) {
             print
                 "Your MPM seems to be threaded. Selecting cgid instead of cgi.\n";
             $acton = 'cgid';
