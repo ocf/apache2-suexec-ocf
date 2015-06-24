@@ -10,6 +10,8 @@ apache2 (2.4.12-3) UNRELEASED; urgency=medium
     CPPFLAGS, new reproducible_builds.diff patch to use it.
   * Moved bash_completion from /etc to /usr/share/bash_completion. Added
     links there for dynamic loading.
+  * Upgrade security.conf comments to 2.4 auth format. Thanks Werner
+    Detter. Closes: #789788
 
  -- Jean-Michel Vourgère <nirgal@debian.org>  Thu, 28 May 2015 16:20:59 +0200
 
