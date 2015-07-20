@@ -12,6 +12,8 @@ apache2 (2.4.12-3) UNRELEASED; urgency=medium
     links there for dynamic loading.
   * Upgrade security.conf comments to 2.4 auth format. Thanks Werner
     Detter. Closes: #789788
+  * apache2.postinst: Fixed tests on deferred mpm switch. Closes:
+    #789914
 
  -- Jean-Michel Vourgère <nirgal@debian.org>  Thu, 28 May 2015 16:20:59 +0200
 
