@@ -1,4 +1,4 @@
-apache2 (2.4.16-1) UNRELEASED; urgency=medium
+apache2 (2.4.16-1) unstable; urgency=medium
 
   [ Stefan Fritsch ]
   * New upstream version, fixing the following security issues:
@@ -23,7 +23,7 @@ apache2 (2.4.16-1) UNRELEASED; urgency=medium
   * apache2.postinst: Fixed tests on deferred mpm switch. Closes:
     #789914
 
- -- Jean-Michel Vourgère <nirgal@debian.org>  Thu, 28 May 2015 16:20:59 +0200
+ -- Stefan Fritsch <sf@debian.org>  Sun, 02 Aug 2015 00:44:07 +0200
 
 apache2 (2.4.12-2) unstable; urgency=medium
 
