@@ -190,6 +190,8 @@ static void *create_core_dir_config(apr_pool_t *a, char *dir)
     conf->max_overlaps = AP_MAXRANGES_UNSET;
     conf->max_reversals = AP_MAXRANGES_UNSET;
 
+    conf->cgi_pass_auth = AP_CGI_PASS_AUTH_UNSET;
+
     return (void *)conf;
 }
 
@@ -198,7 +200,6 @@ static void *merge_core_dir_configs(apr_pool_t *a, void *basev, void *newv)
     core_dir_config *base = (core_dir_config *)basev;
     core_dir_config *new = (core_dir_config *)newv;
     core_dir_config *conf;
-    int i;
 
     /* Create this conf by duplicating the base, replacing elements
      * (or creating copies for merging) where new-> values exist.
@@ -252,23 +253,14 @@ static void *merge_core_dir_configs(apr_pool_t *a, void *basev, void *newv)
         conf->override_list = new->override_list;
     }
 
-    if (conf->response_code_strings == NULL) {
-        conf->response_code_strings = new->response_code_strings;
+    if (conf->response_code_exprs == NULL) {
+        conf->response_code_exprs = new->response_code_exprs;
     }
-    else if (new->response_code_strings != NULL) {
-        /* If we merge, the merge-result must have its own array
-         */
-        conf->response_code_strings = apr_pmemdup(a,
-            base->response_code_strings,
-            sizeof(*conf->response_code_strings) * RESPONSE_CODES);
-
-        for (i = 0; i < RESPONSE_CODES; ++i) {
-            if (new->response_code_strings[i] != NULL) {
-                conf->response_code_strings[i] = new->response_code_strings[i];
-            }
-        }
+    else if (new->response_code_exprs != NULL) {
+        conf->response_code_exprs = apr_hash_overlay(a,
+                new->response_code_exprs, conf->response_code_exprs);
     }
-    /* Otherwise we simply use the base->response_code_strings array
+    /* Otherwise we simply use the base->response_code_exprs array
      */
 
     if (new->hostname_lookups != HOSTNAME_LOOKUP_UNSET) {
@@ -410,6 +402,8 @@ static void *merge_core_dir_configs(apr_pool_t *a, void *basev, void *newv)
     conf->max_ranges = new->max_ranges != AP_MAXRANGES_UNSET ? new->max_ranges : base->max_ranges;
     conf->max_overlaps = new->max_overlaps != AP_MAXRANGES_UNSET ? new->max_overlaps : base->max_overlaps;
     conf->max_reversals = new->max_reversals != AP_MAXRANGES_UNSET ? new->max_reversals : base->max_reversals;
+
+    conf->cgi_pass_auth = new->cgi_pass_auth != AP_CGI_PASS_AUTH_UNSET ? new->cgi_pass_auth : base->cgi_pass_auth;
 
     return (void*)conf;
 }
@@ -796,25 +790,45 @@ char *ap_response_code_string(request_rec *r, int error_index)
 {
     core_dir_config *dirconf;
     core_request_config *reqconf = ap_get_core_module_config(r->request_config);
+    const char *err;
+    const char *response;
+    ap_expr_info_t *expr;
 
     /* check for string registered via ap_custom_response() first */
-    if (reqconf->response_code_strings != NULL &&
-        reqconf->response_code_strings[error_index] != NULL) {
+    if (reqconf->response_code_strings != NULL
+            && reqconf->response_code_strings[error_index] != NULL) {
         return reqconf->response_code_strings[error_index];
     }
 
     /* check for string specified via ErrorDocument */
     dirconf = ap_get_core_module_config(r->per_dir_config);
 
-    if (dirconf->response_code_strings == NULL) {
+    if (!dirconf->response_code_exprs) {
         return NULL;
     }
 
-    if (dirconf->response_code_strings[error_index] == &errordocument_default) {
+    expr = apr_hash_get(dirconf->response_code_exprs, &error_index,
+            sizeof(error_index));
+    if (!expr) {
         return NULL;
     }
 
-    return dirconf->response_code_strings[error_index];
+    /* special token to indicate revert back to default */
+    if ((char *) expr == &errordocument_default) {
+        return NULL;
+    }
+
+    err = NULL;
+    response = ap_expr_str_exec(r, expr, &err);
+    if (err) {
+        ap_log_rerror(
+                APLOG_MARK, APLOG_ERR, 0, r, APLOGNO(02841) "core: ErrorDocument: can't "
+                "evaluate require expression: %s", err);
+        return NULL;
+    }
+
+    /* alas, duplication required as we return not-const */
+    return apr_pstrdup(r->pool, response);
 }
 
 
@@ -1499,27 +1513,43 @@ static const char *set_error_document(cmd_parms *cmd, void *conf_,
                      "directive --- ignoring!", cmd->directive->filename, cmd->directive->line_num);
     }
     else { /* Store it... */
-        if (conf->response_code_strings == NULL) {
-            conf->response_code_strings =
-                apr_pcalloc(cmd->pool,
-                            sizeof(*conf->response_code_strings) *
-                            RESPONSE_CODES);
+        if (conf->response_code_exprs == NULL) {
+            conf->response_code_exprs = apr_hash_make(cmd->pool);
         }
 
         if (strcasecmp(msg, "default") == 0) {
             /* special case: ErrorDocument 404 default restores the
              * canned server error response
              */
-            conf->response_code_strings[index_number] = &errordocument_default;
+            apr_hash_set(conf->response_code_exprs,
+                    apr_pmemdup(cmd->pool, &index_number, sizeof(index_number)),
+                    sizeof(index_number), &errordocument_default);
         }
         else {
+            ap_expr_info_t *expr;
+            const char *expr_err = NULL;
+
             /* hack. Prefix a " if it is a msg; as that is what
              * http_protocol.c relies on to distinguish between
              * a msg and a (local) path.
              */
-            conf->response_code_strings[index_number] = (what == MSG) ?
-                    apr_pstrcat(cmd->pool, "\"", msg, NULL) :
-                    apr_pstrdup(cmd->pool, msg);
+            const char *response =
+                    (what == MSG) ? apr_pstrcat(cmd->pool, "\"", msg, NULL) :
+                            apr_pstrdup(cmd->pool, msg);
+
+            expr = ap_expr_parse_cmd(cmd, response, AP_EXPR_FLAG_STRING_RESULT,
+                    &expr_err, NULL);
+
+            if (expr_err) {
+                return apr_pstrcat(cmd->temp_pool,
+                                   "Cannot parse expression in ErrorDocument: ",
+                                   expr_err, NULL);
+            }
+
+            apr_hash_set(conf->response_code_exprs,
+                    apr_pmemdup(cmd->pool, &index_number, sizeof(index_number)),
+                    sizeof(index_number), expr);
+
         }
     }
 
@@ -1655,6 +1685,15 @@ static const char *set_override(cmd_parms *cmd, void *d_, const char *l)
 
         d->override &= ~OR_UNSET;
     }
+
+    return NULL;
+}
+
+static const char *set_cgi_pass_auth(cmd_parms *cmd, void *d_, int flag)
+{
+    core_dir_config *d = d_;
+
+    d->cgi_pass_auth = flag ? AP_CGI_PASS_AUTH_ON : AP_CGI_PASS_AUTH_OFF;
 
     return NULL;
 }
@@ -1819,6 +1858,24 @@ static const char *set_default_type(cmd_parms *cmd, void *d_,
         ap_log_error(APLOG_MARK, APLOG_WARNING, 0, cmd->server, APLOGNO(00117)
               "Ignoring deprecated use of DefaultType in line %d of %s.",
                      cmd->directive->line_num, cmd->directive->filename);
+    }
+
+    return NULL;
+}
+
+static const char *set_sethandler(cmd_parms *cmd,
+                                     void *d_,
+                                     const char *arg_)
+{
+    core_dir_config *dirconf = d_;
+
+    if (arg_ == ap_strstr_c(arg_, "proxy:unix")) { 
+        dirconf->handler = arg_;
+    }
+    else { 
+        char *arg = apr_pstrdup(cmd->pool,arg_);
+        ap_str_tolower(arg);
+        dirconf->handler = arg;
     }
 
     return NULL;
@@ -4095,11 +4152,13 @@ AP_INIT_TAKE12("RLimitNPROC", no_set_limit, NULL,
 AP_INIT_TAKE12("LimitInternalRecursion", set_recursion_limit, NULL, RSRC_CONF,
               "maximum recursion depth of internal redirects and subrequests"),
 
+AP_INIT_FLAG("CGIPassAuth", set_cgi_pass_auth, NULL, OR_AUTHCFG,
+             "Controls whether HTTP authorization headers, normally hidden, will "
+             "be passed to scripts"),
 AP_INIT_TAKE1("ForceType", ap_set_string_slot_lower,
        (void *)APR_OFFSETOF(core_dir_config, mime_type), OR_FILEINFO,
      "a mime type that overrides other configured type"),
-AP_INIT_TAKE1("SetHandler", ap_set_string_slot_lower,
-       (void *)APR_OFFSETOF(core_dir_config, handler), OR_FILEINFO,
+AP_INIT_TAKE1("SetHandler", set_sethandler, NULL, OR_FILEINFO,
    "a handler name that overrides any other configured handler"),
 AP_INIT_TAKE1("SetOutputFilter", ap_set_string_slot,
        (void *)APR_OFFSETOF(core_dir_config, output_filters), OR_FILEINFO,
@@ -4393,7 +4452,7 @@ static int default_handler(request_rec *r)
             ap_log_rerror(APLOG_MARK, APLOG_DEBUG, status, r, APLOGNO(00133)
                           "default_handler: ap_pass_brigade returned %i",
                           status);
-            return HTTP_INTERNAL_SERVER_ERROR;
+            return AP_FILTER_ERROR;
         }
     }
     else {              /* unusual method (not GET or POST) */
@@ -4732,6 +4791,11 @@ static void core_child_init(apr_pool_t *pchild, server_rec *s)
     apr_random_after_fork(&proc);
 }
 
+static void core_optional_fn_retrieve(void)
+{
+    ap_init_scoreboard(NULL);
+}
+
 AP_CORE_DECLARE(void) ap_random_parent_after_fork(void)
 {
     /*
@@ -4911,6 +4975,8 @@ static void register_hooks(apr_pool_t *p)
                                   APR_HOOK_REALLY_LAST);
     ap_hook_dirwalk_stat(core_dirwalk_stat, NULL, NULL, APR_HOOK_REALLY_LAST);
     ap_hook_open_htaccess(ap_open_htaccess, NULL, NULL, APR_HOOK_REALLY_LAST);
+    ap_hook_optional_fn_retrieve(core_optional_fn_retrieve, NULL, NULL,
+                                 APR_HOOK_MIDDLE);
     
     /* register the core's insert_filter hook and register core-provided
      * filters

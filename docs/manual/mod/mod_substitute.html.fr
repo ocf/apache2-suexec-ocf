@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head><!--
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type" />
+<!--
         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
               This file is generated from xml source: DO NOT EDIT
         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -48,7 +50,7 @@ du serveur HTTP Apache</td></tr></table>
 <ul class="seealso"><li><a href="#comments_section">Commentaires</a></li></ul></div>
 
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
-<div class="directive-section"><h2><a name="Substitute" id="Substitute">Substitute</a> <a name="substitute" id="substitute">Directive</a></h2>
+<div class="directive-section"><h2><a name="substitute" id="substitute">Directive</a> <a name="Substitute" id="Substitute">Substitute</a></h2>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Modèle de substition dans le contenu de la
 réponse</td></tr>
@@ -90,9 +92,9 @@ réponse</td></tr>
 	substitution ultérieure.</dd>
     </dl>
 
-    <div class="example"><h3>Exemple</h3><pre class="prettyprint lang-config">&lt;Location /&gt;
+    <div class="example"><h3>Exemple</h3><pre class="prettyprint lang-config">&lt;Location "/&gt;
     AddOutputFilterByType SUBSTITUTE text/html
-    Substitute s/foo/bar/ni
+    Substitute "s/foo/bar/ni"
 &lt;/Location&gt;</pre>
 </div>
 
@@ -100,7 +102,7 @@ réponse</td></tr>
     slash '/', il faut utiliser un autre délimiteur :</p>
 
     <div class="example"><h3>Exemple d'utilisation d'un délimiteur
-    alternatif</h3><pre class="prettyprint lang-config">&lt;Location /&gt;
+    alternatif</h3><pre class="prettyprint lang-config">&lt;Location "/"&gt;
     AddOutputFilterByType SUBSTITUTE text/html
     Substitute "s|&lt;BR */?&gt;|&lt;br /&gt;|i"
 &lt;/Location&gt;</pre>
@@ -109,7 +111,7 @@ réponse</td></tr>
     <p>Lorsqu'on utilise des expressions rationnelles, on peut insérer
     des références arrières dans les opérations de comparaison et de
     substitution, comme illustré dans l'exemple suivant :</p>
-    <div class="example"><h3>Exemple d'utilisation de références arrières et de captures</h3><pre class="prettyprint lang-config">&lt;Location /&gt;
+    <div class="example"><h3>Exemple d'utilisation de références arrières et de captures</h3><pre class="prettyprint lang-config">&lt;Location "/"&gt;
     AddOutputFilterByType SUBSTITUTE text/html
     # "foo=k,bar=k" -&gt; "foo/bar=k"
     Substitute "s|foo=(\w+),bar=\1|foo/bar=$1"
@@ -127,8 +129,8 @@ réponse</td></tr>
     réécrire ces URLs afin qu'elles soit utilisables dans la partie
     située derrière le mandataire :</p>
 
-    <div class="example"><h3>Réécriture des URLs intégrées à un contenu mandaté</h3><pre class="prettyprint lang-config">ProxyPass /blog/ http://internal.blog.example.com
-ProxyPassReverse /blog/ http://internal.blog.example.com/
+    <div class="example"><h3>Réécriture des URLs intégrées à un contenu mandaté</h3><pre class="prettyprint lang-config">ProxyPass "/blog/" "http://internal.blog.example.com"
+ProxyPassReverse "/blog/" "http://internal.blog.example.com/"
 
 Substitute "s|http://internal.blog.example.com/|http://www.example.com/blog/|i"</pre>
 </div>
@@ -142,7 +144,7 @@ Substitute "s|http://internal.blog.example.com/|http://www.example.com/blog/|i"<
 
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
-<div class="directive-section"><h2><a name="SubstituteMaxLineLength" id="SubstituteMaxLineLength">SubstituteMaxLineLength</a> <a name="substitutemaxlinelength" id="substitutemaxlinelength">Directive</a></h2>
+<div class="directive-section"><h2><a name="substitutemaxlinelength" id="substitutemaxlinelength">Directive</a> <a name="SubstituteMaxLineLength" id="SubstituteMaxLineLength">SubstituteMaxLineLength</a></h2>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Définit la longueur de ligne maximale</td></tr>
 <tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>SubstituteMaxLineLength <var>octets</var>(b|B|k|K|m|M|g|G)</code></td></tr>
@@ -164,10 +166,10 @@ Apache</td></tr>
     <code>G</code> pour fournir une valeur respectivement en octets,
     kiloOctets, mégaOctets ou gigaOctets.</p>
 
-    <div class="example"><h3>Example</h3><pre class="prettyprint lang-config">&lt;Location /&gt;
+    <div class="example"><h3>Example</h3><pre class="prettyprint lang-config">&lt;Location "/"&gt;
     AddOutputFilterByType SUBSTITUTE text/html
     SubstituteMaxLineLength 10m
-    Substitute s/foo/bar/ni
+    Substitute "s/foo/bar/ni"
 &lt;/Location&gt;</pre>
 </div>
 

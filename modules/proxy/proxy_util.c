@@ -1159,7 +1159,7 @@ PROXY_DECLARE(char *) ap_proxy_define_balancer(apr_pool_t *p,
 
     c = strchr(uri, ':');
     if (c == NULL || c[1] != '/' || c[2] != '/' || c[3] == '\0')
-        return "Bad syntax for a balancer name";
+        return apr_psprintf(p, "Bad syntax for a balancer name (%s)", uri);
     /* remove path from uri */
     if ((q = strchr(c + 3, '/')))
         *q = '\0';
@@ -1351,6 +1351,13 @@ static void init_conn_pool(apr_pool_t *p, proxy_worker *worker)
     worker->cp = cp;
 }
 
+PROXY_DECLARE(int) ap_proxy_connection_reusable(proxy_conn_rec *conn)
+{
+    proxy_worker *worker = conn->worker;
+
+    return ! (conn->close || !worker->s->is_address_reusable || worker->s->disablereuse);
+}
+
 static apr_status_t connection_cleanup(void *theconn)
 {
     proxy_conn_rec *conn = (proxy_conn_rec *)theconn;
@@ -1379,7 +1386,7 @@ static apr_status_t connection_cleanup(void *theconn)
     }
 
     /* determine if the connection need to be closed */
-    if (conn->close || !worker->s->is_address_reusable || worker->s->disablereuse) {
+    if (!ap_proxy_connection_reusable(conn)) {
         apr_pool_t *p = conn->pool;
         apr_pool_clear(p);
         conn = apr_pcalloc(p, sizeof(proxy_conn_rec));
@@ -2197,8 +2204,12 @@ ap_proxy_determine_connection(apr_pool_t *p, request_rec *r,
      * The scheme handler decides if this is permanent or
      * short living pool.
      */
-    /* are we connecting directly, or via a proxy? */
-    if (!proxyname) {
+    /* Unless we are connecting the backend via a (forward Proxy)Remote, we
+     * have to use the original form of the URI (non absolute), but this is
+     * also the case via a remote proxy using the CONNECT method since the
+     * original request (and URI) is to be embedded in the body.
+     */
+    if (!proxyname || conn->is_ssl) {
         *url = apr_pstrcat(p, uri->path, uri->query ? "?" : "",
                            uri->query ? uri->query : "",
                            uri->fragment ? "#" : "",
@@ -2372,6 +2383,10 @@ ap_proxy_determine_connection(apr_pool_t *p, request_rec *r,
         dconf = ap_get_module_config(r->per_dir_config, &proxy_module);
         if (dconf->preserve_host) {
             ssl_hostname = r->hostname;
+        }
+        else if (conn->forward
+                 && ((forward_info *)(conn->forward))->use_http_connect) {
+            ssl_hostname = ((forward_info *)conn->forward)->target_host;
         }
         else {
             ssl_hostname = conn->hostname;

@@ -324,7 +324,7 @@ static int stream_reqbody_chunked(apr_pool_t *p,
                           " from %s (%s)", p_conn->addr,
                           p_conn->hostname ? p_conn->hostname: "",
                           c->client_ip, c->remote_host ? c->remote_host: "");
-            return HTTP_BAD_REQUEST;
+            return ap_map_http_request_error(status, HTTP_BAD_REQUEST);
         }
     }
 
@@ -475,7 +475,7 @@ static int stream_reqbody_cl(apr_pool_t *p,
                           " from %s (%s)", p_conn->addr,
                           p_conn->hostname ? p_conn->hostname: "",
                           c->client_ip, c->remote_host ? c->remote_host: "");
-            return HTTP_BAD_REQUEST;
+            return ap_map_http_request_error(status, HTTP_BAD_REQUEST);
         }
     }
 
@@ -624,7 +624,7 @@ static int spool_reqbody_cl(apr_pool_t *p,
                           " from %s (%s)", p_conn->addr,
                           p_conn->hostname ? p_conn->hostname: "",
                           c->client_ip, c->remote_host ? c->remote_host: "");
-            return HTTP_BAD_REQUEST;
+            return ap_map_http_request_error(status, HTTP_BAD_REQUEST);
         }
     }
 
@@ -800,7 +800,7 @@ int ap_proxy_http_request(apr_pool_t *p, request_rec *r,
                           " from %s (%s)",
                           p_conn->addr, p_conn->hostname ? p_conn->hostname: "",
                           c->client_ip, c->remote_host ? c->remote_host: "");
-            return HTTP_BAD_REQUEST;
+            return ap_map_http_request_error(status, HTTP_BAD_REQUEST);
         }
 
         apr_brigade_length(temp_brigade, 1, &bytes);
@@ -922,7 +922,7 @@ skip_body:
      * otherwise sent Connection: Keep-Alive.
      */
     if (!force10) {
-        if (p_conn->close) {
+        if (!ap_proxy_connection_reusable(p_conn)) {
             buf = apr_pstrdup(p, "Connection: close" CRLF);
         }
         else {
@@ -1383,6 +1383,7 @@ apr_status_t ap_proxy_http_process_response(apr_pool_t * p, request_rec *r,
          */
         if (apr_date_checkmask(buffer, "HTTP/#.# ###*")) {
             int major, minor;
+            int toclose;
 
             major = buffer[5] - '0';
             minor = buffer[7] - '0';
@@ -1491,7 +1492,10 @@ apr_status_t ap_proxy_http_process_response(apr_pool_t * p, request_rec *r,
             te = apr_table_get(r->headers_out, "Transfer-Encoding");
 
             /* strip connection listed hop-by-hop headers from response */
-            backend->close = ap_proxy_clear_connection_fn(r, r->headers_out);
+            toclose = ap_proxy_clear_connection_fn(r, r->headers_out);
+            if (toclose) {
+                backend->close = 1;
+            }
 
             if ((buf = apr_table_get(r->headers_out, "Content-Type"))) {
                 ap_set_content_type(r, apr_pstrdup(p, buf));
@@ -1658,6 +1662,11 @@ apr_status_t ap_proxy_http_process_response(apr_pool_t * p, request_rec *r,
                 }
                 ap_discard_request_body(backend->r);
             }
+            /*
+             * prevent proxy_handler() from treating this as an
+             * internal error.
+             */
+            apr_table_setn(r->notes, "proxy-error-override", "1");
             return proxy_status;
         }
 
