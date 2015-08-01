@@ -3,9 +3,6 @@ no_LD_LIBRARY_PATH.patch
 suexec-CVE-2007-1742.patch
 customize_apxs.patch
 build_suexec-custom.patch
-CVE-2015-0228_mod_lua.diff
-mpm_event_crash.diff
-CVE-2015-0253_ErrorDocument.diff
 reproducible_builds.diff
 
 # This patch is applied manually

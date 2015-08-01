@@ -1,5 +1,13 @@
-apache2 (2.4.12-3) UNRELEASED; urgency=medium
+apache2 (2.4.16-1) UNRELEASED; urgency=medium
 
+  [ Stefan Fritsch ]
+  * New upstream version, fixing the following security issues:
+    + CVE-2015-3183: Fix chunk header parsing defect.
+    + CVE-2015-3185: ap_some_auth_required() broken in apache 2.4 in an
+      unfixable way. Add a new replacement API ap_some_authn_required()
+      and ap_force_authn hook.
+
+  [ Jean-Michel Vourgère ]
   * Allow "triggers-awaited" and "triggers-pending" states in addition to
     "installed" when determining whether to defer actions or process
     deferred actions. Thanks Colin Watson. Closes: #787103
