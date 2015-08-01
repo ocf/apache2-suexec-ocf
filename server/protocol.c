@@ -599,8 +599,6 @@ static int read_request_line(request_rec *r, apr_bucket_brigade *bb)
              */
             if (APR_STATUS_IS_ENOSPC(rv)) {
                 r->status    = HTTP_REQUEST_URI_TOO_LARGE;
-                r->proto_num = HTTP_VERSION(1,0);
-                r->protocol  = apr_pstrdup(r->pool, "HTTP/1.0");
             }
             else if (APR_STATUS_IS_TIMEUP(rv)) {
                 r->status = HTTP_REQUEST_TIME_OUT;
@@ -608,6 +606,8 @@ static int read_request_line(request_rec *r, apr_bucket_brigade *bb)
             else if (APR_STATUS_IS_EINVAL(rv)) {
                 r->status = HTTP_BAD_REQUEST;
             }
+            r->proto_num = HTTP_VERSION(1,0);
+            r->protocol  = apr_pstrdup(r->pool, "HTTP/1.0");
             return 0;
         }
     } while ((len <= 0) && (++num_blank_lines < max_blank_lines));
@@ -729,7 +729,7 @@ AP_DECLARE(void) ap_get_mime_headers_core(request_rec *r, apr_bucket_brigade *bb
              */
             if (rv == APR_ENOSPC) {
                 const char *field_escaped;
-                if (field) {
+                if (field && len) {
                     /* ensure ap_escape_html will terminate correctly */
                     field[len - 1] = '\0';
                     field_escaped = ap_escape_html(r->pool, field);
@@ -765,18 +765,21 @@ AP_DECLARE(void) ap_get_mime_headers_core(request_rec *r, apr_bucket_brigade *bb
                 apr_size_t fold_len = last_len + len + 1; /* trailing null */
 
                 if (fold_len >= (apr_size_t)(r->server->limit_req_fieldsize)) {
+                    const char *field_escaped;
+
                     r->status = HTTP_BAD_REQUEST;
                     /* report what we have accumulated so far before the
                      * overflow (last_field) as the field with the problem
                      */
+                    field_escaped = ap_escape_html(r->pool, last_field);
                     apr_table_setn(r->notes, "error-notes",
                                    apr_psprintf(r->pool,
                                                "Size of a request header field "
                                                "after folding "
                                                "exceeds server limit.<br />\n"
                                                "<pre>\n%.*s\n</pre>\n", 
-                                               field_name_len(last_field), 
-                                               ap_escape_html(r->pool, last_field)));
+                                               field_name_len(field_escaped), 
+                                               field_escaped));
                     ap_log_rerror(APLOG_MARK, APLOG_INFO, 0, r, APLOGNO(00562)
                                   "Request header exceeds LimitRequestFieldSize "
                                   "after folding: %.*s",

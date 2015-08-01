@@ -504,7 +504,8 @@ typedef struct {
 #ifdef HAVE_OCSP_STAPLING
     const ap_socache_provider_t *stapling_cache;
     ap_socache_instance_t *stapling_cache_context;
-    apr_global_mutex_t   *stapling_mutex;
+    apr_global_mutex_t   *stapling_cache_mutex;
+    apr_global_mutex_t   *stapling_refresh_mutex;
 #endif
 } SSLModConfigRec;
 
@@ -576,6 +577,7 @@ typedef struct {
 #endif
 
     ssl_proto_t  protocol;
+    int protocol_set;
 
     /** config for handling encrypted keys */
     ssl_pphrase_t pphrase_dialog_type;
@@ -884,7 +886,8 @@ int          ssl_stapling_mutex_reinit(server_rec *, apr_pool_t *);
 
 /* mutex type names for Mutex directive */
 #define SSL_CACHE_MUTEX_TYPE    "ssl-cache"
-#define SSL_STAPLING_MUTEX_TYPE "ssl-stapling"
+#define SSL_STAPLING_CACHE_MUTEX_TYPE "ssl-stapling"
+#define SSL_STAPLING_REFRESH_MUTEX_TYPE "ssl-stapling-refresh"
 
 apr_status_t ssl_die(server_rec *);
 
@@ -925,6 +928,10 @@ void         ssl_var_log_config_register(apr_pool_t *p);
 /* Extract SSL_*_DN_* variables into table 't' from SSL object 'ssl',
  * allocating from 'p': */
 void modssl_var_extract_dns(apr_table_t *t, SSL *ssl, apr_pool_t *p);
+
+/* Extract SSL_*_SAN_* variables (subjectAltName entries) into table 't'
+ * from SSL object 'ssl', allocating from 'p'. */
+void modssl_var_extract_san_entries(apr_table_t *t, SSL *ssl, apr_pool_t *p);
 
 #ifndef OPENSSL_NO_OCSP
 /* Perform OCSP validation of the current cert in the given context.

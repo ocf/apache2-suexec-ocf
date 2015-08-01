@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="tr" xml:lang="tr"><head><!--
+<html xmlns="http://www.w3.org/1999/xhtml" lang="tr" xml:lang="tr"><head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+<!--
         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
               This file is generated from xml source: DO NOT EDIT
         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -30,6 +32,7 @@
 <a href="../ko/mod/mod_log_config.html" hreflang="ko" rel="alternate" title="Korean">&nbsp;ko&nbsp;</a> |
 <a href="../tr/mod/mod_log_config.html" title="Türkçe">&nbsp;tr&nbsp;</a></p>
 </div>
+<div class="outofdate">Bu çeviri güncel olmayabilir. Son değişiklikler için İngilizce sürüm geçerlidir.</div>
 <table class="module"><tr><th><a href="module-dict.html#Description">Açıklama:</a></th><td>Sunucuya yapılan isteklerin günlük kayıtlarının tutulması
 </td></tr>
 <tr><th><a href="module-dict.html#Status">Durum:</a></th><td>Temel</td></tr>
@@ -51,18 +54,18 @@
       her sunucu için birden fazla  <code class="directive">TransferLog</code> ve
       <code class="directive">CustomLog</code> yönergesi belirtilebilir.</p>
 </div>
-<div id="quickview"><h3 class="directives">Yönergeler</h3>
+<div id="quickview"><h3>Konular</h3>
+<ul id="topics">
+<li><img alt="" src="../images/down.gif" /> <a href="#formats">Günlük Girdilerinin Kişiselleştirilmesi</a></li>
+<li><img alt="" src="../images/down.gif" /> <a href="#security">Güvenlik Kaygıları</a></li>
+</ul><h3 class="directives">Yönergeler</h3>
 <ul id="toc">
 <li><img alt="" src="../images/down.gif" /> <a href="#bufferedlogs">BufferedLogs</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#customlog">CustomLog</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#logformat">LogFormat</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#transferlog">TransferLog</a></li>
 </ul>
-<h3>Konular</h3>
-<ul id="topics">
-<li><img alt="" src="../images/down.gif" /> <a href="#formats">Günlük Girdilerinin Kişiselleştirilmesi</a></li>
-<li><img alt="" src="../images/down.gif" /> <a href="#security">Güvenlik Kaygıları</a></li>
-</ul><h3>Ayrıca bakınız:</h3>
+<h3>Ayrıca bakınız:</h3>
 <ul class="seealso">
 <li><a href="../logs.html">Apache Günlük Dosyaları</a></li>
 </ul><ul class="seealso"><li><a href="#comments_section">Yorum</a></li></ul></div>
