@@ -1,9 +1,9 @@
-apache2 (2.4.16-2) UNRELEASED; urgency=medium
+apache2 (2.4.16-2) unstable; urgency=medium
 
   * Make dh_apache2 add a versioned dependency on apache2-bin, for the
     new symbols required for the CVE-2015-3185 fix.
 
- -- Stefan Fritsch <sf@debian.org>  Fri, 07 Aug 2015 23:40:56 +0200
+ -- Stefan Fritsch <sf@debian.org>  Fri, 07 Aug 2015 23:43:16 +0200
 
 apache2 (2.4.16-1) unstable; urgency=medium
 
