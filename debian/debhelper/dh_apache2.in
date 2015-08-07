@@ -58,6 +58,11 @@ sub apache_api_version
 	return "apache2-api-$API";
 }
 
+sub apache_depends
+{
+	# TODO XXX this should be determined from ap_mmn.h, too.
+	return apache_api_version() . ", apache2-bin ( >= 2.4.16 )";
+}
 
 sub apache_version
 {
@@ -457,7 +462,7 @@ foreach my $package ((@{$dh{DOPACKAGES}}))
 		{
 			warning("Package $package appears to be an Apache module. It should comply to the package naming scheme libapache2-mod-<modulename>\n");
 		}
-		addsubstvar($package, "misc:Depends", apache_api_version());
+		addsubstvar($package, "misc:Depends", apache_depends());
 
 		my $modules = "";
 		foreach my $module (@{$PACKAGE_TYPE{'has_a_module'}})
