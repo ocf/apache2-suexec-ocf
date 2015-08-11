@@ -2,6 +2,7 @@ apache2 (2.4.16-3) UNRELEASED; urgency=medium
 
   * Have apache2.postrm removes content of /var/lib/apache2, not the
     directory itself. Closes: #793862
+  * d/p/reproducible_builds.diff: Sort exported symbols list.
 
  -- Jean-Michel Vourgère <nirgal@debian.org>  Tue, 11 Aug 2015 11:12:04 +0200
 
