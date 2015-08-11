@@ -25,10 +25,13 @@ case "$1" in
 	for d in var/cache/apache2 \
 		 var/cache/apache2/mod_cache_disk \
 		 var/log/apache2 \
-		 var/lib/apache2 ; do
+		 var/lib/apache2/conf \
+		 var/lib/apache2/module \
+		 var/lib/apache2/site ; do
 		[ -d $d ] && rm -rf $d
 	done
 
+	rm -f /var/lib/apache2/deferred_actions
 
 	for f in /etc/apache2/sites-enabled/* \
 		/etc/apache2/conf-enabled/* \
