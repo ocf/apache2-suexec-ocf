@@ -1,8 +1,12 @@
 apache2 (2.4.16-3) UNRELEASED; urgency=medium
 
+  [ Jean-Michel Vourgère ]
   * Have apache2.postrm removes content of /var/lib/apache2, not the
     directory itself. Closes: #793862
   * d/p/reproducible_builds.diff: Sort exported symbols list.
+
+  [ Stefan Fritsch ]
+  * apxs: Don't pass --silent to libtool. Closes: #795820
 
  -- Jean-Michel Vourgère <nirgal@debian.org>  Tue, 11 Aug 2015 11:12:04 +0200
 
