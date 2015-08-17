@@ -18,6 +18,23 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+is_default_index_html () {
+	local FILE="$1"
+	[ -f "$FILE" ] || return 1
+	local MD5=$(md5sum "$FILE" 2> /dev/null |cut -d' ' -f 1) ||
+		return 1
+	grep -q "$MD5" <<- EOF
+		1736dfc80cf1f5a8966c096a0b094377
+		21dde95d9d269cbb2fa6560309dca40c
+		3183a3d71d86bcc88aaf3ca5cbbefb45
+		51a41c3207374dad24ec64a0f2646bdc
+		5388f60d7695cb57b87c799ee62d20b2
+		74cec59a19e5d16f7cc6a2445e35fa3b
+		776221a94e5a174dc2396c0f3f6b6a74
+		c481228d439cbb54bdcedbaec5bbb11a
+	EOF
+}
+
 
 case "$1" in
     purge)
@@ -49,7 +66,9 @@ case "$1" in
 		rmdir $d 2> /dev/null || true
 	done
 
-	#XXX: index.html is intentionally(?) left back
+	if is_default_index_html /var/www/html/index.html ; then
+		rm -f /var/www/html/index.html
+	fi
     ;;
 
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)

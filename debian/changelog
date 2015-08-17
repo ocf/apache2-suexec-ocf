@@ -7,6 +7,7 @@ apache2 (2.4.16-3) UNRELEASED; urgency=medium
 
   [ Stefan Fritsch ]
   * apxs: Don't pass --silent to libtool. Closes: #795820
+  * Remove default /var/www/html/index.html on package purge.
 
  -- Jean-Michel Vourgère <nirgal@debian.org>  Tue, 11 Aug 2015 11:12:04 +0200
 
