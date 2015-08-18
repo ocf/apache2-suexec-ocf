@@ -1,4 +1,4 @@
-apache2 (2.4.16-3) UNRELEASED; urgency=medium
+apache2 (2.4.16-3) unstable; urgency=medium
 
   [ Jean-Michel Vourgère ]
   * Have apache2.postrm removes content of /var/lib/apache2, not the
@@ -9,7 +9,7 @@ apache2 (2.4.16-3) UNRELEASED; urgency=medium
   * apxs: Don't pass --silent to libtool. Closes: #795820
   * Remove default /var/www/html/index.html on package purge.
 
- -- Jean-Michel Vourgère <nirgal@debian.org>  Tue, 11 Aug 2015 11:12:04 +0200
+ -- Stefan Fritsch <sf@debian.org>  Tue, 18 Aug 2015 13:49:09 +0200
 
 apache2 (2.4.16-2) unstable; urgency=medium
 
