@@ -1,6 +1,10 @@
 apache2 (2.4.16-4) UNRELEASED; urgency=medium
 
+  [ Stefan Fritsch ]
   * reproducible build: Make symbol sorting consistent over different locales
+
+  [ Jean-Michel Vourgère ]
+  * Updated upstream keyring used to check source authenticity.
 
  -- Stefan Fritsch <sf@debian.org>  Thu, 20 Aug 2015 09:20:14 +0200
 
