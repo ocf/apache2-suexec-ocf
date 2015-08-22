@@ -2,6 +2,8 @@ apache2 (2.4.16-4) UNRELEASED; urgency=medium
 
   [ Stefan Fritsch ]
   * reproducible build: Make symbol sorting consistent over different locales
+  * Conflict with apache2.2-common and apache2.2-bin to get the transitional
+    packages removed. Closes: #768815
 
   [ Jean-Michel Vourgère ]
   * Updated upstream keyring used to check source authenticity.
