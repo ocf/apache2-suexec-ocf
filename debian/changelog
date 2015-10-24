@@ -6,6 +6,7 @@ apache2 (2.4.17-1) UNRELEASED; urgency=medium
   * reproducible build: Make symbol sorting consistent over different locales
   * Conflict with apache2.2-common and apache2.2-bin to get the transitional
     packages removed. Closes: #768815
+  * Don't treat mpm_itk as MPM module in a2query. Closes: #791902
 
   [ Jean-Michel Vourgère ]
   * Updated upstream keyring used to check source authenticity.
