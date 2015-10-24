@@ -1,6 +1,8 @@
-apache2 (2.4.16-4) UNRELEASED; urgency=medium
+apache2 (2.4.17-1) UNRELEASED; urgency=medium
 
   [ Stefan Fritsch ]
+  * New upstream release:
+    - New experimental http2 module
   * reproducible build: Make symbol sorting consistent over different locales
   * Conflict with apache2.2-common and apache2.2-bin to get the transitional
     packages removed. Closes: #768815
