@@ -111,7 +111,7 @@ static void modssl_ctx_init(modssl_ctx_t *mctx, apr_pool_t *p)
     mctx->ticket_key          = NULL;
 #endif
 
-    mctx->protocol            = SSL_PROTOCOL_ALL;
+    mctx->protocol            = SSL_PROTOCOL_DEFAULT;
     mctx->protocol_set        = 0;
 
     mctx->pphrase_dialog_type = SSL_PPTYPE_UNSET;
@@ -612,7 +612,7 @@ const char *ssl_cmd_SSLRandomSeed(cmd_parms *cmd,
         seed->cpPath = ap_server_root_relative(mc->pPool, arg2+4);
 #else
         return apr_pstrcat(cmd->pool, "Invalid SSLRandomSeed entropy source `",
-                           arg2, "': This version of " SSL_LIBRARY_NAME
+                           arg2, "': This version of " MODSSL_LIBRARY_NAME
                            " does not support the Entropy Gathering Daemon "
                            "(EGD).", NULL);
 #endif
@@ -709,7 +709,7 @@ const char *ssl_cmd_SSLCipherSuite(cmd_parms *cmd,
     SSLDirConfigRec *dc = (SSLDirConfigRec *)dcfg;
 
     /* always disable null and export ciphers */
-    arg = apr_pstrcat(cmd->pool, "!aNULL:!eNULL:!EXP:", arg, NULL);
+    arg = apr_pstrcat(cmd->pool, arg, ":!aNULL:!eNULL:!EXP", NULL);
 
     if (cmd->path) {
         dc->szCipherSuite = arg;
@@ -1343,7 +1343,15 @@ static const char *ssl_cmd_protocol_parse(cmd_parms *parms,
             }
         }
         else if (strcEQ(w, "SSLv3")) {
+#ifdef OPENSSL_NO_SSL3
+            if (action != '-') {
+                return "SSLv3 not supported by this version of OpenSSL";
+            }
+            /* Nothing to do, the flag is not present to be toggled */
+            continue;
+#else
             thisopt = SSL_PROTOCOL_SSLV3;
+#endif
         }
         else if (strcEQ(w, "TLSv1")) {
             thisopt = SSL_PROTOCOL_TLSV1;
@@ -1421,7 +1429,7 @@ const char *ssl_cmd_SSLProxyCipherSuite(cmd_parms *cmd,
     SSLSrvConfigRec *sc = mySrvConfig(cmd->server);
 
     /* always disable null and export ciphers */
-    arg = apr_pstrcat(cmd->pool, "!aNULL:!eNULL:!EXP:", arg, NULL);
+    arg = apr_pstrcat(cmd->pool, arg, ":!aNULL:!eNULL:!EXP", NULL);
 
     sc->proxy->auth.cipher_suite = arg;
 
@@ -1875,6 +1883,11 @@ const char *ssl_cmd_SSLOpenSSLConfCmd(cmd_parms *cmd, void *dcfg,
     else if (value_type == SSL_CONF_TYPE_DIR) {
         if ((err = ssl_cmd_check_dir(cmd, &arg2)))
             return err;
+    }
+
+    if (strcEQ(arg1, "CipherString")) {
+        /* always disable null and export ciphers */
+        arg2 = apr_pstrcat(cmd->pool, arg2, ":!aNULL:!eNULL:!EXP", NULL);
     }
 
     param = apr_array_push(sc->server->ssl_ctx_param);
