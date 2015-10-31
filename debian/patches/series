@@ -8,3 +8,4 @@ reproducible_builds.diff
 # This patch is applied manually
 #suexec-custom.patch
 revert-REDIRECT_URL.patch
+mod_http2_log_protocol.patch
