@@ -1,3 +1,9 @@
+apache2 (2.4.17-3) UNRELEASED; urgency=medium
+
+  * mpm_prefork: Fix segfault if started with -X. Closes: #805737
+
+ -- Stefan Fritsch <sf@debian.org>  Mon, 23 Nov 2015 19:21:28 +0100
+
 apache2 (2.4.17-2) unstable; urgency=medium
 
   * Revert REDIRECT_URL to pre-2.4.17 behavior for now. The change broke
