@@ -1,3 +1,10 @@
+apache2 (2.4.18-1) UNRELEASED; urgency=medium
+
+  * New upstream release:
+    - mostly HTTP/2 improvements
+
+ -- Stefan Fritsch <sf@debian.org>  Sat, 19 Dec 2015 09:19:09 +0100
+
 apache2 (2.4.17-3) unstable; urgency=medium
 
   * mpm_prefork: Fix segfault if started with -X. Closes: #805737
