@@ -18162,7 +18162,7 @@ EOF
   > $modpath_current/modules.mk
 
 
-http2_objs="mod_http2.lo h2_alt_svc.lo h2_config.lo h2_conn.lo h2_conn_io.lo h2_ctx.lo h2_from_h1.lo h2_h2.lo h2_io.lo h2_io_set.lo h2_mplx.lo h2_request.lo h2_response.lo h2_session.lo h2_stream.lo h2_stream_set.lo h2_switch.lo h2_task.lo h2_task_input.lo h2_task_output.lo h2_task_queue.lo h2_to_h1.lo h2_util.lo h2_worker.lo h2_workers.lo "
+http2_objs="mod_http2.lo h2_alt_svc.lo h2_bucket_eoc.lo h2_bucket_eos.lo h2_config.lo h2_conn.lo h2_conn_io.lo h2_ctx.lo h2_from_h1.lo h2_h2.lo h2_io.lo h2_io_set.lo h2_mplx.lo h2_push.lo h2_request.lo h2_response.lo h2_session.lo h2_stream.lo h2_stream_set.lo h2_switch.lo h2_task.lo h2_task_input.lo h2_task_output.lo h2_task_queue.lo h2_util.lo h2_worker.lo h2_workers.lo "
 
 
 
@@ -18586,8 +18586,8 @@ fi
       fi
     fi
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for nghttp2 version >= 1.0.0" >&5
-$as_echo_n "checking for nghttp2 version >= 1.0.0... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for nghttp2 version >= 1.2.1" >&5
+$as_echo_n "checking for nghttp2 version >= 1.2.1... " >&6; }
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 #include <nghttp2/nghttp2ver.h>
@@ -18598,7 +18598,7 @@ main ()
 #if !defined(NGHTTP2_VERSION_NUM)
 #error "Missing nghttp2 version"
 #endif
-#if NGHTTP2_VERSION_NUM < 0x010000
+#if NGHTTP2_VERSION_NUM < 0x010201
 #error "Unsupported nghttp2 version " NGHTTP2_VERSION_TEXT
 #endif
   ;
@@ -18702,6 +18702,68 @@ done
         { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: nghttp2 library is unusable" >&5
 $as_echo "$as_me: WARNING: nghttp2 library is unusable" >&2;}
       fi
+      for ac_func in nghttp2_stream_get_weight
+do :
+  ac_fn_c_check_func "$LINENO" "nghttp2_stream_get_weight" "ac_cv_func_nghttp2_stream_get_weight"
+if test "x$ac_cv_func_nghttp2_stream_get_weight" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_NGHTTP2_STREAM_GET_WEIGHT 1
+_ACEOF
+
+  if test "x$MOD_CPPFLAGS" = "x"; then
+    test "x$silent" != "xyes" && echo "  setting MOD_CPPFLAGS to \""-DH2_NG2_STREAM_API"\""
+    MOD_CPPFLAGS=""-DH2_NG2_STREAM_API""
+  else
+    apr_addto_bugger=""-DH2_NG2_STREAM_API""
+    for i in $apr_addto_bugger; do
+      apr_addto_duplicate="0"
+      for j in $MOD_CPPFLAGS; do
+        if test "x$i" = "x$j"; then
+          apr_addto_duplicate="1"
+          break
+        fi
+      done
+      if test $apr_addto_duplicate = "0"; then
+        test "x$silent" != "xyes" && echo "  adding \"$i\" to MOD_CPPFLAGS"
+        MOD_CPPFLAGS="$MOD_CPPFLAGS $i"
+      fi
+    done
+  fi
+
+fi
+done
+
+      for ac_func in nghttp2_session_change_stream_priority
+do :
+  ac_fn_c_check_func "$LINENO" "nghttp2_session_change_stream_priority" "ac_cv_func_nghttp2_session_change_stream_priority"
+if test "x$ac_cv_func_nghttp2_session_change_stream_priority" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_NGHTTP2_SESSION_CHANGE_STREAM_PRIORITY 1
+_ACEOF
+
+  if test "x$MOD_CPPFLAGS" = "x"; then
+    test "x$silent" != "xyes" && echo "  setting MOD_CPPFLAGS to \""-DH2_NG2_CHANGE_PRIO"\""
+    MOD_CPPFLAGS=""-DH2_NG2_CHANGE_PRIO""
+  else
+    apr_addto_bugger=""-DH2_NG2_CHANGE_PRIO""
+    for i in $apr_addto_bugger; do
+      apr_addto_duplicate="0"
+      for j in $MOD_CPPFLAGS; do
+        if test "x$i" = "x$j"; then
+          apr_addto_duplicate="1"
+          break
+        fi
+      done
+      if test $apr_addto_duplicate = "0"; then
+        test "x$silent" != "xyes" && echo "  adding \"$i\" to MOD_CPPFLAGS"
+        MOD_CPPFLAGS="$MOD_CPPFLAGS $i"
+      fi
+    done
+  fi
+
+fi
+done
+
     else
       { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: nghttp2 version is too old" >&5
 $as_echo "$as_me: WARNING: nghttp2 version is too old" >&2;}
