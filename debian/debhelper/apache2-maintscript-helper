@@ -288,7 +288,7 @@ apache2_switch_mpm()
 
 	local CUR_MPM=$(a2query -M) || return 1
 
-	if [ $CUR_MPM != $MPM ] ; then
+	if [ "$CUR_MPM" != "$MPM" ] ; then
 		a2dismod -m -q "mpm_$CUR_MPM";
 		a2enmod -m -q "mpm_$MPM";
 		apache2_msg "info" "apache2_switch_mpm Switch to $MPM"
@@ -338,9 +338,9 @@ apache2_switch_mpm()
 #          2.4.6-4: Allow apache2_invoke to disable configuration in preinst/postinst
 apache2_invoke()
 {
-	local CMD=$1
-	local CONF=$2
-	local RCD_ACTION=$3
+	local CMD="$1"
+	local CONF="$2"
+	local RCD_ACTION="$3"
 	local invoke_rcd=0
 	local check_switch=""
 	local invoke_string=""
@@ -349,7 +349,7 @@ apache2_invoke()
 	[ -x "/usr/sbin/a2query" ] || return 1
 
 	if [ -n "$APACHE2_MAINTSCRIPT_DEFER" ] ; then
-		echo "$APACHE2_MAINTSCRIPT_PACKAGE apache2_invoke $*" >> $APACHE2_MAINTSCRIPT_DEFER
+		echo "$APACHE2_MAINTSCRIPT_PACKAGE apache2_invoke $*" >> "$APACHE2_MAINTSCRIPT_DEFER"
 		return 0
 	fi
 
@@ -485,12 +485,12 @@ apache2_reload()
 		apache2_msg "err" "apache2_reload: Your configuration is broken. Not ${action}ing Apache 2"
 		grep -v -e "Action 'configtest' failed." \
 			-e "The Apache error log may have more information." \
-			$tmpfile |
+			"$tmpfile" |
 			while read LINE ; do
 				apache2_msg "err" "apache2_reload: $LINE"
 			done
 	fi
-	rm -f $tmpfile
+	rm -f "$tmpfile"
 }
 
 # vim: syntax=sh sw=8 sts=8 sr noet
