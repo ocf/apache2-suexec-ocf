@@ -176,9 +176,9 @@ sub load_defaults
 {
 	my @out = `$APACHE2 -V 2>/dev/null`;
 	return if $?;
-	for (my $line; $line <= $#out; $line++)
+	foreach my $line (@out)
 	{
-		if ($out[$line] =~ m/(Server version|Server MPM|Magic Number):\s+(.*?)$/)
+		if ($line =~ m/(Server version|Server MPM|Magic Number):\s+(.*?)$/)
 		{
 			my ($pattern, $value) = ($1, $2);
 			if ($pattern =~ /version/)
