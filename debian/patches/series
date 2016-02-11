@@ -7,3 +7,25 @@ reproducible_builds.diff
 
 # This patch is applied manually
 #suexec-custom.patch
+spelling-errors.patch
+
+CVE-2019-0196.patch
+CVE-2019-0211.patch
+CVE-2019-0215.patch
+CVE-2019-0217.patch
+CVE-2019-0220-1.patch
+CVE-2019-0220-2.patch
+CVE-2019-0220-3.patch
+CVE-2019-0197.patch
+CVE-2019-10092.patch
+CVE-2019-10097.patch
+CVE-2019-10098.patch
+import-http2-module-from-2.4.46.patch
+CVE-2020-11984.patch
+CVE-2020-1927.patch
+CVE-2020-1934.patch
+
+ocf_build_suexec.patch
+# This patch is applied manually in debian/rules, similar to the Debian
+# suexec-custom.patch file listed above.
+#ocf-suexec.patch
