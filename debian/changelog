@@ -1,3 +1,9 @@
+apache2 (2.4.10-10ocf1) unstable; urgency=medium
+
+  * Add apache2-suexec-ocf patches.
+
+ -- Chris Kuehl <ckuehl@ocf.berkeley.edu>  Thu, 11 Feb 2016 00:00:43 -0800
+
 apache2 (2.4.10-10) unstable; urgency=medium
 
   * CVE-2015-0228: mod_lua: Fix denial of service vulnerability in
