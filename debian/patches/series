@@ -10,3 +10,8 @@ reproducible_builds.diff
 
 fix_logresolve_segfault.patch
 mpm_event_restart_segfault_PR60487.patch
+
+ocf_build_suexec.patch
+# This patch is applied manually in debian/rules, similar to the Debian
+# suexec-custom.patch file listed above.
+#ocf-suexec.patch
