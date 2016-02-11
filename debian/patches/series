@@ -24,3 +24,8 @@ import-http2-module-from-2.4.46.patch
 CVE-2020-11984.patch
 CVE-2020-1927.patch
 CVE-2020-1934.patch
+
+ocf_build_suexec.patch
+# This patch is applied manually in debian/rules, similar to the Debian
+# suexec-custom.patch file listed above.
+#ocf-suexec.patch
