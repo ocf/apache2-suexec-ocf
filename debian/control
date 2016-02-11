@@ -217,3 +217,12 @@ Description: transitional package
  This is a transitional package to apache2 for users of
  libapache2-mod-proxy-uwsgi.
  It can be safely removed after the installation is complete.
+
+Package: apache2-suexec-ocf
+Priority: extra
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, apache2-bin
+Replaces: apache2-suexec (<< 2.3~)
+Breaks: apache2-suexec (<< 2.3~)
+Provides: apache2-suexec
+Description: OCF-flavored Apache suexec program for mod_suexec
