@@ -1,0 +1,39 @@
+--- a/support/suexec-ocf.c
++++ b/support/suexec-ocf.c
+@@ -14,6 +14,7 @@
+  * limitations under the License.
+  */
+ 
++
+ /*
+  * suexec.c -- "Wrapper" support program for suEXEC behaviour for Apache
+  *
+@@ -69,6 +70,8 @@
+ 
+ #define AP_ENVBUF 256
+ 
++#define AP_DOC_ROOT "/services"
++
+ extern char **environ;
+ static FILE *log = NULL;
+ 
+@@ -579,11 +582,15 @@
+     /*
+      * Error out if the target name/group is different from
+      * the name/group of the cwd or the program.
++     *
++     * If the owner/group of the cwd or program is root, we allow it (this is
++     * an OCF modification).
+      */
+-    if ((uid != dir_info.st_uid) ||
+-        (gid != dir_info.st_gid) ||
+-        (uid != prg_info.st_uid) ||
+-        (gid != prg_info.st_gid)) {
++    if (((uid != dir_info.st_uid) ||
++         (gid != dir_info.st_gid) ||
++         (uid != prg_info.st_uid) ||
++         (gid != prg_info.st_gid)
++        ) && !(dir_info.st_uid == 0 && dir_info.st_gid == 0 && prg_info.st_uid == 0 && prg_info.st_gid == 0)) {
+         log_err("target uid/gid (%lu/%lu) mismatch "
+                 "with directory (%lu/%lu) or program (%lu/%lu)\n",
+                 (unsigned long)uid, (unsigned long)gid,

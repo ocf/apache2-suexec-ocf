@@ -24,6 +24,10 @@ support/suexec-custom.c: support/suexec.c debian/patches/suexec-custom.patch
 	cp support/suexec.c support/suexec-custom.c
 	patch -p1 -i debian/patches/suexec-custom.patch
 
+support/suexec-ocf.c: support/suexec.c debian/patches/ocf-suexec.patch
+	cp support/suexec.c support/suexec-ocf.c
+	patch -p1 -i debian/patches/ocf-suexec.patch
+
 prebuild-checks:
 	ERRS="" ;\
 	for a in $$(find debian/config-dir/ -type f) ; do \
@@ -54,7 +58,7 @@ prepare-scripts: debian/a2query debian/debhelper/dh_apache2
 
 generate-maintainer-scripts:
 	set -e ; \
-	for type in custom pristine ; do \
+	for type in custom pristine ocf ; do \
 		for f in postinst preinst prerm links dirs lintian-overrides postrm; do \
 			if [ -e debian/apache2-suexec.$$f.in ] ; then \
 				perl -pe "s{__TYPE__}{$$type}g" < debian/apache2-suexec.$$f.in > debian/apache2-suexec-$$type.$$f ;\
@@ -76,7 +80,7 @@ generate-maintainer-scripts:
 clean build build-arch build-indep binary binary-arch binary-indep: %:
 	dh $@ --parallel --with autotools_dev
 
-override_dh_auto_configure: generate-maintainer-scripts prebuild-checks support/suexec-custom.c
+override_dh_auto_configure: generate-maintainer-scripts prebuild-checks support/suexec-custom.c support/suexec-ocf.c
 	./configure --enable-layout=Debian --enable-so --with-program-name=apache2 \
 		--enable-suexec --with-suexec-caller=www-data \
 		--with-suexec-bin=/usr/lib/apache2/suexec --with-suexec-docroot=/var/www \
@@ -102,7 +106,10 @@ override_dh_fixperms-arch:
 	# configurable suexec
 	chmod 4754 debian/apache2-suexec-custom/usr/lib/apache2/suexec-custom
 	chgrp www-data debian/apache2-suexec-custom/usr/lib/apache2/suexec-custom
-	dh_fixperms -a -Xusr/lib/apache2/suexec-custom -Xusr/lib/apache2/suexec-pristine
+	# ocf suexec
+	chmod 4754 debian/apache2-suexec-ocf/usr/lib/apache2/suexec-ocf
+	chgrp www-data debian/apache2-suexec-ocf/usr/lib/apache2/suexec-ocf
+	dh_fixperms -a -Xusr/lib/apache2/suexec-custom -Xusr/lib/apache2/suexec-pristine -Xusr/lib/apache2/suexec-ocf
 	chown -R www-data:www-data debian/apache2/var/cache/apache2/mod_cache_disk
 	chown root:adm debian/apache2/var/log/apache2
 	chmod o-rx debian/apache2/var/log/apache2

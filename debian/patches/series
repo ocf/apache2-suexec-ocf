@@ -12,3 +12,7 @@ mod_ssl_memleak.diff
 mod_ssl-oscp_stapling_crash.diff
 CVE-2014-8109_mod_lua.diff
 CVE-2015-0228_mod_lua.diff
+ocf_build_suexec.patch
+# This patch is applied manually in debian/rules, similar to the Debian
+# suexec-custom.patch file listed above.
+#ocf-suexec.patch
