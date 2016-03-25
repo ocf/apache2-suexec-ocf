@@ -18,7 +18,9 @@ You can then use a2enmod-xxx, /etc/init.d/apache2-xxx, ... as usual, and they
 will affect the new instance of apache2.
 
 To start the new apache2 instance on boot, use
-- if you use dependency based boot sequence (the default):
+- if you use systemd, run:
+	systemctl enable apache2-xxx
+- if you use sysv-init with dependency based boot sequence (the default):
   If you don't have ssl keys with passphrases, you may want to set
   'X-Interactive: false' in /etc/init.d/apache2-xxx to reduce boot time.
   Then execute:

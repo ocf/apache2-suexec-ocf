@@ -6,6 +6,7 @@ apache2 (2.4.18-2) UNRELEASED; urgency=medium
     www-data. Closes: #806697
   * Remove ssl work-arounds for MSIE. Newer versions of IE work without them
     and older versions are no longer supported by MS. Closes: #815852
+  * Give a hint about systemd in README.multiple-instances. Closes: #818904
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 09 Jan 2016 23:35:20 +0100
 
