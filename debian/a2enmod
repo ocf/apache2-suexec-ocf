@@ -39,7 +39,8 @@ my $env_file = $ENV{APACHE_ENVVARS};
 if (! $env_file) {
     if ($ENV{APACHE_CONFDIR}) {
         $env_file = "$ENV{APACHE_CONFDIR}/envvars";
-    } else {
+    }
+    else {
         $env_file = "/etc/apache2$dir_suffix/envvars";
     }
 }
