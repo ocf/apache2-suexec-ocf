@@ -32,7 +32,7 @@ my $act        = $1;
 my $obj        = $2;
 my $dir_suffix = $3;
 
-my @essential_module_list = (qw/access_compat alias auth_basic authn_file/,
+my @essential_module_list = (qw/alias auth_basic authn_file/,
     qw/authz_host authz_user autoindex deflate dir env filter logio/,
     qw/mime negotiation setenvif unixd version watchdog/);
 my $env_file = $ENV{APACHE_ENVVARS}
