@@ -1,5 +1,5 @@
 #!/bin/sh
-set -ex
+set -exu
 
 # Check to make sure that module loads haven't been duplicated.
 # Since this is potential minefield that could cause chaos, and a fix is
@@ -9,20 +9,18 @@ set -ex
 #   https://bugs.launchpad.net/ubuntu/+source/apache2/+bug/1251939
 #   https://issues.apache.org/bugzilla/show_bug.cgi?id=55787
 
-TEMPFILE0=$(mktemp)
-TEMPFILE1=$(mktemp)
-TEMPFILE2=$(mktemp)
+cd $ADTTMP
 
-apache2ctl -l -M > $TEMPFILE0
-sort $TEMPFILE0 > $TEMPFILE1
-if ! grep core.c $TEMPFILE1 ; then
+apache2ctl -l -M > unsorted
+sort unsorted > sorted
+if ! grep core.c sorted ; then
 	echo "core.c not found in apach2ctl output. apache2ctl broken?"
 	exit 1
 fi
 
-uniq < $TEMPFILE1 > $TEMPFILE2
+uniq < sorted > dedup
 
-if ! diff -u $TEMPFILE1 $TEMPFILE2 ; then
+if ! diff -u sorted dedup ; then
 	echo Duplicate module loads found
 	exit 1
 fi
