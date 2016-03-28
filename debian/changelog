@@ -1,5 +1,10 @@
-apache2 (2.4.18-2) UNRELEASED; urgency=medium
+apache2 (2.4.18-2) UNRELEASED; urgency=low
 
+  * htcacheclean:
+    - split starting/stopping into separate init script 'apache-htcacheclean'
+    - move config from /etc/default/apache2 to /etc/default/apache-htcacheclean
+    - make a2enmod/a2dismod enable/disable htcacheclean with mod_cache_disk
+    - start htcacheclean as the apache2 run user/group
   * Fix a2query -M not returning output if apache2 config is broken.
     Fix missing quotes in apache2-maintscript-helper. Closes: #810500
   * README.backtrace: Note that coredump directory needs to be owned by
@@ -14,7 +19,6 @@ apache2 (2.4.18-2) UNRELEASED; urgency=medium
     Closes: #719245
   * Fix duplicate-module-load test and make sure it fails if it cannot execute
     apache2ctl.
-    
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 09 Jan 2016 23:35:20 +0100
 

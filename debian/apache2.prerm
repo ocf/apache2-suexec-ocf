@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+if [ -x "/etc/init.d/apache-htcacheclean" ] && [ "$1" = remove ] ; then
+	invoke-rc.d apache-htcacheclean stop || true
+fi
+
+#DEBHELPER#

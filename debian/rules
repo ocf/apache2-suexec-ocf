@@ -104,7 +104,8 @@ override_dh_fixperms-indep:
 	dh_fixperms -i
 
 override_dh_installinit:
-	dh_installinit --restart-after-upgrade --error-handler=true -- defaults 91 09
+	dh_installinit --restart-after-upgrade --error-handler=true
+	dh_installinit --name apache-htcacheclean --noscripts
 
 override_dh_installdocs-indep:
 	# TODO: So, did anyone check convert_docs needs an update? ;)

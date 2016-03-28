@@ -2,6 +2,10 @@ Tests: duplicate-module-load
 Restrictions: allow-stderr, needs-root
 Depends: apache2
 
+Tests: htcacheclean
+Restrictions: allow-stderr, needs-root
+Depends: apache2
+
 Tests: ssl-passphrase
 Restrictions: needs-root allow-stderr breaks-testbed
 Depends: apache2, curl, expect, ssl-cert

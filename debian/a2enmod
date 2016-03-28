@@ -11,6 +11,8 @@ use File::Spec;
 use File::Basename;
 use File::Path;
 use Getopt::Long;
+use feature ':5.16';
+no warnings "experimental::smartmatch";
 
 my $quiet;
 my $force;
@@ -80,6 +82,8 @@ my $choicedir = $act eq 'enable' ? $availdir : $enabldir;
 my $linkdir = File::Spec->abs2rel( $availdir, $enabldir );
 
 my $request_reload = 0;
+my $request_htcacheclean;
+my $htc = "apache-htcacheclean$dir_suffix";
 
 my $rc = 0;
 
@@ -109,8 +113,14 @@ foreach my $acton (@objs) {
     doit($acton) or $rc = 1;
 }
 
-info(
-    "To activate the new configuration, you need to run:\n  service apache2 $reload\n"
+my $htcstart = "";
+if ($request_htcacheclean) {
+    my $cmd = ($act eq "enable") ? "start" : "stop";
+    $htcstart = "  service $htc $cmd\n";
+}
+info(  "To activate the new configuration, you need to run:\n"
+     . "  service apache2$dir_suffix $reload\n"
+     . $htcstart
 ) if $request_reload;
 
 exit($rc);
@@ -261,11 +271,7 @@ sub doit {
             }
 
             print "Enabling $obj $acton.\n";
-            if ( $acton eq 'ssl' ) {
-                info(     "See /usr/share/doc/apache2/README.Debian.gz on "
-                        . "how to configure SSL and create self-signed certificates.\n"
-                );
-            }
+            special_module_handling($acton);
             return add_link( $tgt, $link )
                 && switch_marker( $obj, $act, $acton );
         }
@@ -276,6 +282,7 @@ sub doit {
     }
     else {
         if ( -e $link || -l $link ) {
+            special_module_handling($acton);
             if ($obj eq 'module' && grep {$_ eq $acton} @essential_module_list) {
                   $force || essential_module_handling($acton);
             }
@@ -547,4 +554,41 @@ sub essential_module_handling {
         exit(1)
     }
 }
+
+sub special_module_handling {
+    my $acton = shift;
+
+    if ($obj ne 'module') {
+        return;
+    }
+
+    given ($acton) {
+        when ('ssl') {
+            if ( $act eq 'enable' ) {
+                info(  "See /usr/share/doc/apache2/README.Debian.gz on "
+                     . "how to configure SSL and create self-signed "
+                     . "certificates.\n"
+                );
+            }
+        }
+        when ('cache_disk') {
+            $request_htcacheclean = 1;
+            my $verb = "\u$act";
+            $verb =~ s/e$/ing/;
+            info("$verb external service $htc\n");
+            # The init script has no Default-Start runlevels, so we need to
+            # specify them explicitly.
+            system("update-rc.d $htc $act 2 3 4 5");
+            if ($rc == 0) {
+                info("The service will be started on next reboot.\n")
+                    if $act eq 'enable';
+            }
+            else {
+                warning("update-rc.d failed\n");
+            }
+
+        }
+    }
+}
+
 # vim: syntax=perl sw=4 sts=4 sr et
