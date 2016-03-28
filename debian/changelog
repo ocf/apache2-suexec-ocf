@@ -19,6 +19,7 @@ apache2 (2.4.18-2) UNRELEASED; urgency=low
     Closes: #719245
   * Fix duplicate-module-load test and make sure it fails if it cannot execute
     apache2ctl.
+  * Bump Standards-Version (no changes necessary).
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 09 Jan 2016 23:35:20 +0100
 
