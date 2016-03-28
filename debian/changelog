@@ -1,4 +1,4 @@
-apache2 (2.4.18-2) UNRELEASED; urgency=low
+apache2 (2.4.18-2) unstable; urgency=low
 
   * htcacheclean:
     - split starting/stopping into separate init script 'apache-htcacheclean'
@@ -21,7 +21,7 @@ apache2 (2.4.18-2) UNRELEASED; urgency=low
     apache2ctl.
   * Bump Standards-Version (no changes necessary).
 
- -- Stefan Fritsch <sf@debian.org>  Sat, 09 Jan 2016 23:35:20 +0100
+ -- Stefan Fritsch <sf@debian.org>  Mon, 28 Mar 2016 21:58:54 +0200
 
 apache2 (2.4.18-1) unstable; urgency=medium
 
