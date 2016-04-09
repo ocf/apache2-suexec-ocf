@@ -7,4 +7,3 @@ reproducible_builds.diff
 
 # This patch is applied manually
 #suexec-custom.patch
-prefork_single_process_crash.patch
