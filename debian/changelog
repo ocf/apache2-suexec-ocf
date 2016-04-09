@@ -1,3 +1,9 @@
+apache2 (2.4.18-3) UNRELEASED; urgency=medium
+
+  * Build against lua 5.2 instead of 5.1. Closes: #820243
+
+ -- Stefan Fritsch <sf@debian.org>  Sat, 09 Apr 2016 13:41:04 +0200
+
 apache2 (2.4.18-2) unstable; urgency=low
 
   * htcacheclean:
