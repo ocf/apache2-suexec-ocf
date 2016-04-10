@@ -85,7 +85,20 @@ override_dh_auto_configure: generate-maintainer-scripts prebuild-checks support/
 		LTFLAGS="$(AP2_LTFLAGS)"
 
 
-override_dh_install: clean-config-vars prepare-scripts
+debian/config-dir/apache2.conf: debian/config-dir/apache2.conf.in
+	@# Sanity check that the marker is actually there
+	grep -q ___MUTEX___ $<
+ifeq "$(DEB_BUILD_ARCH_OS)" "linux"
+	@# On linux, we use the default pthread mutex. Comment out
+	@# Mutex directive.
+	perl -p -e 's,___MUTEX___,#,' < $< > $@
+else
+	@# On kfreebsd/hurd, pthread mutexes are not robust. There, we need to
+	@# use fcntl and set the directory explicitly for multi-instance setups.
+	perl -p -i -e 's,___MUTEX___,,' < $< > $@
+endif
+
+override_dh_install: clean-config-vars prepare-scripts debian/config-dir/apache2.conf
 	dh_install --list-missing
 
 override_dh_fixperms-arch:
