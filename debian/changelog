@@ -3,6 +3,9 @@ apache2 (2.4.20-1) UNRELEASED; urgency=medium
   * New upstream release
     - mostly bugfixes and HTTP/2 improvements
   * Build against lua 5.2 instead of 5.1. Closes: #820243
+  * Correct systemd-sysv-generator behavior by customizing some parameters.
+    This fixes 'systemctl status' returning incorrect results. Thanks to
+    Pierre-André MOREY for the patch. LP: #1488962
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 09 Apr 2016 13:41:04 +0200
 
