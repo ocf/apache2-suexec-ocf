@@ -39,6 +39,11 @@ prebuild-checks:
 		ls -1 $$ERRS ;\
 		false ;\
 	fi
+	MD5=$$(md5sum debian/index.html 2> /dev/null |cut -d' ' -f 1) ; \
+	if ! grep -q $$MD5 debian/apache2.postrm ; then \
+		echo "ERROR: index.html's md5 is missing in postrm!" ;\
+		false ; \
+	fi
 
 clean-config-vars:
 	# Clean up config_vars.mk
