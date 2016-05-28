@@ -1,3 +1,4 @@
+# http://svn.apache.org/viewvc?view=revision&revision=1742135
 --- apache2.orig/server/core.c
 +++ apache2/server/core.c
 @@ -966,7 +966,10 @@ AP_DECLARE(const char *) ap_get_useragen
