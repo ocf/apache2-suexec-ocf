@@ -32,6 +32,7 @@ is_default_index_html () {
 		74cec59a19e5d16f7cc6a2445e35fa3b
 		776221a94e5a174dc2396c0f3f6b6a74
 		c481228d439cbb54bdcedbaec5bbb11a
+		675d549372241f55964b5f886921b06d
 	EOF
 }
 
