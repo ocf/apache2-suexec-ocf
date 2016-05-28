@@ -8,6 +8,7 @@ apache2 (2.4.20-2) UNRELEASED; urgency=medium
     broken robots doing a DoS on the site. Closes: #821313
   * Fix a2enmod to run on perl 5.14 to simplify backports. Closes: #821956
   * Bump Standards-Version (no changes necessary).
+  * Fix segfault with logresolve -c. Closes: #823259
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 28 May 2016 10:58:26 +0200
 
