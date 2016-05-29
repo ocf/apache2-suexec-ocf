@@ -83,6 +83,7 @@ sub apache_conf_installdir
 =head1 SYNOPSIS
 
 B<dh_apache2> [S<I<debhelper options>>] [S<B<--conditional>>=I<expression>] [B<--error-handler=>I<function>] [B<-n>|B<--noscripts>]
+    [B<-e>|B<--noenable>] [B<-r>|B<--restart>]
 
 =head1 DESCRIPTION
 
