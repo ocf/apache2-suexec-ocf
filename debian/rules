@@ -102,7 +102,7 @@ override_dh_auto_configure: generate-maintainer-scripts prebuild-checks support/
 		--enable-mods-shared="all cgi ident authnz_fcgi" \
 		--enable-mods-static="unixd logio watchdog version" \
 		CFLAGS="$(AP2_CFLAGS)" CPPFLAGS="$(AP2_CPPFLAGS)" LDFLAGS="$(AP2_LDFLAGS)" \
-		LTFLAGS="$(AP2_LTFLAGS)"
+		LTFLAGS="$(AP2_LTFLAGS)" SHELL=/bin/bash
 
 
 debian/config-dir/apache2.conf: debian/config-dir/apache2.conf.in
