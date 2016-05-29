@@ -1,3 +1,10 @@
+apache2 (2.4.20-3) UNRELEASED; urgency=low
+
+  * Fix conffiles that may have got the wrong content during upgrade from
+    wheezy to early jessie versions. Closes: #794933
+
+ -- Stefan Fritsch <sf@debian.org>  Sat, 28 May 2016 19:03:19 +0200
+
 apache2 (2.4.20-2) unstable; urgency=medium
 
   * Fix crash in ap_get_useragent_host() triggered by mod_perl test.
