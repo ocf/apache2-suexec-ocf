@@ -440,7 +440,7 @@ foreach my $package ((@{$dh{DOPACKAGES}}))
 				}
 				if ($dir =~ m#etc/apache2/sites-available# and $file =~ m#.conf$#)
 				{
-					verbose_print("package $package appears	to contain a virtual host confoguration\n");
+					verbose_print("package $package appears	to contain a virtual host configuration\n");
 					push @{$PACKAGE_TYPE{'has_a_site_conf'}}, $conf_name;
 				}
 				if ($dir =~ m#etc/apache2/conf-available# and $file =~ m#.conf$#)
