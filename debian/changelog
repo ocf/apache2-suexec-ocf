@@ -5,6 +5,7 @@ apache2 (2.4.20-3) UNRELEASED; urgency=low
   * Re-introduce mod_imagemap and mod_cern_meta. Closes: #786657
   * Set SHELL=/bin/bash during configure to get reproducible builds regardless
     of where /bin/sh points to.
+  * Use 'Require method' instead of Limit/LimitExcept in userdir.conf.
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 28 May 2016 19:03:19 +0200
 
