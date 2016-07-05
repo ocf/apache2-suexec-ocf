@@ -7,5 +7,5 @@ reproducible_builds.diff
 
 # This patch is applied manually
 #suexec-custom.patch
-ap_get_useragent_host_modperl_crash.patch
+
 fix_logresolve_segfault.patch
