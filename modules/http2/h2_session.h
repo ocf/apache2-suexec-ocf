@@ -70,6 +70,8 @@ typedef enum {
     H2_SESSION_EV_NGH2_DONE,        /* nghttp2 wants neither read nor write anything */
     H2_SESSION_EV_MPM_STOPPING,     /* the process is stopping */
     H2_SESSION_EV_PRE_CLOSE,        /* connection will close after this */
+    H2_SESSION_EV_STREAM_OPEN,      /* stream has been opened */
+    H2_SESSION_EV_STREAM_DONE,      /* stream has been handled completely */
 } h2_session_event_t;
 
 typedef struct h2_session {
@@ -96,10 +98,13 @@ typedef struct h2_session {
     unsigned int reprioritize  : 1; /* scheduled streams priority changed */
     unsigned int eoc_written   : 1; /* h2 eoc bucket written */
     unsigned int flush         : 1; /* flushing output necessary */
+    unsigned int have_read     : 1; /* session has read client data */
+    unsigned int have_written  : 1; /* session did write data to client */
     apr_interval_time_t  wait_us;   /* timout during BUSY_WAIT state, micro secs */
     
     struct h2_push_diary *push_diary; /* remember pushes, avoid duplicates */
     
+    int open_streams;               /* number of streams open */
     int unsent_submits;             /* number of submitted, but not yet written responses. */
     int unsent_promises;            /* number of submitted, but not yet written push promised */
                                          
@@ -121,8 +126,6 @@ typedef struct h2_session {
     
     apr_bucket_brigade *bbtmp;      /* brigade for keeping temporary data */
     struct apr_thread_cond_t *iowait; /* our cond when trywaiting for data */
-    
-    apr_pool_t *spare;              /* spare stream pool */
     
     char status[64];                /* status message for scoreboard */
     int last_status_code;           /* the one already reported */
@@ -190,17 +193,19 @@ void h2_session_close(h2_session *session);
 apr_status_t h2_session_handle_response(h2_session *session,
                                         struct h2_stream *stream);
 
-/* Get the h2_stream for the given stream idenrtifier. */
-struct h2_stream *h2_session_get_stream(h2_session *session, int stream_id);
-
 /**
  * Create and register a new stream under the given id.
  * 
  * @param session the session to register in
  * @param stream_id the new stream identifier
+ * @param initiated_on the stream id this one is initiated on or 0
+ * @param req the request for this stream or NULL if not known yet
  * @return the new stream
  */
-struct h2_stream *h2_session_open_stream(h2_session *session, int stream_id);
+struct h2_stream *h2_session_open_stream(h2_session *session, int stream_id,
+                                         int initiated_on, 
+                                         const h2_request *req);
+
 
 /**
  * Returns if client settings have push enabled.
@@ -213,8 +218,8 @@ int h2_session_push_enabled(h2_session *session);
  * @param session the session to which the stream belongs
  * @param stream the stream to destroy
  */
-apr_status_t h2_session_stream_destroy(h2_session *session, 
-                                       struct h2_stream *stream);
+apr_status_t h2_session_stream_done(h2_session *session, 
+                                    struct h2_stream *stream);
 
 /**
  * Submit a push promise on the stream and schedule the new steam for

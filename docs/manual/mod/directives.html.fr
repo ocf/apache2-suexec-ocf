@@ -200,6 +200,7 @@
 <li><a href="mod_cgid.html#cgidscripttimeout">CGIDScriptTimeout</a></li>
 <li><a href="core.html#cgimapextension">CGIMapExtension</a></li>
 <li><a href="core.html#cgipassauth">CGIPassAuth</a></li>
+<li><a href="core.html#cgivar">CGIVar</a></li>
 <li><a href="mod_charset_lite.html#charsetdefault">CharsetDefault</a></li>
 <li><a href="mod_charset_lite.html#charsetoptions">CharsetOptions</a></li>
 <li><a href="mod_charset_lite.html#charsetsourceenc">CharsetSourceEnc</a></li>
@@ -285,7 +286,6 @@
 <li><a href="mpm_common.html#gracefulshutdowntimeout">GracefulShutdownTimeout</a></li>
 <li><a href="mod_unixd.html#group">Group</a></li>
 <li><a href="mod_http2.html#h2direct" id="H" name="H">H2Direct</a></li>
-<li><a href="mod_http2.html#h2keepalivetimeout">H2KeepAliveTimeout</a></li>
 <li><a href="mod_http2.html#h2maxsessionstreams">H2MaxSessionStreams</a></li>
 <li><a href="mod_http2.html#h2maxworkeridleseconds">H2MaxWorkerIdleSeconds</a></li>
 <li><a href="mod_http2.html#h2maxworkers">H2MaxWorkers</a></li>
@@ -297,8 +297,6 @@
 <li><a href="mod_http2.html#h2serializeheaders">H2SerializeHeaders</a></li>
 <li><a href="mod_http2.html#h2sessionextrafiles">H2SessionExtraFiles</a></li>
 <li><a href="mod_http2.html#h2streammaxmemsize">H2StreamMaxMemSize</a></li>
-<li><a href="mod_http2.html#h2streamtimeout">H2StreamTimeout</a></li>
-<li><a href="mod_http2.html#h2timeout">H2Timeout</a></li>
 <li><a href="mod_http2.html#h2tlscooldownsecs">H2TLSCoolDownSecs</a></li>
 <li><a href="mod_http2.html#h2tlswarmupsize">H2TLSWarmUpSize</a></li>
 <li><a href="mod_http2.html#h2upgrade">H2Upgrade</a></li>
@@ -446,6 +444,9 @@
 <li><a href="mod_proxy_ftp.html#proxyftpdircharset">ProxyFtpDirCharset</a></li>
 <li><a href="mod_proxy_ftp.html#proxyftpescapewildcards">ProxyFtpEscapeWildcards</a></li>
 <li><a href="mod_proxy_ftp.html#proxyftplistonwildcard">ProxyFtpListOnWildcard</a></li>
+<li><a href="mod_proxy_hcheck.html#proxyhcexpr">ProxyHCExpr</a></li>
+<li><a href="mod_proxy_hcheck.html#proxyhctemplate">ProxyHCTemplate</a></li>
+<li><a href="mod_proxy_hcheck.html#proxyhctpsize">ProxyHCTPsize</a></li>
 <li><a href="mod_proxy_html.html#proxyhtmlbufsize">ProxyHTMLBufSize</a></li>
 <li><a href="mod_proxy_html.html#proxyhtmlcharsetout">ProxyHTMLCharsetOut</a></li>
 <li><a href="mod_proxy_html.html#proxyhtmldoctype">ProxyHTMLDocType</a></li>

@@ -35,10 +35,10 @@
 <tr><th><a href="module-dict.html#SourceFile">Fichier Source:</a></th><td>mod_socache_dc.c</td></tr></table>
 <h3>Sommaire</h3>
 
-    <p>Le module <code>mod_socache_dc</code> est un fournisseur de cache
+    <p>Le module <code class="module"><a href="../mod/mod_socache_dc.html">mod_socache_dc</a></code> est un fournisseur de cache
     d'objets partagés qui permet la création et l'accès à un cache
     maintenu par les bibliothèques de mise en cache de sessions
-    distribuées <a href="http://www.distcache.org/">distcache</a>.
+    distribuées <a href="http://distcache.sourceforge.net/">distcache</a>.
     </p>
 
     <p>Vous trouverez des détails à propos des autres fournisseurs de
@@ -48,7 +48,9 @@
 </div>
 <div id="quickview"><h3 class="directives">Directives</h3>
 <p>Ce module ne fournit aucune directive.</p>
-<ul class="seealso"><li><a href="#comments_section">Commentaires</a></li></ul></div>
+<h3>Traitement des bugs</h3><ul class="seealso"><li><a href="https://www.apache.org/dist/httpd/CHANGES_2.4">Journal des modifications de httpd</a></li><li><a href="https://bz.apache.org/bugzilla/buglist.cgi?bug_status=__open__&amp;list_id=144532&amp;product=Apache%20httpd-2&amp;query_format=specific&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;component=mod_socache_dc">Problèmes connus</a></li><li><a href="https://bz.apache.org/bugzilla/enter_bug.cgi?product=Apache%20httpd-2&amp;component=mod_socache_dc">Signaler un bug</a></li></ul><h3>Voir aussi</h3>
+<ul class="seealso">
+<li><a href="#comments_section">Commentaires</a></li></ul></div>
 
 </div>
 <div class="bottomlang">

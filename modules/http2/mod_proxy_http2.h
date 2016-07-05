@@ -13,7 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef mod_h2_mod_h2_h
-#define mod_h2_mod_h2_h
+#ifndef __MOD_PROXY_HTTP2_H__
+#define __MOD_PROXY_HTTP2_H__
+
 
 #endif

@@ -30,7 +30,6 @@
  * The h2_response gives the HEADER frames to sent to the client, followed
  * by DATA frames read from the h2_stream until EOS is reached.
  */
-#include "h2_io.h"
 
 struct h2_mplx;
 struct h2_priority;
@@ -38,6 +37,7 @@ struct h2_request;
 struct h2_response;
 struct h2_session;
 struct h2_sos;
+struct h2_bucket_beam;
 
 typedef struct h2_stream h2_stream;
 
@@ -48,16 +48,23 @@ struct h2_stream {
     
     apr_pool_t *pool;           /* the memory pool for this stream */
     struct h2_request *request; /* the request made in this stream */
-    int rst_error;              /* stream error for RST_STREAM */
+    struct h2_bucket_beam *input;
+    int request_headers_added;  /* number of request headers added */
     
+    struct h2_response *response;
+    struct h2_bucket_beam *output;
+    apr_bucket_brigade *buffer;
+    apr_bucket_brigade *tmp;
+    apr_array_header_t *files;  /* apr_file_t* we collected during I/O */
+
+    int rst_error;              /* stream error for RST_STREAM */
     unsigned int aborted   : 1; /* was aborted */
     unsigned int suspended : 1; /* DATA sending has been suspended */
     unsigned int scheduled : 1; /* stream has been scheduled */
+    unsigned int started   : 1; /* stream has started processing */
     unsigned int submitted : 1; /* response HEADER has been sent */
     
     apr_off_t input_remaining;  /* remaining bytes on input as advertised via content-length */
-
-    struct h2_sos *sos;         /* stream output source, e.g. to read output from */
     apr_off_t data_frames_sent; /* # of DATA frames sent out for this stream */
 };
 
@@ -71,15 +78,18 @@ struct h2_stream {
  * @param session the session this stream belongs to
  * @return the newly opened stream
  */
-h2_stream *h2_stream_open(int id, apr_pool_t *pool, struct h2_session *session);
+h2_stream *h2_stream_open(int id, apr_pool_t *pool, struct h2_session *session,
+                          int initiated_on, const struct h2_request *req);
 
 /**
- * Destroy any resources held by this stream. Will destroy memory pool
- * if still owned by the stream.
- *
- * @param stream the stream to destroy
+ * Cleanup any resources still held by the stream, called by last bucket.
  */
-apr_status_t h2_stream_destroy(h2_stream *stream);
+void h2_stream_eos_destroy(h2_stream *stream);
+
+/**
+ * Destroy memory pool if still owned by the stream.
+ */
+void h2_stream_destroy(h2_stream *stream);
 
 /**
  * Removes stream from h2_session and destroys it.
@@ -93,7 +103,7 @@ void h2_stream_cleanup(h2_stream *stream);
  * destruction to take the pool with it.
  *
  * @param stream the stream to detach the pool from
- * @param the detached memmory pool or NULL if stream no longer has one
+ * @result the detached memory pool or NULL if stream no longer has one
  */
 apr_pool_t *h2_stream_detach_pool(h2_stream *stream);
 
@@ -105,15 +115,6 @@ apr_pool_t *h2_stream_detach_pool(h2_stream *stream);
  * @param r the request with all the meta data
  */
 apr_status_t h2_stream_set_request(h2_stream *stream, request_rec *r);
-
-/**
- * Initialize stream->request with the given h2_request.
- * 
- * @param stream the stream to init the request for
- * @param req the request for initializing, will be copied
- */
-void h2_stream_set_h2_request(h2_stream *stream, int initiated_on,
-                              const struct h2_request *req);
 
 /*
  * Add a HTTP/2 header (including pseudo headers) or trailer 
@@ -152,7 +153,7 @@ apr_status_t h2_stream_write_data(h2_stream *stream,
  * @param stream the stream to reset
  * @param error_code the HTTP/2 error code
  */
-void h2_stream_rst(h2_stream *streamm, int error_code);
+void h2_stream_rst(h2_stream *stream, int error_code);
 
 /**
  * Schedule the stream for execution. All header information must be
@@ -181,13 +182,18 @@ struct h2_response *h2_stream_get_response(h2_stream *stream);
  * the stream response has been collected.
  * 
  * @param stream the stream to set the response for
- * @param resonse the response data for the stream
+ * @param response the response data for the stream
  * @param bb bucket brigade with output data for the stream. Optional,
  *        may be incomplete.
  */
 apr_status_t h2_stream_set_response(h2_stream *stream, 
                                     struct h2_response *response,
-                                    apr_bucket_brigade *bb);
+                                    struct h2_bucket_beam *output);
+
+/**
+ * Set the HTTP error status as response.
+ */
+apr_status_t h2_stream_set_error(h2_stream *stream, int http_status);
 
 /**
  * Do a speculative read on the stream output to determine the 
@@ -204,23 +210,6 @@ apr_status_t h2_stream_set_response(h2_stream *stream,
  */
 apr_status_t h2_stream_out_prepare(h2_stream *stream, 
                                    apr_off_t *plen, int *peos);
-
-/**
- * Read data from the stream output.
- * 
- * @param stream the stream to read from
- * @param cb callback to invoke for byte chunks read. Might be invoked
- *        multiple times (with different values) for one read operation.
- * @param ctx context data for callback
- * @param plen (in-/out) max. number of bytes to read and on return actual
- *        number of bytes read
- * @param peos (out) != 0 iff end of stream has been reached while reading
- * @return APR_SUCCESS if out information was computed successfully.
- *         APR_EAGAIN if not data is available and end of stream has not been
- *         reached yet.
- */
-apr_status_t h2_stream_readx(h2_stream *stream, h2_io_data_cb *cb, 
-                             void *ctx, apr_off_t *plen, int *peos);
 
 /**
  * Read a maximum number of bytes into the bucket brigade.
