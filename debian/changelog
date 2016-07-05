@@ -1,5 +1,9 @@
-apache2 (2.4.20-3) UNRELEASED; urgency=low
+apache2 (2.4.23-1) UNRELEASED; urgency=high
 
+  * New upstream release
+    - Security: CVE-2016-4979: Fix bypass of TLS client certificate
+      verification in mod_http2.
+    - new modules mod_proxy_http2 (experimental) and mod_proxy_hcheck
   * Re-introduce mod_imagemap and mod_cern_meta. Closes: #786657
   * Set SHELL=/bin/bash during configure to get reproducible builds regardless
     of where /bin/sh points to.
