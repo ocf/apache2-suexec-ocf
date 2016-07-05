@@ -45,21 +45,6 @@ prebuild-checks:
 		false ; \
 	fi
 
-debian/fixup_conffiles.tgz: \
-    debian/config-dir/sites-available/000-default.conf \
-    debian/config-dir/sites-available/default-ssl.conf \
-    debian/config-dir/conf-available/charset.conf \
-    debian/config-dir/conf-available/localized-error-pages.conf \
-    debian/config-dir/conf-available/other-vhosts-access-log.conf \
-    debian/config-dir/conf-available/security.conf
-	tar --transform 's,.*/,,' -cz -f $@ $^
-
-debian/fixup_conffiles.b64: debian/fixup_conffiles.tgz
-	base64 < $< > $@
-
-debian/apache2.preinst: debian/apache2.preinst.in debian/fixup_conffiles.b64 debian/create_preinst
-	debian/create_preinst
-
 clean-config-vars:
 	# Clean up config_vars.mk
 	# FIXME: Maybe someone could document here why we actually need to
@@ -74,7 +59,7 @@ prepare-scripts: debian/a2query debian/debhelper/dh_apache2
 	(grep -s -v apache2:API debian/apache2-bin.substvars; echo apache2:API=apache2-api-$(API)) > debian/apache2-bin.substvars.new
 	mv debian/apache2-bin.substvars.new debian/apache2-bin.substvars
 
-generate-maintainer-scripts: debian/apache2.preinst
+generate-maintainer-scripts:
 	set -e ; \
 	for type in custom pristine ; do \
 		for f in postinst preinst prerm links dirs lintian-overrides postrm; do \

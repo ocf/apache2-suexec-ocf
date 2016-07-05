@@ -1,7 +1,5 @@
 apache2 (2.4.20-3) UNRELEASED; urgency=low
 
-  * Fix conffiles that may have got the wrong content during upgrade from
-    wheezy to early jessie versions. Closes: #794933
   * Re-introduce mod_imagemap and mod_cern_meta. Closes: #786657
   * Set SHELL=/bin/bash during configure to get reproducible builds regardless
     of where /bin/sh points to.
