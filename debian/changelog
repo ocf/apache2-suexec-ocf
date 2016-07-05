@@ -1,4 +1,4 @@
-apache2 (2.4.23-1) UNRELEASED; urgency=high
+apache2 (2.4.23-1) unstable; urgency=high
 
   * New upstream release
     - Security: CVE-2016-4979: Fix bypass of TLS client certificate
@@ -9,7 +9,7 @@ apache2 (2.4.23-1) UNRELEASED; urgency=high
     of where /bin/sh points to.
   * Use 'Require method' instead of Limit/LimitExcept in userdir.conf.
 
- -- Stefan Fritsch <sf@debian.org>  Sat, 28 May 2016 19:03:19 +0200
+ -- Stefan Fritsch <sf@debian.org>  Tue, 05 Jul 2016 23:57:25 +0200
 
 apache2 (2.4.20-2) unstable; urgency=medium
 
