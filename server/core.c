@@ -409,6 +409,15 @@ static void *merge_core_dir_configs(apr_pool_t *a, void *basev, void *newv)
 
     conf->cgi_pass_auth = new->cgi_pass_auth != AP_CGI_PASS_AUTH_UNSET ? new->cgi_pass_auth : base->cgi_pass_auth;
 
+    if (new->cgi_var_rules) {
+        if (!conf->cgi_var_rules) {
+            conf->cgi_var_rules = new->cgi_var_rules;
+        }
+        else {
+            conf->cgi_var_rules = apr_hash_overlay(a, new->cgi_var_rules, conf->cgi_var_rules);
+        }
+    }
+
     AP_CORE_MERGE_FLAG(qualify_redirect_url, conf, base, new);
 
     return (void*)conf;
@@ -966,7 +975,10 @@ AP_DECLARE(const char *) ap_get_useragent_host(request_rec *r,
     int hostname_lookups;
     int ignored_str_is_ip;
 
-    if (r->useragent_addr == conn->client_addr) {
+    /* Guard here when examining the host before the read_request hook
+     * has populated an r->useragent_addr
+     */
+    if (!r->useragent_addr || (r->useragent_addr == conn->client_addr)) {
         return ap_get_remote_host(conn, r->per_dir_config, type, str_is_ip);
     }
 
@@ -1547,7 +1559,9 @@ static const char *set_document_root(cmd_parms *cmd, void *dummy,
             conf->ap_document_root = arg;
         }
         else {
-            return "DocumentRoot must be a directory";
+            return apr_psprintf(cmd->pool, 
+                                "DocumentRoot '%s' is not a directory, or is not readable",
+                                arg);
         }
     }
     return NULL;
@@ -1793,6 +1807,31 @@ static const char *set_cgi_pass_auth(cmd_parms *cmd, void *d_, int flag)
 
     d->cgi_pass_auth = flag ? AP_CGI_PASS_AUTH_ON : AP_CGI_PASS_AUTH_OFF;
 
+    return NULL;
+}
+
+static const char *set_cgi_var(cmd_parms *cmd, void *d_,
+                               const char *var, const char *rule_)
+{
+    core_dir_config *d = d_;
+    char *rule = apr_pstrdup(cmd->pool, rule_);
+
+    ap_str_tolower(rule);
+
+    if (!strcmp(var, "REQUEST_URI")) {
+        if (strcmp(rule, "current-uri") && strcmp(rule, "original-uri")) {
+            return "Valid rules for REQUEST_URI are 'current-uri' and 'original-uri'";
+        }
+    }
+    else {
+        return apr_pstrcat(cmd->pool, "Unrecognized CGI variable: \"",
+                           var, "\"", NULL);
+    }
+
+    if (!d->cgi_var_rules) {
+        d->cgi_var_rules = apr_hash_make(cmd->pool);
+    }
+    apr_hash_set(d->cgi_var_rules, var, APR_HASH_KEY_STRING, rule);
     return NULL;
 }
 
@@ -3133,6 +3172,10 @@ static const char *include_config (cmd_parms *cmd, void *dummy,
     int optional = cmd->cmd->cmd_data ? 1 : 0;
     void *data;
 
+    /* NOTE: ap_include_sentinel is also used by ap_process_resource_config()
+     * during DUMP_INCLUDES; don't change its type or remove it without updating
+     * the other.
+     */
     apr_pool_userdata_get(&data, "ap_include_sentinel", cmd->pool);
     if (data) {
         recursion = data;
@@ -3155,6 +3198,24 @@ static const char *include_config (cmd_parms *cmd, void *dummy,
         *recursion = 0;
         return apr_pstrcat(cmd->pool, "Invalid Include path ",
                            name, NULL);
+    }
+
+    if (ap_exists_config_define("DUMP_INCLUDES")) {
+        unsigned *line_number;
+
+        /* NOTE: ap_include_lineno is used by ap_process_resource_config()
+         * during DUMP_INCLUDES; don't change its type or remove it without
+         * updating the other.
+         */
+        apr_pool_userdata_get(&data, "ap_include_lineno", cmd->pool);
+        if (data) {
+            line_number = data;
+        } else {
+            data = line_number = apr_palloc(cmd->pool, sizeof(*line_number));
+            apr_pool_userdata_setn(data, "ap_include_lineno", NULL, cmd->pool);
+        }
+
+        *line_number = cmd->config_file->line_number;
     }
 
     error = ap_process_fnmatch_configs(cmd->server, conffile, &conftree,
@@ -4293,6 +4354,8 @@ AP_INIT_TAKE12("LimitInternalRecursion", set_recursion_limit, NULL, RSRC_CONF,
 AP_INIT_FLAG("CGIPassAuth", set_cgi_pass_auth, NULL, OR_AUTHCFG,
              "Controls whether HTTP authorization headers, normally hidden, will "
              "be passed to scripts"),
+AP_INIT_TAKE2("CGIVar", set_cgi_var, NULL, OR_FILEINFO,
+              "Controls how some CGI variables are set"),
 AP_INIT_FLAG("QualifyRedirectURL", set_qualify_redirect_url, NULL, OR_FILEINFO,
              "Controls whether HTTP authorization headers, normally hidden, will "
              "be passed to scripts"),
@@ -4841,7 +4904,7 @@ static conn_rec *core_create_conn(apr_pool_t *ptrans, server_rec *server,
     conn_rec *c = (conn_rec *) apr_pcalloc(ptrans, sizeof(conn_rec));
 
     c->sbh = sbh;
-    (void)ap_update_child_status(c->sbh, SERVER_BUSY_READ, (request_rec *)NULL);
+    ap_update_child_status(c->sbh, SERVER_BUSY_READ, NULL);
 
     /* Got a connection structure, so initialize what fields we can
      * (the rest are zeroed out by pcalloc).

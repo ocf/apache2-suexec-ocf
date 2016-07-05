@@ -319,6 +319,7 @@ SET(MODULE_LIST
   "modules/proxy/mod_proxy_http+I+Apache proxy HTTP module.  Requires and is enabled by --enable-proxy."
   "modules/proxy/mod_proxy_scgi+I+Apache proxy SCGI module.  Requires and is enabled by --enable-proxy."
   "modules/proxy/mod_proxy_wstunnel+I+Apache proxy Websocket Tunnel module.  Requires and is enabled by --enable-proxy."
+  "modules/http2/mod_proxy_http2+i+Apache proxy HTTP/2 module.  Requires --enable-proxy."
   "modules/session/mod_session+I+session module"
   "modules/session/mod_session_cookie+I+session cookie module"
   "modules/session/mod_session_crypto+i+session crypto module"
@@ -384,15 +385,13 @@ SET(mod_http2_extra_sources
   modules/http2/h2_conn.c            modules/http2/h2_conn_io.c
   modules/http2/h2_ctx.c             modules/http2/h2_filter.c
   modules/http2/h2_from_h1.c         modules/http2/h2_h2.c
-  modules/http2/h2_io.c              modules/http2/h2_io_set.c
+  modules/http2/h2_bucket_beam.c
   modules/http2/h2_mplx.c            modules/http2/h2_push.c
   modules/http2/h2_request.c         modules/http2/h2_response.c
   modules/http2/h2_session.c         modules/http2/h2_stream.c 
   modules/http2/h2_switch.c          modules/http2/h2_ngn_shed.c 
-  modules/http2/h2_task.c            modules/http2/h2_task_input.c
-  modules/http2/h2_task_output.c     modules/http2/h2_int_queue.c
-  modules/http2/h2_util.c            modules/http2/h2_worker.c
-  modules/http2/h2_workers.c
+  modules/http2/h2_task.c            modules/http2/h2_util.c
+  modules/http2/h2_worker.c          modules/http2/h2_workers.c
 )
 SET(mod_ldap_extra_defines           LDAP_DECLARE_EXPORT)
 SET(mod_ldap_extra_libs              wldap32)
@@ -432,6 +431,13 @@ IF(LIBXML2_FOUND)
 ENDIF()
 SET(mod_proxy_scgi_extra_libs        mod_proxy)
 SET(mod_proxy_wstunnel_extra_libs    mod_proxy)
+SET(mod_proxy_http2_requires               NGHTTP2_FOUND)
+SET(mod_proxy_http2_extra_defines          ssize_t=long)
+SET(mod_proxy_http2_extra_includes         ${NGHTTP2_INCLUDE_DIR})
+SET(mod_proxy_http2_extra_libs             ${NGHTTP2_LIBRARIES} mod_proxy)
+SET(mod_proxy_http2_extra_sources
+  modules/http2/h2_proxy_session.c   modules/http2/h2_proxy_util.c
+)
 SET(mod_ratelimit_extra_defines      AP_RL_DECLARE_EXPORT)
 SET(mod_sed_extra_sources
   modules/filters/regexp.c           modules/filters/sed0.c

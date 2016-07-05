@@ -33,6 +33,8 @@
 <a href="../ja/mod/core.html" hreflang="ja" rel="alternate" title="Japanese">&nbsp;ja&nbsp;</a> |
 <a href="../tr/mod/core.html" hreflang="tr" rel="alternate" title="Türkçe">&nbsp;tr&nbsp;</a></p>
 </div>
+<div class="outofdate">Cette traduction peut être périmée. Vérifiez la version
+            anglaise pour les changements récents.</div>
 <table class="module"><tr><th><a href="module-dict.html#Description">Description:</a></th><td>Fonctionnalités de base du serveur HTTP Apache toujours
 disponibles</td></tr>
 <tr><th><a href="module-dict.html#Status">Statut:</a></th><td>Core</td></tr></table>
@@ -48,6 +50,7 @@ disponibles</td></tr>
 <li><img alt="" src="../images/down.gif" /> <a href="#allowoverridelist">AllowOverrideList</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#cgimapextension">CGIMapExtension</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#cgipassauth">CGIPassAuth</a></li>
+<li><img alt="" src="../images/down.gif" /> <a href="#cgivar">CGIVar</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#contentdigest">ContentDigest</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#defaultruntimedir">DefaultRuntimeDir</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#defaulttype">DefaultType</a></li>
@@ -122,7 +125,9 @@ disponibles</td></tr>
 <li><img alt="" src="../images/down.gif" /> <a href="#usecanonicalphysicalport">UseCanonicalPhysicalPort</a></li>
 <li><img alt="" src="../images/down.gif" /> <a href="#virtualhost">&lt;VirtualHost&gt;</a></li>
 </ul>
-<ul class="seealso"><li><a href="#comments_section">Commentaires</a></li></ul></div>
+<h3>Traitement des bugs</h3><ul class="seealso"><li><a href="https://www.apache.org/dist/httpd/CHANGES_2.4">Journal des modifications de httpd</a></li><li><a href="https://bz.apache.org/bugzilla/buglist.cgi?bug_status=__open__&amp;list_id=144532&amp;product=Apache%20httpd-2&amp;query_format=specific&amp;order=changeddate%20DESC%2Cpriority%2Cbug_severity&amp;component=core">Problèmes connus</a></li><li><a href="https://bz.apache.org/bugzilla/enter_bug.cgi?product=Apache%20httpd-2&amp;component=core">Signaler un bug</a></li></ul><h3>Voir aussi</h3>
+<ul class="seealso">
+<li><a href="#comments_section">Commentaires</a></li></ul></div>
 
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
 <div class="directive-section"><h2><a name="acceptfilter" id="acceptfilter">Directive</a> <a name="AcceptFilter" id="AcceptFilter">AcceptFilter</a></h2>
@@ -688,6 +693,33 @@ Apache</td></tr>
     <code class="module"><a href="../mod/mod_include.html">mod_include</a></code> ou <code class="module"><a href="../mod/mod_ext_filter.html">mod_ext_filter</a></code>. Les
     modules tiers qui n'utilisent pas <code>ap_add_common_vars()</code>
     peuvent aussi choisir de prendre en compte cette option.</p>
+
+</div>
+<div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
+<div class="directive-section"><h2><a name="cgivar" id="cgivar">Directive</a> <a name="CGIVar" id="CGIVar">CGIVar</a></h2>
+<table class="directive">
+<tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Contrôle la manière dont certaines variables CGI sont définies</td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>CGIVar <var>variable</var> <var>rule</var></code></td></tr>
+<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>répertoire, .htaccess</td></tr>
+<tr><th><a href="directive-dict.html#Override">AllowOverride:</a></th><td>FileInfo</td></tr>
+<tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Core</td></tr>
+<tr><th><a href="directive-dict.html#Module">Module:</a></th><td>core</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>Disponible à partir de la version 2.4.21 du serveur HTTP Apache</td></tr>
+</table>
+  <p>Cette directive permet de contrôler la manière dont certaines variables CGI
+  sont définies.</p>
+
+  <p>règles <strong>REQUEST_URI</strong> :</p>
+  <dl>
+    <dt><code>original-uri</code> (valeur par défaut)</dt>
+    <dd>La valeur est extraite de la requête originale, et ne tient pas compte
+    des redirections internes ou des sous-requêtes qui pourraient modifier la
+    ressource demandée.</dd>
+    <dt><code>current-uri</code></dt>
+    <dd>La valeur reflète la ressource en cours de traitement ; elle peut être
+    différente de la ressource demandée dans la requête initiale du client suite à
+    d'éventuelles redirections internes ou sous-requêtes.</dd>
+  </dl>
 
 </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
@@ -4261,8 +4293,7 @@ serveurs virtuels à base de nom</td></tr>
     priorité particulière si le nom contient des caractères génériques
     (que ce soit pour ServerName ou ServerAlias).</p>
 
-    <p>Tous les noms spécifiés au sein d'une section
-    <code class="directive">VirtualHost</code> sont traités comme un
+    <p>Tous les noms spécifiés au sein d'une section <code class="directive"><a href="#virtualhost">&lt;VirtualHost&gt;</a></code> sont traités comme un
     <code class="directive">ServerAlias</code> (sans caractères génériques).</p>
 
 
@@ -4288,16 +4319,13 @@ s'authentifier lui-même</td></tr>
     les protocole, nom d'hôte et port d'une requête que le serveur
     utilise pour s'authentifier lui-même.</p>
 
-    <p>La directive <code class="directive">ServerName</code> permet
-    (éventuellement en conjonction avec la directive
-    <code class="directive">ServerAlias</code>) d'identifier de manière unique
-    un serveur virtuel, lorsqu'elle est utilisée dans un contexte de <a href="../vhosts/name-based.html">serveurs virtuels à base de
-    noms</a>.</p>
+    <p>La directive <code class="directive">ServerName</code> permet (éventuellement en
+    conjonction avec la directive <code class="directive"><a href="#serveralias">ServerAlias</a></code>) d'identifier de manière unique un
+    serveur virtuel, lorsqu'elle est utilisée dans un contexte de <a href="../vhosts/name-based.html">serveurs virtuels à base de noms</a>.</p>
 
     <p>Cette directive est aussi utilisée lors de la création d'URLs de
-    redirection relatives quand la directive
-    <code class="directive">UseCanonicalName</code> est définie à une valeur autre que
-    la valeur par défaut.</p>
+    redirection relatives quand la directive <code class="directive"><a href="#usecanonicalname">UseCanonicalName</a></code> est définie à une valeur autre
+    que la valeur par défaut.</p>
     
     <p>Par exemple, si le nom de la
     machine hébergeant le serveur web est
