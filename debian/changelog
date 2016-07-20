@@ -1,3 +1,11 @@
+apache2 (2.4.23-2) UNRELEASED; urgency=high
+
+  * CVE-2016-5387: Sets environmental variable based on user supplied Proxy
+    request header.
+    Don't pass through HTTP_PROXY in server/util_script.c
+
+ -- Stefan Fritsch <sf@debian.org>  Thu, 21 Jul 2016 23:19:29 +0200
+
 apache2 (2.4.23-1) unstable; urgency=high
 
   * New upstream release
