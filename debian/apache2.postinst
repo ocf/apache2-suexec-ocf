@@ -79,8 +79,8 @@ install_default_site()
 is_problematic_index_html () {
 	local FILE="$1"
 	[ -f "$FILE" ] || return 1
-	local MD5=$(md5sum "$FILE" 2> /dev/null |cut -d' ' -f 1) ||
-		return 1
+	local MD5=$(md5sum "$FILE" 2> /dev/null |cut -d' ' -f 1)
+	[ -n "$MD5" ] || return 1
 	grep -q "$MD5" <<- EOF
 	1736dfc80cf1f5a8966c096a0b094377
 	776221a94e5a174dc2396c0f3f6b6a74
