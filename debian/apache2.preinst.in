@@ -16,6 +16,15 @@ set -e
 FIXUP_TEMPFILE=
 
 
+# During the migration of conffiles from apache2.2-common to apache2,
+# some things may have gone wrong.
+# * Some conffiles may have been left with obsolete content. These
+#   have an md5sum in this list.
+# * Some other conffiles may have been removed but dpkg still thinks that
+#   they belong to apache2.2-common. A few of these have been re-introduced,
+#   but dpkg being confused about their state causes dpkg to think the
+#   admin has removed them and to not create the new content.
+#   These have a 'restore' instead of a md5 in the list.
 list_fixup_conffiles () {
 	cat <<- EOF
 		/etc/bash_completion.d/apache2					6a5f85e62655f6b5c8fa0f95c7c35c9c	removed
@@ -25,6 +34,9 @@ list_fixup_conffiles () {
 		/etc/apache2/conf-available/localized-error-pages.conf		844ba27ddb794fc6967bfb56b950e6a8
 		/etc/apache2/conf-available/other-vhosts-access-log.conf	2cad303fc4221d6b0068a8b37597b9fb
 		/etc/apache2/conf-available/security.conf			0f644d9d04ad556f44f1e65674bc07dc
+		/etc/apache2/mods-available/cern_meta.load			restore
+		/etc/apache2/mods-available/ident.load				restore
+		/etc/apache2/mods-available/imagemap.load			restore
 		EOF
 }
 
@@ -52,6 +64,9 @@ replace_broken_conffiles () {
 			if [ -z "$REMOVED" ] ; then
 				extract_fixup_conffile "$FILE"
 			fi
+		elif [ ! -e "$FILE" ] && [ "$MD5" = "restore" ] ; then
+			echo "Restoring lost conffile ${FILE}."
+			extract_fixup_conffile "$FILE"
 		fi
 	done
 	rm -f "$FIXUP_TEMPFILE"

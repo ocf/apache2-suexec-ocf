@@ -51,7 +51,10 @@ debian/fixup_conffiles.tgz: \
     debian/config-dir/conf-available/charset.conf \
     debian/config-dir/conf-available/localized-error-pages.conf \
     debian/config-dir/conf-available/other-vhosts-access-log.conf \
-    debian/config-dir/conf-available/security.conf
+    debian/config-dir/conf-available/security.conf \
+    debian/config-dir/mods-available/cern_meta.load \
+    debian/config-dir/mods-available/ident.load \
+    debian/config-dir/mods-available/imagemap.load
 	tar --transform 's,.*/,,' -cz -f $@ $^
 
 debian/fixup_conffiles.b64: debian/fixup_conffiles.tgz
