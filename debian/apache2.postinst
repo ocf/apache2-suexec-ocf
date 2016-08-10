@@ -240,9 +240,29 @@ execute_deferred_actions ()
 	rm /var/lib/apache2/deferred_actions
 }
 
+list_fixup_conffiles () {
+	cat <<- EOF
+		/etc/bash_completion.d/apache2
+		/etc/apache2/sites-available/000-default.conf
+		/etc/apache2/sites-available/default-ssl.conf
+		/etc/apache2/conf-available/charset.conf
+		/etc/apache2/conf-available/localized-error-pages.conf
+		/etc/apache2/conf-available/other-vhosts-access-log.conf
+		/etc/apache2/conf-available/security.conf
+		EOF
+}
+
 case "$1" in
 	configure)
 
+		if dpkg --compare-versions "$2" lt-nl "2.4.23-3~" ; then
+			list_fixup_conffiles | while read FILE ; do
+				if [ -e "${FILE}.dpkg-remove-fixup" ] ; then
+					echo "Removing backup copy of $FILE"
+					rm "${FILE}.dpkg-remove-fixup"
+				fi
+			done
+		fi
 		enable_default_mpm $@
 		refresh_modules $@
 		install_default_files $@

@@ -1,3 +1,10 @@
+apache2 (2.4.23-3) UNRELEASED; urgency=low
+
+  * Fix conffiles that may have got the wrong content during upgrade from
+    wheezy to early jessie versions. Closes: #794933
+
+ -- Stefan Fritsch <sf@debian.org>  Wed, 10 Aug 2016 11:25:02 +0200
+
 apache2 (2.4.23-2) unstable; urgency=high
 
   * CVE-2016-5387: Sets environmental variable based on user supplied Proxy
