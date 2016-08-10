@@ -2,6 +2,7 @@ apache2 (2.4.23-3) UNRELEASED; urgency=low
 
   * Fix conffiles that may have got the wrong content during upgrade from
     wheezy to early jessie versions. Closes: #794933
+  * Make mod_proxy_html depend on mod_xml2enc.
 
  -- Stefan Fritsch <sf@debian.org>  Wed, 10 Aug 2016 11:25:02 +0200
 
