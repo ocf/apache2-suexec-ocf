@@ -477,7 +477,7 @@ foreach my $package ((@{$dh{DOPACKAGES}}))
 	if ($#{$PACKAGE_TYPE{'has_a_conf_file'}} >= 0 or $#{$PACKAGE_TYPE{'has_a_site_conf'}} >= 0)
 	{
 		$PACKAGE_TYPE{'dependency_line'} .= "| httpd";
-		addsubstvar($package, "misc:Recommends", "apache2 (" . apache_version() . ") " . $PACKAGE_TYPE{'dependency_line'} );
+		addsubstvar($package, "misc:Recommends", "apache2 ( >= 2.4.6-4~ ) " . $PACKAGE_TYPE{'dependency_line'} );
 
 		my $confs = "";
 		my $sites = "";

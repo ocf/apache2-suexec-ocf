@@ -9,6 +9,8 @@ apache2 (2.4.23-3) UNRELEASED; urgency=low
     local admin has disabled the requested mpm manually.
     Closes: #827446, #799630
   * Make mod_proxy_html depend on mod_xml2enc.
+  * dh_apache2: Make versioned recommends on apache2 less strict. There is
+    no advantage in recommending the current version. Closes: #784290
 
  -- Stefan Fritsch <sf@debian.org>  Wed, 10 Aug 2016 11:25:02 +0200
 
