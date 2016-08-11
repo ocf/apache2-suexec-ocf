@@ -1,4 +1,4 @@
-apache2 (2.4.23-3) UNRELEASED; urgency=low
+apache2 (2.4.23-3) unstable; urgency=low
 
   * Fix conffiles that may have got the wrong content during upgrade from
     wheezy to early jessie versions. Closes: #794933
@@ -12,7 +12,7 @@ apache2 (2.4.23-3) UNRELEASED; urgency=low
   * dh_apache2: Make versioned recommends on apache2 less strict. There is
     no advantage in recommending the current version. Closes: #784290
 
- -- Stefan Fritsch <sf@debian.org>  Wed, 10 Aug 2016 11:25:02 +0200
+ -- Stefan Fritsch <sf@debian.org>  Thu, 11 Aug 2016 21:40:35 +0200
 
 apache2 (2.4.23-2) unstable; urgency=high
 
