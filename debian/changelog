@@ -5,6 +5,9 @@ apache2 (2.4.23-3) UNRELEASED; urgency=low
   * Also restore re-introduced *.load files for mod_ident, mod_imagemap, and
     mod_cern_meta. These may have gone missing due to dpkg thinking they still
     belong to apache2.2-common. Reported by Markus Waldeck.
+  * apache2-maintscript-helper: Make apache2_switch_mpm do nothing if the
+    local admin has disabled the requested mpm manually.
+    Closes: #827446, #799630
   * Make mod_proxy_html depend on mod_xml2enc.
 
  -- Stefan Fritsch <sf@debian.org>  Wed, 10 Aug 2016 11:25:02 +0200

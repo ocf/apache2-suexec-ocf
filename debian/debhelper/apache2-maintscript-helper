@@ -286,16 +286,26 @@ apache2_switch_mpm()
 		return 1
 	fi
 
-	local CUR_MPM=$(a2query -M) || return 1
+	local a2query_ret=0
+	a2query -m "$mpm_$MPM" > /dev/null 2>&1 || a2query_ret=$?
 
-	if [ "$CUR_MPM" != "$MPM" ] ; then
-		a2dismod -m -q "mpm_$CUR_MPM";
-		a2enmod -m -q "mpm_$MPM";
-		apache2_msg "info" "apache2_switch_mpm Switch to $MPM"
-	else
+	case $a2query_ret in
+	0)
 		apache2_msg "info" "apache2_switch_mpm $MPM: No action required"
 		return 0
-	fi
+		;;
+	32)
+		apache2_msg "info" "apache2_switch_mpm $MPM: Has been disabled manually, not changing"
+		return 1
+		;;
+
+	esac
+
+	local CUR_MPM=$(a2query -M) || return 1
+
+	a2dismod -m -q "mpm_$CUR_MPM";
+	a2enmod -m -q "mpm_$MPM";
+	apache2_msg "info" "apache2_switch_mpm Switch to $MPM"
 
 	if ! apache2_has_module "mpm_$MPM" ; then
 		# rollback
