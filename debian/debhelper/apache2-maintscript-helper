@@ -391,8 +391,8 @@ apache2_invoke()
 				apache2_msg "info" "apache2_invoke $CONF: already enabled"
 				APACHE2_NEED_ACTION=1
 			elif [ "$a2query_ret" -eq 32	 ] ; then
-				# the maintainer disabled the module
-				apache2_msg "info" "apache2_invoke $CONF: no action - $invoke_string was disabled by maintainer"
+				# the admin disabled the module
+				apache2_msg "info" "apache2_invoke $CONF: no action - $invoke_string was disabled by local admin"
 				return 0
 			else
 				# coming here either means:
