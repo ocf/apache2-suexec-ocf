@@ -1,3 +1,9 @@
+apache2 (2.4.23-4) UNRELEASED; urgency=medium
+
+  * Fix pre-inst script for new installations. Closes: #834169
+
+ -- Stefan Fritsch <sf@debian.org>  Fri, 12 Aug 2016 21:43:43 +0200
+
 apache2 (2.4.23-3) unstable; urgency=low
 
   * Fix conffiles that may have got the wrong content during upgrade from
