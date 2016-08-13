@@ -55,7 +55,14 @@ debian/fixup_conffiles.tgz: \
     debian/config-dir/mods-available/cern_meta.load \
     debian/config-dir/mods-available/ident.load \
     debian/config-dir/mods-available/imagemap.load
-	tar --transform 's,.*/,,' -cz -f $@ $^
+	@# mtime/owner/group/mode are for reproducible build
+	tar \
+		--mtime=2000-01-01T00:00 \
+		--owner=root:0 \
+		--group=root:0 \
+		--mode=0644 \
+		--transform 's,.*/,,' \
+		-cz -f $@ $^
 
 debian/fixup_conffiles.b64: debian/fixup_conffiles.tgz
 	base64 < $< > $@
