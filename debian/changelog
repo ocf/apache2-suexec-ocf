@@ -6,6 +6,9 @@ apache2 (2.4.23-5) UNRELEASED; urgency=medium
 
   [ Raphaël Hertzog ]
   * Add systemd unit files. Closes: #798430
+  * Improve a2enmod to enable apache-htcacheclean with systemctl and let
+    it enable 'apache-htcacheclean@instance.service' for multi-instance
+    support.
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 13 Aug 2016 13:38:30 +0200
 

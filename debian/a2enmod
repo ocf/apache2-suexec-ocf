@@ -84,7 +84,14 @@ my $linkdir = File::Spec->abs2rel( $availdir, $enabldir );
 my $request_reload = 0;
 my $request_htcacheclean;
 my $htc = "apache-htcacheclean$dir_suffix";
-
+my $htc_service = "apache-htcacheclean";  # Service name for systemd
+my $apache_service = "apache2";
+if (defined($dir_suffix) and $dir_suffix ne '') {
+    # Uses '@instance.service' suffix instead of '-instance' suffix
+    my $service_suffix = '@' . substr($dir_suffix, 1) . '.service';
+    $htc_service .= $service_suffix;
+    $apache_service .= $service_suffix;
+}
 my $rc = 0;
 
 if ( !scalar @ARGV ) {
@@ -114,13 +121,18 @@ foreach my $acton (@objs) {
 }
 
 my $htcstart = "";
-if ($request_htcacheclean) {
-    my $cmd = ($act eq "enable") ? "start" : "stop";
+my $apache_reload = "";
+my $cmd = ($act eq "enable") ? "start" : "stop";
+if (-d "/run/systemd" and -x "/bin/systemctl") {
+    $htcstart = "  systemctl $cmd $htc_service\n";
+    $apache_reload = "  systemctl $reload $apache_service\n";
+} else {
     $htcstart = "  service $htc $cmd\n";
+    $apache_reload = "  service apache2$dir_suffix $reload\n";
 }
 info(  "To activate the new configuration, you need to run:\n"
-     . "  service apache2$dir_suffix $reload\n"
-     . $htcstart
+     . $apache_reload
+     . ($request_htcacheclean ? $htcstart : "")
 ) if $request_reload;
 
 exit($rc);
@@ -574,17 +586,24 @@ sub special_module_handling {
         when ('cache_disk') {
             $request_htcacheclean = 1;
             my $verb = "\u$act";
+            my $command;
             $verb =~ s/e$/ing/;
-            info("$verb external service $htc\n");
-            # The init script has no Default-Start runlevels, so we need to
-            # specify them explicitly.
-            system("update-rc.d $htc $act 2 3 4 5");
-            if ($rc == 0) {
+            if (-d "/run/systemd" and -x "/bin/systemctl") {
+                info("$verb external service $htc_service\n");
+                $command = "systemctl $act $htc_service";
+            } else {
+                info("$verb external service $htc\n");
+                # The init script has no Default-Start runlevels, so we need to
+                # specify them explicitly.
+                $command = "update-rc.d $htc $act 2 3 4 5";
+            }
+            my $res = system($command);
+            if ($res == 0) {
                 info("The service will be started on next reboot.\n")
                     if $act eq 'enable';
             }
             else {
-                warning("update-rc.d failed\n");
+                warning("'$command' failed\n");
             }
 
         }
