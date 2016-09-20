@@ -593,9 +593,7 @@ sub special_module_handling {
                 $command = "systemctl $act $htc_service";
             } else {
                 info("$verb external service $htc\n");
-                # The init script has no Default-Start runlevels, so we need to
-                # specify them explicitly.
-                $command = "update-rc.d $htc $act 2 3 4 5";
+                $command = "update-rc.d $htc $act";
             }
             my $res = system($command);
             if ($res == 0) {

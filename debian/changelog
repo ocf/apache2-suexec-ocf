@@ -13,6 +13,9 @@ apache2 (2.4.23-5) UNRELEASED; urgency=medium
     multi-instance support.
   * Drop /lib/systemd/system/apache2.service.d/forking.conf now that we have
     proper native systemd support.
+  * Modify handling of /etc/init.d/apache-htcacheclean to have a usual
+    Default-Start value but instead we disable it manually in the postinst.
+    That way "systemctl enable apache-htcacheclean" works.
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 13 Aug 2016 13:38:30 +0200
 

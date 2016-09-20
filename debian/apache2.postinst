@@ -147,26 +147,36 @@ start_htcacheclean ()
 	fi
 }
 
+disable_htcacheclean()
+{
+	if deb-systemd-helper debian-installed apache-htcacheclean.service; then
+		deb-systemd-helper disable apache-htcacheclean.service >/dev/null || true
+	fi
+	update-rc.d apache-htcacheclean disable >/dev/null
+}
+
 # The apache-htcacheclean service is disabled by default. Can't use
-# debhelper. The update-rc.d 'enable' call must come after the 'defaults'
+# debhelper. The update-rc.d 'disable' call must come after the 'defaults'
 # call, or the former will fail.
 handle_htcacheclean ()
 {
-	if [ -x "/etc/init.d/apache-htcacheclean" ]; then
-		update-rc.d apache-htcacheclean defaults >/dev/null
+	if dpkg --compare-versions "$2" lt "2.4.18-2~"; then
+		# Disable on initial installation or when upgrading from an old
+		# version without that init script and with the module disabled
+		# (or when configured to run from cron)
+		if [ ! -e "/etc/apache2/mods-enabled/cache_disk.load" ]; then
+			disable_htcacheclean
+			return
+		elif (. /etc/default/apache-htcacheclean && [ "$HTCACHECLEAN_MODE" = "cron" ]); then
+			disable_htcacheclean
+			return
+		fi
 	fi
 
-	if dpkg --compare-versions "$2" gt "2.4.18-2~" ||
-	   [ ! -e "/etc/apache2/mods-enabled/cache_disk.load" ] ; then
-		return 0
+	# Restart it if applicable
+	if [ -e "/etc/apache2/mods-enabled/cache_disk.load" ]; then
+		start_htcacheclean
 	fi
-	if ( . /etc/default/apache-htcacheclean &&
-		[ "$HTCACHECLEAN_MODE" != "cron" ] &&
-		[ "$HTCACHECLEAN_RUN" != "no" ] )
-	then
-		update-rc.d apache-htcacheclean enable 2 3 4 5
-	fi
-	start_htcacheclean
 }
 
 msg ()
@@ -269,13 +279,12 @@ case "$1" in
 		enable_default_modules $@
 		enable_default_conf $@
 		install_default_site $@
-		handle_htcacheclean $@
 		execute_deferred_actions
 
 	;;
 
 	abort-upgrade)
-		start_htcacheclean $@
+
 	;;
 
 	abort-remove|abort-deconfigure)
@@ -289,6 +298,16 @@ case "$1" in
 esac
 
 #DEBHELPER#
+
+# Deal with htcacheclean after debhelper's initial init script handling
+case "$1" in
+	configure)
+		handle_htcacheclean $@
+	;;
+	abort-upgrade)
+		start_htcacheclean $@
+	;;
+esac
 
 exit 0
 

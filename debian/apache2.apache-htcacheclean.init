@@ -7,8 +7,8 @@ fi
 # Provides:          apache-htcacheclean
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
-# Default-Start:
-# Default-Stop:      0 1 2 3 4 5 6
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
 # Short-Description: Cache cleaner process for Apache2 web server
 # Description:       Start the htcacheclean helper
 #  This script will start htcacheclean which will periodically scan the
