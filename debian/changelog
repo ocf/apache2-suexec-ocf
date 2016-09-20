@@ -1,7 +1,11 @@
 apache2 (2.4.23-5) UNRELEASED; urgency=medium
 
+  [ Stefan Fritsch ]
   * Tweak creation of .tar.gz embedded in preinst to get reproducible
     build.
+
+  [ Raphaël Hertzog ]
+  * Add systemd unit files. Closes: #798430
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 13 Aug 2016 13:38:30 +0200
 
