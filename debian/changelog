@@ -11,6 +11,8 @@ apache2 (2.4.23-5) UNRELEASED; urgency=medium
     support.
   * Improve setup-instance to rely on the systemd apache2@instance.service for
     multi-instance support.
+  * Drop /lib/systemd/system/apache2.service.d/forking.conf now that we have
+    proper native systemd support.
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 13 Aug 2016 13:38:30 +0200
 
