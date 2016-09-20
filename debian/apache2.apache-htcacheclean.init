@@ -24,7 +24,7 @@ DIR_SUFFIX="${NAME##apache-htcacheclean}"
 APACHE_CONFDIR="${APACHE_CONFDIR:=/etc/apache2$DIR_SUFFIX}"
 RUN_USER=$(. $APACHE_CONFDIR/envvars > /dev/null && echo "$APACHE_RUN_USER")
 
-# Default values. Edit /etc/default/apache-htcacheclean to change these
+# Default values. Edit /etc/default/apache-htcacheclean$DIR_SUFFIX to change these
 HTCACHECLEAN_SIZE="${HTCACHECLEAN_SIZE:=300M}"
 HTCACHECLEAN_DAEMON_INTERVAL="${HTCACHECLEAN_DAEMON_INTERVAL:=120}"
 HTCACHECLEAN_PATH="${HTCACHECLEAN_PATH:=/var/cache/apache2$DIR_SUFFIX/mod_cache_disk}"
