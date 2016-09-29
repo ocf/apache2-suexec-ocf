@@ -1,4 +1,6 @@
-apache2 (2.4.23-5) UNRELEASED; urgency=medium
+apache2 (2.4.23-5) unstable; urgency=low
+
+  * Team upload.
 
   [ Stefan Fritsch ]
   * Tweak creation of .tar.gz embedded in preinst to get reproducible
@@ -17,7 +19,7 @@ apache2 (2.4.23-5) UNRELEASED; urgency=medium
     Default-Start value but instead we disable it manually in the postinst.
     That way "systemctl enable apache-htcacheclean" works.
 
- -- Stefan Fritsch <sf@debian.org>  Sat, 13 Aug 2016 13:38:30 +0200
+ -- Raphaël Hertzog <hertzog@debian.org>  Thu, 29 Sep 2016 12:03:31 +0200
 
 apache2 (2.4.23-4) unstable; urgency=medium
 
