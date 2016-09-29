@@ -18,6 +18,8 @@ apache2 (2.4.23-5) unstable; urgency=low
   * Modify handling of /etc/init.d/apache-htcacheclean to have a usual
     Default-Start value but instead we disable it manually in the postinst.
     That way "systemctl enable apache-htcacheclean" works.
+  * Add some lintian overrides for non-problems (two update-rc.d calls in
+    postinst, and a .js file with a very long line).
 
  -- Raphaël Hertzog <hertzog@debian.org>  Thu, 29 Sep 2016 12:03:31 +0200
 
