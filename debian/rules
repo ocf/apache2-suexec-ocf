@@ -57,7 +57,7 @@ debian/fixup_conffiles.tgz: \
     debian/config-dir/mods-available/imagemap.load
 	@# mtime/owner/group/mode are for reproducible build
 	tar \
-		--mtime=2000-01-01T00:00 \
+		--mtime=2000-01-01T00:00Z \
 		--owner=root:0 \
 		--group=root:0 \
 		--mode=0644 \
