@@ -2,6 +2,7 @@ apache2 (2.4.23-6) UNRELEASED; urgency=medium
 
   * One more tweak for reproducible build. Thanks to Daniel Shahaf for the
     patch. Closes: #839977
+  * Avoid building with openssl 1.1 for now. See #828236
 
  -- Stefan Fritsch <sf@debian.org>  Tue, 01 Nov 2016 22:37:32 +0100
 
