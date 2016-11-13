@@ -62,7 +62,7 @@ debian/fixup_conffiles.tgz: \
 		--group=root:0 \
 		--mode=0644 \
 		--transform 's,.*/,,' \
-		-cz -f $@ $^
+		-c $^ | gzip -n > $@
 
 debian/fixup_conffiles.b64: debian/fixup_conffiles.tgz
 	base64 < $< > $@
