@@ -1,11 +1,11 @@
 [Unit]
 Description=The Apache HTTP Server
 After=network.target remote-fs.target nss-lookup.target
-ConditionPathIsDirectory=/etc/apache2-%I
+ConditionPathIsDirectory=/etc/apache2-%i
 
 [Service]
 Type=forking
-Environment=APACHE_CONFDIR=/etc/apache2-%I
+Environment=APACHE_CONFDIR=/etc/apache2-%i
 ExecStart=/usr/sbin/apachectl start
 ExecStop=/usr/sbin/apachectl stop
 ExecReload=/usr/sbin/apachectl graceful

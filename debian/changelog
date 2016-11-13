@@ -4,6 +4,7 @@ apache2 (2.4.23-7) UNRELEASED; urgency=medium
   * Move DefaultRuntimeDir and pid file for multi-instances to
     /var/run/apache2-xxx. Thanks to Horst Platz for the debugging.
     Closes: #838932 LP: #1627339
+  * Fix systemd unit naming for multi-instances.
   * Tweak embedded .tar.gz some more to build reproducibly.
 
  -- Stefan Fritsch <sf@debian.org>  Sun, 13 Nov 2016 11:06:36 +0100
