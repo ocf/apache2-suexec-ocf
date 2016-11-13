@@ -1,4 +1,4 @@
-apache2 (2.4.23-7) UNRELEASED; urgency=medium
+apache2 (2.4.23-7) unstable; urgency=medium
 
   * Make apache2-dev depend on openssl 1.0, too. Closes: #844160
   * Move DefaultRuntimeDir and pid file for multi-instances to
@@ -7,7 +7,7 @@ apache2 (2.4.23-7) UNRELEASED; urgency=medium
   * Fix systemd unit naming for multi-instances.
   * Tweak embedded .tar.gz some more to build reproducibly.
 
- -- Stefan Fritsch <sf@debian.org>  Sun, 13 Nov 2016 11:06:36 +0100
+ -- Stefan Fritsch <sf@debian.org>  Sun, 13 Nov 2016 13:08:28 +0100
 
 apache2 (2.4.23-6) unstable; urgency=medium
 
