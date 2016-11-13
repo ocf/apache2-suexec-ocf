@@ -1,3 +1,9 @@
+apache2 (2.4.23-7) UNRELEASED; urgency=medium
+
+  * Make apache2-dev depend on openssl 1.0, too. Closes: #844160
+
+ -- Stefan Fritsch <sf@debian.org>  Sun, 13 Nov 2016 11:06:36 +0100
+
 apache2 (2.4.23-6) unstable; urgency=medium
 
   * One more tweak for reproducible build. Thanks to Daniel Shahaf for the
