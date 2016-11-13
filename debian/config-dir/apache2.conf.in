@@ -74,6 +74,12 @@
 ___MUTEX___Mutex file:${APACHE_LOCK_DIR} default
 
 #
+# The directory where shm and other runtime files will be stored.
+#
+
+DefaultRuntimeDir ${APACHE_RUN_DIR}
+
+#
 # PidFile: The file in which the server should record its process
 # identification number when it starts.
 # This needs to be set in /etc/apache2/envvars
