@@ -129,7 +129,9 @@ else
 endif
 
 override_dh_install: clean-config-vars prepare-scripts debian/config-dir/apache2.conf
-	dh_install --list-missing
+	# don't install mod_ssl_openssl.h in apache2-dev
+	dh_install --list-missing -papache2-dev -Xopenssl
+	dh_install --list-missing --remaining-packages
 
 override_dh_fixperms-arch:
 	# standard suexec
@@ -166,6 +168,7 @@ override_dh_installdocs-indep:
 
 override_dh_installdocs-arch:
 	dh_installdocs --link-doc=apache2 -papache2 -papache2-dbg
+	dh_installdocs --link-doc=apache2-dev -papache2-ssl-dev
 	dh_installdocs -a
 
 override_dh_installchangelogs:

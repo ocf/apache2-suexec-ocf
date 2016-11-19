@@ -120,8 +120,7 @@ Description: Apache HTTP Server (on-site documentation)
 
 Package: apache2-dev
 Architecture: any
-Depends: ${misc:Depends}, openssl,
- libapr1-dev, libaprutil1-dev, libssl1.0-dev | libssl-dev (<< 1.1),
+Depends: ${misc:Depends}, openssl, libapr1-dev, libaprutil1-dev,
  debhelper (>= 9), ${perl:Depends}
 Provides: dh-apache2
 Description: Apache HTTP Server (development headers)
@@ -138,6 +137,18 @@ Description: Apache HTTP Server (development headers)
   - Apache 2 module configurations and shared objects
   - Site configuration files
   - Global configuration files
+
+Package: apache2-ssl-dev
+Architecture: any
+Depends: ${misc:Depends}, apache2-dev (= ${binary:Version}),
+ libssl1.0-dev | libssl-dev (<< 1.1)
+Description: Apache HTTP Server (mod_ssl development headers)
+ The Apache HTTP Server Project's goal is to build a secure, efficient and
+ extensible HTTP server as standards-compliant open source software. The
+ result has long been the number one web server on the Internet.
+ .
+ This package provides the development header and the dependencies for
+ modules that interact with mod_ssl's internal openssl state.
 
 Package: apache2-dbg
 Section: debug

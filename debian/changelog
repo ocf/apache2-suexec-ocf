@@ -1,3 +1,13 @@
+apache2 (2.4.23-8) UNRELEASED; urgency=medium
+
+  * Move the mod_ssl_openssl.h header and the dependency on libssl-dev to a
+    new package apache2-ssl-dev.  Packages that interface with openssl
+    state from mod_ssl must build-depend on this new package.
+    This will help to disentangle the build-deps in the openssl transition.
+    Closes: #845033
+
+ -- Stefan Fritsch <sf@debian.org>  Sat, 19 Nov 2016 23:55:28 +0100
+
 apache2 (2.4.23-7) unstable; urgency=medium
 
   * Make apache2-dev depend on openssl 1.0, too. Closes: #844160
