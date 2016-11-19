@@ -1,4 +1,4 @@
-apache2 (2.4.23-8) UNRELEASED; urgency=medium
+apache2 (2.4.23-8) unstable; urgency=medium
 
   * Move the mod_ssl_openssl.h header and the dependency on libssl-dev to a
     new package apache2-ssl-dev.  Packages that interface with openssl
@@ -6,7 +6,7 @@ apache2 (2.4.23-8) UNRELEASED; urgency=medium
     This will help to disentangle the build-deps in the openssl transition.
     Closes: #845033
 
- -- Stefan Fritsch <sf@debian.org>  Sat, 19 Nov 2016 23:55:28 +0100
+ -- Stefan Fritsch <sf@debian.org>  Sun, 20 Nov 2016 00:33:13 +0100
 
 apache2 (2.4.23-7) unstable; urgency=medium
 
