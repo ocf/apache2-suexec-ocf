@@ -9,4 +9,3 @@ reproducible_builds.diff
 #suexec-custom.patch
 
 fix_logresolve_segfault.patch
-CVE-2016-5387.patch
