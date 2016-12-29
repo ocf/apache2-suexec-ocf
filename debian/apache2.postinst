@@ -42,9 +42,19 @@ enable_default_modules()
 				alias dir autoindex \
 				env mime negotiation setenvif \
 				filter deflate \
-				status ; do
+				status reqtimeout ; do
 			a2enmod -m -q $module
 		done
+	fi
+	if [ -z "$2" ] ; then
+		return 0
+	fi
+	# mod_reqtimeout activation was missed in some versions
+	if dpkg --compare-versions "$2" lt "2.4.10-10+deb8u8" || \
+		(dpkg --compare-versions "$2" gt "2.4.10-11" && \
+		 dpkg --compare-versions "$2" lt "2.4.25-2~")
+	then
+			a2enmod -m -q reqtimeout
 	fi
 }
 
