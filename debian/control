@@ -19,7 +19,7 @@ Architecture: any
 Pre-Depends: dpkg (>= 1.17.14)
 Depends: ${misc:Depends}, lsb-base, procps [!hurd-i386],
  perl, mime-support, apache2-bin (= ${binary:Version}),
- apache2-utils (>= 2.4), apache2-data (= ${source:Version}),
+ apache2-utils (= ${binary:Version}), apache2-data (= ${source:Version}),
  ${perl:Depends}
 Provides: httpd, httpd-cgi
 Recommends: ssl-cert

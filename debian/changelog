@@ -4,6 +4,9 @@ apache2 (2.4.25-2) UNRELEASED; urgency=medium
     before 2.4.25-2. It was wrongly not activated in new installs since
     jessie. This made the default installation vulnerable to some DoS
     attacks.
+  * Restart htcacheclean on updates and tighten dependency on apache2-utils
+    to ensure that apache2-utils cannot be upgraded without apache2.
+    Closes: #851122
   * Add test for some modules to be enabled.
   * Remove mention of CVE-2016-5387 in 2.4.25-1 changelog. It was already
     fixed in 2.4.23-2.
