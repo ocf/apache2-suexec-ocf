@@ -7,6 +7,9 @@ apache2 (2.4.25-2) UNRELEASED; urgency=medium
   * Restart htcacheclean on updates and tighten dependency on apache2-utils
     to ensure that apache2-utils cannot be upgraded without apache2.
     Closes: #851122
+  * When running on systems with systemd, make 'apache2ctl start' invoke
+    systemctl instead. Otherwise systemd will think apache2 is not running
+    and ignore further commands like reload. Closes: #839227
   * Add test for some modules to be enabled.
   * Remove mention of CVE-2016-5387 in 2.4.25-1 changelog. It was already
     fixed in 2.4.23-2.
