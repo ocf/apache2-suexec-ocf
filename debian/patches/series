@@ -9,3 +9,4 @@ reproducible_builds.diff
 #suexec-custom.patch
 
 fix_logresolve_segfault.patch
+mpm_event_restart_segfault_PR60487.patch
