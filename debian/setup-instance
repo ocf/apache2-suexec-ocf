@@ -7,6 +7,17 @@ if [ $# != 1 ] ; then
 	exit 1
 fi
 
+is_systemd () {
+	case "$(readlink -f /proc/1/exe || true)" in
+	*systemd*)
+		return 0
+		;;
+	*)
+		return 1
+		;;
+	esac
+}
+
 # the SUFFIX must not contain spaces or shell meta characters
 SUFFIX=$1
 
@@ -18,7 +29,7 @@ fi
 echo Setting up /etc/apache2-$SUFFIX ...
 cp -a /etc/apache2 /etc/apache2-$SUFFIX
 
-if [ -d /run/systemd ] && [ -x /bin/systemctl ]; then
+if is_systemd ; then
     echo "systemd is in use, no init script installed"
     echo "use the 'apache2@$SUFFIX.service' service to control your new instance"
     echo "sample commands:"

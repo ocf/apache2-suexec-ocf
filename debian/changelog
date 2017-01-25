@@ -1,3 +1,10 @@
+apache2 (2.4.25-3) UNRELEASED; urgency=medium
+
+  * Fix detection of systemd to fix 'apache2ctl start' on sysv-init.
+    Closes: #852543
+
+ -- Stefan Fritsch <sf@debian.org>  Wed, 25 Jan 2017 20:56:56 +0100
+
 apache2 (2.4.25-2) unstable; urgency=medium
 
   * Activate mod_reqtimeout in new installs and during updates from

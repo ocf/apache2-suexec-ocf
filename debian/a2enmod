@@ -123,7 +123,7 @@ foreach my $acton (@objs) {
 my $htcstart = "";
 my $apache_reload = "";
 my $cmd = ($act eq "enable") ? "start" : "stop";
-if (-d "/run/systemd" and -x "/bin/systemctl") {
+if (is_systemd()) {
     $htcstart = "  systemctl $cmd $htc_service\n";
     $apache_reload = "  systemctl $reload $apache_service\n";
 } else {
@@ -606,6 +606,12 @@ sub special_module_handling {
 
         }
     }
+}
+
+sub is_systemd
+{
+    my $init = readlink("/proc/1/exe") || "";
+    return scalar $init =~ /systemd/;
 }
 
 # vim: syntax=perl sw=4 sts=4 sr et
