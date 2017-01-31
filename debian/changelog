@@ -1,3 +1,9 @@
+apache2 (2.4.25-3ocf1) unstable; urgency=medium
+
+  * Add apache2-suexec-ocf patches.
+
+ -- Chris Kuehl <ckuehl@ocf.berkeley.edu>  Mon, 30 Jan 2017 19:04:43 -0800
+
 apache2 (2.4.25-3) unstable; urgency=medium
 
   * Fix detection of systemd to fix 'apache2ctl start' on sysv-init.
