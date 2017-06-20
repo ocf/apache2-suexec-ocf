@@ -1,3 +1,14 @@
+apache2 (2.4.25-4) UNRELEASED; urgency=high
+
+  * Backport security fixes from 2.4.26:
+  * CVE-2017-3167: Authentication bypass with ap_get_basic_auth_pw()
+  * CVE-2017-3169: mod_ssl NULL pointer dereference
+  * CVE-2017-7668: Buffer overrun in ap_find_token()
+  * CVE-2017-7679: mod_mime buffer overread
+  * CVE-2017-7659: mod_http2 NULL pointer dereference
+
+ -- Stefan Fritsch <sf@debian.org>  Tue, 20 Jun 2017 21:29:11 +0200
+
 apache2 (2.4.25-3) unstable; urgency=medium
 
   * Fix detection of systemd to fix 'apache2ctl start' on sysv-init.

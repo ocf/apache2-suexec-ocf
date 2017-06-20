@@ -10,3 +10,9 @@ reproducible_builds.diff
 
 fix_logresolve_segfault.patch
 mpm_event_restart_segfault_PR60487.patch
+
+CVE-2017-3167.diff
+CVE-2017-3169.diff
+CVE-2017-7659.diff
+CVE-2017-7668.diff
+CVE-2017-7679.diff
