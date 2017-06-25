@@ -1,3 +1,9 @@
+apache2 (2.4.26-1) UNRELEASED; urgency=medium
+
+  [ New upstream release ]
+
+ -- Stefan Fritsch <sf@debian.org>  Sun, 25 Jun 2017 09:12:21 +0200
+
 apache2 (2.4.25-4) unstable; urgency=high
 
   * Backport security fixes from 2.4.26:
