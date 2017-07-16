@@ -1,6 +1,65 @@
                                                          -*- coding: utf-8 -*-
 
+Changes with Apache 2.4.27
+
+  *) COMPATIBILITY: mod_lua: Remove the undocumented exported 'apr_table'
+     global variable when using Lua 5.2 or later. This was exported as a
+     side effect from luaL_register, which is no longer supported as of
+     Lua 5.2 which deprecates pollution of the global namespace.
+     [Rainer Jung]
+
+  *) COMPATIBILITY: mod_http2: Disable and give warning when using Prefork.
+     The server will continue to run, but HTTP/2 will no longer be negotiated.
+     [Stefan Eissing]
+
+  *) COMPATIBILITY: mod_proxy_fcgi: Revert to 2.4.20 FCGI behavior for the
+     default ProxyFCGIBackendType, fixing a regression with PHP-FPM. PR 61202.
+     [Jacob Champion, Jim Jagielski]
+
+  *) mod_lua: Improve compatibility with Lua 5.1, 5.2 and 5.3.
+     PR58188, PR60831, PR61245. [Rainer Jung]
+  
+  *) mod_http2: Simplify ready queue, less memory and better performance. Update
+     mod_http2 version to 1.10.7. [Stefan Eissing]
+  
+  *) Allow single-char field names inadvertantly disallowed in 2.4.25.
+     PR 61220. [Yann Ylavic]
+
+  *) htpasswd / htdigest: Do not apply the strict permissions of the temporary
+     passwd file to a possibly existing passwd file. PR 61240. [Ruediger Pluem]
+
+  *) core: Avoid duplicate HEAD in Allow header.
+     This is a regression in 2.4.24 (unreleased), 2.4.25 and 2.4.26.
+     PR 61207. [Christophe Jaillet]
+
 Changes with Apache 2.4.26
+
+  *) SECURITY: CVE-2017-7679 (cve.mitre.org)
+     mod_mime can read one byte past the end of a buffer when sending a
+     malicious Content-Type response header.  [Yann Ylavic]
+
+  *) SECURITY: CVE-2017-7668 (cve.mitre.org)
+     The HTTP strict parsing changes added in 2.2.32 and 2.4.24 introduced a
+     bug in token list parsing, which allows ap_find_token() to search past
+     the end of its input string. By maliciously crafting a sequence of
+     request headers, an attacker may be able to cause a segmentation fault,
+     or to force ap_find_token() to return an incorrect value.
+     [Jacob Champion]
+
+  *) SECURITY: CVE-2017-7659 (cve.mitre.org)
+     A maliciously constructed HTTP/2 request could cause mod_http2 to
+     dereference a NULL pointer and crash the server process.
+
+  *) SECURITY: CVE-2017-3169 (cve.mitre.org)
+     mod_ssl may dereference a NULL pointer when third-party modules call
+     ap_hook_process_connection() during an HTTP request to an HTTPS port.
+     [Yann Ylavic]
+
+  *) SECURITY: CVE-2017-3167 (cve.mitre.org)
+     Use of the ap_get_basic_auth_pw() by third-party modules outside of the
+     authentication phase may lead to authentication requirements being
+     bypassed.
+     [Emmanuel Dreyfus <manu netbsd.org>, Jacob Champion, Eric Covener]
 
   *) HTTP/2 support no longer tagged as "experimental" but is instead considered
      fully production ready.
@@ -9,18 +68,12 @@ Changes with Apache 2.4.26
      the session in continuous check for state changes that never happen. 
      [Stefan Eissing]
 
-  *) mod_mime: Fix error checking for quoted pairs.  [Yann Ylavic]
-
   *) mod_proxy_wstunnel: Add "upgrade" parameter to allow upgrade to other
      protocols.  [Jean-Frederic Clere]
 
   *) MPMs unix: Place signals handlers and helpers out of DSOs to avoid
      a possible crash if a signal is caught during (graceful) restart.
      PR 60487.  [Yann Ylavic]
-
-  *) core: Deprecate ap_get_basic_auth_pw() and add
-     ap_get_basic_auth_components().
-     [Emmanuel Dreyfus <manu netbsd.org>, Jacob Champion, Eric Covener]
 
   *) mod_rewrite: When a substitution is a fully qualified URL, and the 
      scheme/host/port matches the current virtual host, stop interpreting the 
@@ -37,9 +90,6 @@ Changes with Apache 2.4.26
 
   *) core: EBCDIC fixes for interim responses with additional headers.
      [Eric Covener]
-
-  *) mod_ssl: Consistently pass the expected bio_filter_in_ctx_t
-     to ssl_io_filter_error(). [Yann Ylavic]
 
   *) mod_env: when processing a 'SetEnv' directive, warn if the environment
      variable name includes a '='. It is likely a configuration error.
@@ -121,11 +171,6 @@ Changes with Apache 2.4.26
   *) mod_proxy_fcgi: Add ProxyFCGISetEnvIf to fixup CGI environment
      variables just before invoking the FastCGI. [Eric Covener,
      Jacob Champion]
-
-  *) mod_proxy: Allow the per-request environment variable "no-proxy" to
-     be used as an alternative to ProxyPass /path !. This is primarily
-     to set exceptions for ProxyPass specified in <Location> context.
-    Use SetEnvIf, not SetEnv. [Eric Covener]
 
   *) mod_proxy_fcgi: Return to 2.4.20-and-earlier behavior of leaving
      a "proxy:fcgi://" prefix in the SCRIPT_FILENAME environment variable by

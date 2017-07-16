@@ -20108,14 +20108,10 @@ $as_echo_n "checking for lua.h in ${x}/include/lua-5.3... " >&6; }
     if test -f ${x}/include/lua-5.3/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib/lua-5.3 $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua-5.3" >&5
 $as_echo_n "checking for luaL_newstate in -llua-5.3... " >&6; }
 if ${ac_cv_lib_lua_5_3_luaL_newstate+:} false; then :
@@ -20154,40 +20150,8 @@ fi
 $as_echo "$ac_cv_lib_lua_5_3_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua_5_3_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua-5.3" >&5
-$as_echo_n "checking for luaL_register in -llua-5.3... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include/lua-5.3"
-            LIBS="-llua-5.3"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib/lua-5.3 -llua-5.3 $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib/lua-5.3 -llua-5.3 $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib/lua-5.3\""
@@ -20209,24 +20173,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include/lua-5.3"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include/lua-5.3"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
@@ -20241,14 +20194,10 @@ $as_echo_n "checking for lua.h in ${x}/include/lua5.3... " >&6; }
     if test -f ${x}/include/lua5.3/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua5.3" >&5
 $as_echo_n "checking for luaL_newstate in -llua5.3... " >&6; }
 if ${ac_cv_lib_lua5_3_luaL_newstate+:} false; then :
@@ -20287,40 +20236,8 @@ fi
 $as_echo "$ac_cv_lib_lua5_3_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua5_3_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua5.3" >&5
-$as_echo_n "checking for luaL_register in -llua5.3... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include/lua5.3"
-            LIBS="-llua5.3"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib -llua5.3 $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib -llua5.3 $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib\""
@@ -20342,24 +20259,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include/lua5.3"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include/lua5.3"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
@@ -20374,14 +20280,10 @@ $as_echo_n "checking for lua.h in ${x}/include/lua53... " >&6; }
     if test -f ${x}/include/lua53/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib/lua53 $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua" >&5
 $as_echo_n "checking for luaL_newstate in -llua... " >&6; }
 if ${ac_cv_lib_lua_luaL_newstate+:} false; then :
@@ -20420,40 +20322,8 @@ fi
 $as_echo "$ac_cv_lib_lua_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua" >&5
-$as_echo_n "checking for luaL_register in -llua... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include/lua53"
-            LIBS="-llua"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib/lua53 -llua $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib/lua53 -llua $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib/lua53\""
@@ -20475,24 +20345,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include/lua53"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include/lua53"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
@@ -20508,14 +20367,10 @@ $as_echo_n "checking for lua.h in ${x}/include... " >&6; }
     if test -f ${x}/include/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua" >&5
 $as_echo_n "checking for luaL_newstate in -llua... " >&6; }
 if ${ac_cv_lib_lua_luaL_newstate+:} false; then :
@@ -20554,40 +20409,8 @@ fi
 $as_echo "$ac_cv_lib_lua_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua" >&5
-$as_echo_n "checking for luaL_register in -llua... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include"
-            LIBS="-llua"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib -llua $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib -llua $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib\""
@@ -20609,24 +20432,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
@@ -20642,14 +20454,10 @@ $as_echo_n "checking for lua.h in ${x}/include/lua-5.2... " >&6; }
     if test -f ${x}/include/lua-5.2/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib/lua-5.2 $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua-5.2" >&5
 $as_echo_n "checking for luaL_newstate in -llua-5.2... " >&6; }
 if ${ac_cv_lib_lua_5_2_luaL_newstate+:} false; then :
@@ -20688,40 +20496,8 @@ fi
 $as_echo "$ac_cv_lib_lua_5_2_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua_5_2_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua-5.2" >&5
-$as_echo_n "checking for luaL_register in -llua-5.2... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include/lua-5.2"
-            LIBS="-llua-5.2"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib/lua-5.2 -llua-5.2 $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib/lua-5.2 -llua-5.2 $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib/lua-5.2\""
@@ -20743,24 +20519,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include/lua-5.2"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include/lua-5.2"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
@@ -20775,14 +20540,10 @@ $as_echo_n "checking for lua.h in ${x}/include/lua5.2... " >&6; }
     if test -f ${x}/include/lua5.2/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua5.2" >&5
 $as_echo_n "checking for luaL_newstate in -llua5.2... " >&6; }
 if ${ac_cv_lib_lua5_2_luaL_newstate+:} false; then :
@@ -20821,40 +20582,8 @@ fi
 $as_echo "$ac_cv_lib_lua5_2_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua5_2_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua5.2" >&5
-$as_echo_n "checking for luaL_register in -llua5.2... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include/lua5.2"
-            LIBS="-llua5.2"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib -llua5.2 $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib -llua5.2 $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib\""
@@ -20876,24 +20605,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include/lua5.2"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include/lua5.2"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
@@ -20908,14 +20626,10 @@ $as_echo_n "checking for lua.h in ${x}/include/lua52... " >&6; }
     if test -f ${x}/include/lua52/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib/lua52 $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua" >&5
 $as_echo_n "checking for luaL_newstate in -llua... " >&6; }
 if ${ac_cv_lib_lua_luaL_newstate+:} false; then :
@@ -20954,40 +20668,8 @@ fi
 $as_echo "$ac_cv_lib_lua_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua" >&5
-$as_echo_n "checking for luaL_register in -llua... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include/lua52"
-            LIBS="-llua"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib/lua52 -llua $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib/lua52 -llua $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib/lua52\""
@@ -21009,24 +20691,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include/lua52"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include/lua52"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
@@ -21042,14 +20713,10 @@ $as_echo_n "checking for lua.h in ${x}/include/lua-5.1... " >&6; }
     if test -f ${x}/include/lua-5.1/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib/lua-5.1 $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua-5.1" >&5
 $as_echo_n "checking for luaL_newstate in -llua-5.1... " >&6; }
 if ${ac_cv_lib_lua_5_1_luaL_newstate+:} false; then :
@@ -21088,40 +20755,8 @@ fi
 $as_echo "$ac_cv_lib_lua_5_1_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua_5_1_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua-5.1" >&5
-$as_echo_n "checking for luaL_register in -llua-5.1... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include/lua-5.1"
-            LIBS="-llua-5.1"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib/lua-5.1 -llua-5.1 $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib/lua-5.1 -llua-5.1 $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib/lua-5.1\""
@@ -21143,24 +20778,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include/lua-5.1"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include/lua-5.1"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
@@ -21175,14 +20799,10 @@ $as_echo_n "checking for lua.h in ${x}/include/lua5.1... " >&6; }
     if test -f ${x}/include/lua5.1/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua5.1" >&5
 $as_echo_n "checking for luaL_newstate in -llua5.1... " >&6; }
 if ${ac_cv_lib_lua5_1_luaL_newstate+:} false; then :
@@ -21221,40 +20841,8 @@ fi
 $as_echo "$ac_cv_lib_lua5_1_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua5_1_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua5.1" >&5
-$as_echo_n "checking for luaL_register in -llua5.1... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include/lua5.1"
-            LIBS="-llua5.1"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib -llua5.1 $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib -llua5.1 $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib\""
@@ -21276,24 +20864,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include/lua5.1"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include/lua5.1"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
@@ -21308,14 +20885,10 @@ $as_echo_n "checking for lua.h in ${x}/include/lua51... " >&6; }
     if test -f ${x}/include/lua51/lua.h; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
         save_CFLAGS=$CFLAGS
         save_LDFLAGS=$LDFLAGS
-        save_LIBS=$LIBS
-
         CFLAGS="$CFLAGS"
         LDFLAGS="-L${x}/lib/lua51 $LDFLAGS $lib_m"
-
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_newstate in -llua" >&5
 $as_echo_n "checking for luaL_newstate in -llua... " >&6; }
 if ${ac_cv_lib_lua_luaL_newstate+:} false; then :
@@ -21354,40 +20927,8 @@ fi
 $as_echo "$ac_cv_lib_lua_luaL_newstate" >&6; }
 if test "x$ac_cv_lib_lua_luaL_newstate" = xyes; then :
 
-                        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for luaL_register in -llua" >&5
-$as_echo_n "checking for luaL_register in -llua... " >&6; }
-            CFLAGS="$CFLAGS -I${x}/include/lua51"
-            LIBS="-llua"
-            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-
-                    #define LUA_COMPAT_ALL
-                    #define LUA_COMPAT_5_2
-                    #define LUA_COMPAT_5_1
-                    #define LUA_COMPAT_MODULE
-
-                    #include <lua.h>
-                    #include <lauxlib.h>
-
-int
-main ()
-{
-
-                    /* This isn't a valid call, but we're testing linkability */
-                    luaL_register(NULL, NULL, NULL);
-
-  ;
-  return 0;
-}
-
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-                LUA_LIBS="-L${x}/lib/lua51 -llua $lib_m"
-                if test "x$ap_platform_runtime_link_flag" != "x"; then
+            LUA_LIBS="-L${x}/lib/lua51 -llua $lib_m"
+            if test "x$ap_platform_runtime_link_flag" != "x"; then
 
   if test "x$LUA_LIBS" = "x"; then
     test "x$silent" != "xyes" && echo "  setting LUA_LIBS to \"$ap_platform_runtime_link_flag${x}/lib/lua51\""
@@ -21409,24 +20950,13 @@ $as_echo "yes" >&6; }
     done
   fi
 
-                fi
-                LUA_CFLAGS="-I${x}/include/lua51"
-
-else
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+            fi
+            LUA_CFLAGS="-I${x}/include/lua51"
 
 fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-
-fi
-
 
         CFLAGS=$save_CFLAGS
         LDFLAGS=$save_LDFLAGS
-        LIBS=$save_LIBS
 
         if test -n "${LUA_LIBS}"; then
             break
