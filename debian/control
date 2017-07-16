@@ -5,7 +5,7 @@ Maintainer: Debian Apache Maintainers <debian-apache@lists.debian.org>
 Uploaders: Stefan Fritsch <sf@debian.org>, Arno Töll <arno@debian.org>
 Build-Depends: debhelper (>= 9.20131213~), lsb-release, dpkg-dev (>= 1.16.1~),
  libaprutil1-dev (>= 1.5.0), libapr1-dev (>= 1.5.0), libpcre3-dev, zlib1g-dev,
- libnghttp2-dev, libssl1.0-dev | libssl-dev (<< 1.1), perl,
+ libnghttp2-dev, libssl-dev (>= 1.1), perl,
  liblua5.2-dev, libxml2-dev, autotools-dev, gawk | awk,
  dh-systemd
 Build-Conflicts: autoconf2.13
@@ -51,6 +51,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
 # MODULE_MAGIC_NUMBER_MAJOR from apache2/include/ap_mmn.h
 Provides: ${apache2:API}
+Breaks: gridsite (<< 2.3.2-4~), libapache2-mod-dacs (<< 1.4.38a-2~)
 Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom
 Description: Apache HTTP Server (modules and other binary files)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
@@ -141,7 +142,7 @@ Description: Apache HTTP Server (development headers)
 Package: apache2-ssl-dev
 Architecture: any
 Depends: ${misc:Depends}, apache2-dev (= ${binary:Version}),
- libssl1.0-dev | libssl-dev (<< 1.1)
+ libssl-dev (>= 1.1)
 Description: Apache HTTP Server (mod_ssl development headers)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
