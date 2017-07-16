@@ -4,6 +4,9 @@ apache2 (2.4.27-1) UNRELEASED; urgency=medium
   * Fix CVE-2017-9788: mod_auth_digest: Uninitialized memory reflection
     Closes: #868467
 
+  [ Stefan Fritsch ]
+  * Switch to openssl 1.1. Closes: #851094
+
  -- Stefan Fritsch <sf@debian.org>  Sun, 25 Jun 2017 09:12:21 +0200
 
 apache2 (2.4.25-4) unstable; urgency=high
