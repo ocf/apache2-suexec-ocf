@@ -1,3 +1,9 @@
+apache2 (2.4.27-4) UNRELEASED; urgency=medium
+
+  * Use 'service' instead of init script in monit example config.
+
+ -- Stefan Fritsch <sf@debian.org>  Sat, 05 Aug 2017 20:59:48 +0200
+
 apache2 (2.4.27-3) experimental; urgency=medium
 
   * Switch to openssl 1.1. Again closes: #851094
