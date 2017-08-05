@@ -4,6 +4,7 @@ apache2 (2.4.27-4) UNRELEASED; urgency=medium
     Closes: #857607
   * Use 'service' instead of init script in monit example config.
   * Accordingly, bump Standards-Version to 4.0.0.
+  * Use libprotocol-http2-perl in autopkgtest.
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 05 Aug 2017 20:59:48 +0200
 
