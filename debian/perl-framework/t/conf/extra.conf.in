@@ -173,6 +173,10 @@
         RewriteLog @SERVERROOT@/logs/rewrite_log
         RewriteLogLevel 9
     </IfVersion>
+    <IfVersion >= 2.3.6>
+        LogLevel rewrite:trace8
+    </IfVersion>
+
     <IfDefine !APACHE1>
         <IfVersion < 2.3.4>
             RewriteLock @SERVERROOT@/logs/rewrite_lock
@@ -195,7 +199,12 @@
 
     <Directory @SERVERROOT@/htdocs/modules/rewrite>
         RewriteEngine On
-        RewriteOptions inherit
+        <IfVersion >= 2.5.0>
+            RewriteOptions inherit LongURLOptimization
+        </IfVersion>
+        <IfVersion < 2.5.0>
+            RewriteOptions inherit
+        </IfVersion>
 
         RewriteRule ^forbidden$ - [F]
         RewriteRule ^gone$ - [G]
@@ -277,8 +286,14 @@
       ProxyPass /reverse/ http://@SERVERNAME@:@PORT@/
       ProxyPassReverse /reverse/ http://@SERVERNAME@:@PORT@/
       <IfVersion >= 2.4.7>
-        ProxyPass /uds unix:/tmp/test-ptf.sock|http:
+        ProxyPass /uds/ unix:/tmp/test-ptf.sock|http:
       </IfVersion>
+      <Location /reverse/locproxy/>
+         ProxyPass http://@SERVERNAME@:@PORT@/
+      </Location>
+      <IfModule mod_setenvif.c>
+          SetEnvIf Request_URI "^/reverse/locproxy/index.html$" no-proxy
+      </IfModule>
    </VirtualHost>
 
    <IfVersion >= 2.2.5>
@@ -866,9 +881,23 @@ LimitRequestFields    32
     <IfModule mod_headers.c>
     <IfModule mod_proxy.c>
        ProxyPass /if_sec/proxy/ http://@SERVERNAME@:@PORT@/
+
+       # Directory context
        <Directory @SERVERROOT@/htdocs/if_sec/dir/>
          <If "-n %{REQ:In-If1}">
            Header merge Out-Trace dir1
+             <If "-n %{REQ:In-If11}">
+               Header merge Out-Trace nested11
+               <If "-n %{REQ:In-If111}">
+                 Header merge Out-Trace nested111
+               </If>
+               <Elseif "-n %{REQ:In-If112}">
+                 Header merge Out-Trace nested112
+               </Elseif>
+               <Else>
+                 Header merge Out-Trace nested113
+               </Else>
+             </If>
          </If>
          <If "-n %{REQ:In-If2}">
            Header merge Out-Trace dir2
@@ -879,6 +908,8 @@ LimitRequestFields    32
            </If>
          </Files>
        </Directory>
+
+       # Location context
        <Location /if_sec/proxy/>
          <If "-n %{REQ:In-If1}">
            Header merge Out-Trace locp1
@@ -890,18 +921,58 @@ LimitRequestFields    32
        <Location /if_sec/loc/>
          <If "-n %{REQ:In-If1}">
            Header merge Out-Trace loc1
+           <If "-n %{REQ:In-If11}">
+             Header merge Out-Trace nested11
+             <If "-n %{REQ:In-If111}">
+               Header merge Out-Trace nested111
+             </If>
+             <Elseif "-n %{REQ:In-If112}">
+               Header merge Out-Trace nested112
+             </Elseif>
+             <Else>
+               Header merge Out-Trace nested113
+             </Else>
+           </If>
          </If>
          <If "-n %{REQ:In-If2}">
            Header merge Out-Trace loc2
          </If>
        </Location>
+
+       # Files context
        <Files *.if_test>
          <If "-n %{REQ:In-If2}">
            Header merge Out-Trace files2
+           <If "-n %{REQ:In-If11}">
+             Header merge Out-Trace nested11
+             <If "-n %{REQ:In-If111}">
+               Header merge Out-Trace nested111
+             </If>
+             <Elseif "-n %{REQ:In-If112}">
+               Header merge Out-Trace nested112
+             </Elseif>
+             <Else>
+               Header merge Out-Trace nested113
+             </Else>
+           </If>
          </If>
        </Files>
+
+       # Global context
        <If "-n %{REQ:In-If1}">
          Header merge Out-Trace global1
+         <If "-n %{REQ:In-If11}">
+           Header merge Out-Trace nested11
+           <If "-n %{REQ:In-If111}">
+             Header merge Out-Trace nested111
+           </If>
+           <Elseif "-n %{REQ:In-If112}">
+             Header merge Out-Trace nested112
+           </Elseif>
+           <Else>
+             Header merge Out-Trace nested113
+           </Else>
+         </If>
        </If>
     </IfModule>
     </IfModule>
@@ -980,13 +1051,25 @@ LimitRequestFields    32
 #
 <IfDefine APACHE2>
   <IfVersion >= 2.2.32>
-    <VirtualHost _default_:http_strict>
+    <Directory @SERVERROOT@/htdocs/apache/http_strict>
+      Options +ExecCGI
+      AddHandler cgi-script .pl
+    </Directory>
+    <VirtualHost _default_:http_unsafe>
+      DocumentRoot @SERVERROOT@/htdocs/
+      HttpProtocolOptions Unsafe Allow0.9
+      <IfModule mod_headers.c>
+        <Location /regression-header>
+          # Use two examples to ensure multiple bad headers are caught
+          # Note the vertical tab (^K or 0x0B) embedded in the header value
+          Header always set X-Bad "verticaltab"
+          Header always set X?Bad "badly named header"
+        </Location>
+      </IfModule>
+   </VirtualHost>
+   <VirtualHost _default_:http_strict>
       DocumentRoot @SERVERROOT@/htdocs/
       HttpProtocolOptions Strict Require1.0 RegisteredMethods
-      <Directory @SERVERROOT@/htdocs/apache/http_strict>
-        Options +ExecCGI
-        AddHandler cgi-script .pl
-      </Directory>
       <IfModule mod_headers.c>
         <Location /regression-header>
           # Use two examples to ensure multiple bad headers are caught
@@ -1042,7 +1125,9 @@ LimitRequestFields    32
       <IfFile @SERVERROOT@/htdocs/apache/iffile/document>
         Header merge X-Out success4
       </IfFile>
-
+      <IfFile "htdocs/apache/iffile/document">
+        Header merge X-Out success5
+      </IfFile>
       # Followed by the IfFiles that should fail.
       <IfFile !htdocs/apache/iffile/document>
         Header merge X-Out fail1
@@ -1093,3 +1178,23 @@ LimitRequestFields    32
 
 </IfModule>
 </IfDefine>
+
+##
+## mod_ssl_ct configuration
+##
+<IfModule mod_ssl_ct.c>
+  # If mod_ssl_ct is loaded, CTSCTStorage is needed to pass the configtest.
+  CTSCTStorage .
+</IfModule>
+
+##
+## mod_remote_ip configuration
+##
+<IfModule mod_remoteip.c>
+   <VirtualHost remote_ip>
+      DocumentRoot @SERVERROOT@/htdocs/modules/remoteip
+      <IfVersion >= 2.5.0>
+        RemoteIPProxyProtocol On
+      </IfVersion>
+   </VirtualHost>
+</IfModule>

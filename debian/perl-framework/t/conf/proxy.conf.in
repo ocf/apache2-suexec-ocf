@@ -42,6 +42,87 @@
 
 </IfModule>
 
+#
+# Test config for FCGI (see t/modules/proxy_fcgi.t)
+#
+<IfModule mod_proxy_fcgi.c>
+  # XXX we have no way to retrieve the NextAvailablePort from Apache::Test...
+  Define FCGI_PORT @NextAvailablePort@
+
+  <VirtualHost proxy_fcgi>
+    <IfVersion >= 2.4.26>
+      # ProxyFCGISetEnvIf tests
+      <Location /fcgisetenv>
+        SetHandler proxy:fcgi://127.0.0.1:${FCGI_PORT}
+
+        ProxyFCGISetEnvIf true  QUERY_STRING test_value
+        ProxyFCGISetEnvIf true  TEST_EMPTY
+        ProxyFCGISetEnvIf false TEST_NOT_SET
+        ProxyFCGISetEnvIf true  TEST_DOCROOT "%{DOCUMENT_ROOT}"
+        ProxyFCGISetEnvIf "reqenv('GATEWAY_INTERFACE') =~ m#CGI/(.\..)#" TEST_CGI_VERSION "v$1"
+        ProxyFCGISetEnvIf true !REMOTE_ADDR
+      </Location>
+    </IfVersion>
+
+    <Directory @SERVERROOT@/htdocs/modules/proxy/fcgi>
+      <FilesMatch \.php$>
+        SetHandler proxy:fcgi://127.0.0.1:${FCGI_PORT}
+      </FilesMatch>
+    </Directory>
+
+    <IfVersion >= 2.4.26>
+      <Directory @SERVERROOT@/htdocs/modules/proxy/fcgi-generic>
+        ProxyFCGIBackendType GENERIC
+        <FilesMatch \.php$>
+          SetHandler proxy:fcgi://127.0.0.1:${FCGI_PORT}
+        </FilesMatch>
+      </Directory>
+      <Directory @SERVERROOT@/htdocs/php/fpm>
+        ProxyFCGIBackendType FPM
+      </Directory>
+    </IfVersion>
+
+    <IfModule mod_rewrite.c>
+      <IfVersion >= 2.4.26>
+        <Directory @SERVERROOT@/htdocs/modules/proxy/fcgi-generic-rewrite>
+          ProxyFCGIBackendType GENERIC
+          RewriteEngine On
+          RewriteRule ^.*\.php(/.*)?$ fcgi://127.0.0.1:${FCGI_PORT}@SERVERROOT@/htdocs/modules/proxy/fcgi-generic-rewrite/$0 [L,P]
+        </Directory>
+      </IfVersion>
+
+      <Directory @SERVERROOT@/htdocs/modules/proxy/fcgi-rewrite-path-info>
+        RewriteEngine On
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^.*$ index.php/$0 [L]
+        <Files index.php>
+          SetHandler proxy:fcgi://127.0.0.1:${FCGI_PORT}
+        </Files>
+      </Directory>
+    </IfModule>
+
+    <IfModule mod_actions.c>
+      #AddType application/x-php-fpm .php
+      Action application/x-php-fpm /php/fpm/action virtual
+      <Location /php/fpm/action>
+           SetHandler proxy:fcgi://localhost:9001
+      </Location>
+      <Directory @SERVERROOT@/htdocs/modules/proxy/fcgi-action>
+        AddType application/x-fcgi-action .php
+        Action application/x-fcgi-action /fcgi-action-virtual virtual
+      </Directory>
+      <Location /fcgi-action-virtual>
+        SetHandler proxy:fcgi://127.0.0.1:${FCGI_PORT}
+      </Location>
+      Action application/x-php-fpm /php-fpm-pp/
+      ProxyPass /php-fpm-pp/ fcgi://localhost:9001/@SERVERROOT@/htdocs/
+      ProxyPassReverse /php-fpm-pp/ fcgi://localhost:9001/@SERVERROOT@/htdocs/
+    </IfModule>
+
+
+  </VirtualHost>
+</IfModule>
+
 <IfModule mod_rewrite.c>
   <Directory @SERVERROOT@/htdocs/modules/proxy/rewrite>
      AllowOverride All
