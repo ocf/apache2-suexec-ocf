@@ -7,6 +7,8 @@ apache2 (2.4.27-4) UNRELEASED; urgency=medium
     - change package priorities from extra to optional
   * Use libprotocol-http2-perl in autopkgtest.
   * Update test suite to svn r1804214.
+  * Also remove -DBUILD_DATETIME and -fdebug-prefix-map from config_vars.mk
+    to avoid them being used by apxs.
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 05 Aug 2017 20:59:48 +0200
 

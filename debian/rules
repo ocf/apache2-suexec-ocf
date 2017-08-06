@@ -73,9 +73,9 @@ debian/apache2.preinst: debian/apache2.preinst.in debian/fixup_conffiles.b64 deb
 	debian/create_preinst
 
 clean-config-vars-stamp: debian/tmp/usr/share/apache2/build/config_vars.mk debian/clean_config_vars
-	# Clean up config_vars.mk
-	# FIXME: Maybe someone could document here why we actually need to
-	# cleanup some stuff here
+	# Clean up config_vars.mk so that flags that are only intended for the
+	# compilation of apache2 itself are not used by apxs for compiling
+	# modules.
 	perl ./debian/clean_config_vars '$(AP2_CFLAGS)' '$(AP2_CPPFLAGS)' '$(AP2_LDFLAGS)'
 	touch $@
 
