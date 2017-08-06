@@ -27,7 +27,7 @@ support/suexec-custom.c: support/suexec.c debian/patches/suexec-custom.patch
 	cp support/suexec.c support/suexec-custom.c
 	patch -p1 -i debian/patches/suexec-custom.patch
 
-prebuild-checks:
+prebuild-checks-stamp:
 	ERRS="" ;\
 	for a in $$(find debian/config-dir/ -type f) ; do \
 		t="$$a.$$$$" ;\
@@ -45,6 +45,7 @@ prebuild-checks:
 		echo "ERROR: index.html's md5 is missing in postrm!" ;\
 		false ; \
 	fi
+	touch $@
 
 debian/fixup_conffiles.tgz: \
     debian/config-dir/sites-available/000-default.conf \
@@ -71,21 +72,23 @@ debian/fixup_conffiles.b64: debian/fixup_conffiles.tgz
 debian/apache2.preinst: debian/apache2.preinst.in debian/fixup_conffiles.b64 debian/create_preinst
 	debian/create_preinst
 
-clean-config-vars:
+clean-config-vars-stamp: debian/tmp/usr/share/apache2/build/config_vars.mk debian/clean_config_vars
 	# Clean up config_vars.mk
 	# FIXME: Maybe someone could document here why we actually need to
 	# cleanup some stuff here
 	perl ./debian/clean_config_vars '$(AP2_CFLAGS)' '$(AP2_CPPFLAGS)' '$(AP2_LDFLAGS)'
+	touch $@
 
 %: %.in
 	sed 's#__SERVER_VERSION__#$(SERVER_VERSION)#; s#__MODULE_DIR__#$(MODULE_DIR)#; s#__API__#$(API)#; s#__OPENSSL__#$(OPENSSL)#;' $< > $@
 	chmod `/usr/bin/stat -c '%a' "$<"` $@
 
-prepare-scripts: debian/a2query debian/debhelper/dh_apache2
+substvars-stamp: debian/rules include/ap_mmn.h
 	(grep -s -v apache2:API debian/apache2-bin.substvars; echo "apache2:API=apache2-api-$(API), apache2-api-$(API)-$(OPENSSL)") > debian/apache2-bin.substvars.new
 	mv debian/apache2-bin.substvars.new debian/apache2-bin.substvars
+	touch $@
 
-generate-maintainer-scripts: debian/apache2.preinst
+suexec-scripts-stamp: $(wildcard debian/debian/apache2-suexec.*.in)
 	set -e ; \
 	for type in custom pristine ; do \
 		for f in postinst preinst prerm links dirs lintian-overrides postrm; do \
@@ -95,11 +98,13 @@ generate-maintainer-scripts: debian/apache2.preinst
 			fi ;\
 		done ;\
 	done
+	touch $@
 
 clean build build-arch build-indep binary binary-arch binary-indep: %:
 	dh $@ --parallel --with autotools_dev,systemd
 
-override_dh_auto_configure: generate-maintainer-scripts prebuild-checks support/suexec-custom.c
+override_dh_auto_configure: configure-stamp
+configure-stamp: prebuild-checks-stamp support/suexec-custom.c
 	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
 		--enable-layout=Debian --enable-so --with-program-name=apache2 \
 		--enable-suexec --with-suexec-caller=www-data \
@@ -114,7 +119,7 @@ override_dh_auto_configure: generate-maintainer-scripts prebuild-checks support/
 		--enable-mods-static="unixd logio watchdog version" \
 		CFLAGS="$(AP2_CFLAGS)" CPPFLAGS="$(AP2_CPPFLAGS)" LDFLAGS="$(AP2_LDFLAGS)" \
 		LTFLAGS="$(AP2_LTFLAGS)" SHELL=/bin/bash
-
+	touch $@
 
 debian/config-dir/apache2.conf: debian/config-dir/apache2.conf.in
 	@# Sanity check that the marker is actually there
@@ -129,7 +134,13 @@ else
 	perl -p -i -e 's,___MUTEX___,,' < $< > $@
 endif
 
-override_dh_install: clean-config-vars prepare-scripts debian/config-dir/apache2.conf
+override_dh_install: clean-config-vars-stamp \
+		     substvars-stamp \
+		     debian/config-dir/apache2.conf \
+		     debian/a2query \
+		     debian/debhelper/dh_apache2 \
+		     debian/apache2.preinst \
+		     suexec-scripts-stamp
 	# don't install mod_ssl_openssl.h in apache2-dev
 	dh_install --list-missing -papache2-dev -Xopenssl
 	dh_install --list-missing --remaining-packages
@@ -192,5 +203,4 @@ override_dh_auto_install:
 override_dh_builddeb:
 	dh_builddeb -- -Zxz
 
-.PHONY: generate-maintainer-scripts clean-config-vars prepare-scripts prebuild-checks
 .PHONY: clean build build-arch build-indep binary binary-arch binary-indep
