@@ -3,7 +3,8 @@ apache2 (2.4.27-4) UNRELEASED; urgency=medium
   * Use 'invoke-rc.d' instead of init script in logrotate script.
     Closes: #857607
   * Use 'service' instead of init script in monit example config.
-  * Accordingly, bump Standards-Version to 4.0.0.
+  * Bump Standards-Version to 4.0.1. Other changes:
+    - change package priorities from extra to optional
   * Use libprotocol-http2-perl in autopkgtest.
   * Update test suite to svn r1804214.
 

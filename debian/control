@@ -1,6 +1,5 @@
 Source: apache2
 Section: httpd
-Priority: optional
 Maintainer: Debian Apache Maintainers <debian-apache@lists.debian.org>
 Uploaders: Stefan Fritsch <sf@debian.org>, Arno Töll <arno@debian.org>
 Build-Depends: debhelper (>= 9.20131213~), lsb-release, dpkg-dev (>= 1.16.1~),
@@ -91,7 +90,6 @@ Description: Apache HTTP Server standard suexec program for mod_suexec
  need different settings, use the package apache2-suexec-custom.
 
 Package: apache2-suexec-custom
-Priority: extra
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}, apache2-bin
 Provides: apache2-suexec
@@ -153,7 +151,6 @@ Description: Apache HTTP Server (mod_ssl development headers)
 
 Package: apache2-dbg
 Section: debug
-Priority: extra
 Architecture: any
 Depends: ${misc:Depends}, apache2-bin (= ${binary:Version})
 Description: Apache debugging symbols
