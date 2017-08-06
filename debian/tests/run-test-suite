@@ -11,7 +11,6 @@ cp -a debian/perl-framework $AUTOPKGTEST_TMP
 cd $AUTOPKGTEST_TMP/perl-framework
 
 # XXX TODO these tests have problems and need debugging
-rm t/modules/info.t
 rm t/protocol/echo.t
 rm t/security/CVE-2009-3555.t
 
