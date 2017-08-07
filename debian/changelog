@@ -12,6 +12,8 @@ apache2 (2.4.27-4) UNRELEASED; urgency=medium
   * Also remove -DBUILD_DATETIME and -fdebug-prefix-map from config_vars.mk
     to avoid them being used by apxs.
   * deflate.conf: Remove mention of MSIE6
+  * Make the apache-htcacheclean init script actually look into
+    /etc/default/apache-htcacheclean for its config. LP: #1691495
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 05 Aug 2017 20:59:48 +0200
 

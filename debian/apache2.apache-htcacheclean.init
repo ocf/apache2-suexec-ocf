@@ -30,6 +30,13 @@ HTCACHECLEAN_DAEMON_INTERVAL="${HTCACHECLEAN_DAEMON_INTERVAL:=120}"
 HTCACHECLEAN_PATH="${HTCACHECLEAN_PATH:=/var/cache/apache2$DIR_SUFFIX/mod_cache_disk}"
 HTCACHECLEAN_OPTIONS="${HTCACHECLEAN_OPTIONS:=-n}"
 
+# Read configuration variable file if it is present
+if [ -f /etc/default/apache-htcacheclean$DIR_SUFFIX ] ; then
+       . /etc/default/apache-htcacheclean$DIR_SUFFIX
+elif [ -f /etc/default/apache-htcacheclean ] ; then
+       . /etc/default/apache-htcacheclean
+fi
+
 PIDDIR="/var/run/apache2/$RUN_USER"
 PIDFILE="$PIDDIR/$NAME.pid"
 DAEMON_ARGS="$HTCACHECLEAN_OPTIONS \
