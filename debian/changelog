@@ -14,6 +14,8 @@ apache2 (2.4.27-4) UNRELEASED; urgency=medium
   * deflate.conf: Remove mention of MSIE6
   * Make the apache-htcacheclean init script actually look into
     /etc/default/apache-htcacheclean for its config. LP: #1691495
+  * mime.conf: Guard AddOutputFilter INCLUDES with proper <IfModule>.
+    LP: #1675184
 
  -- Stefan Fritsch <sf@debian.org>  Sat, 05 Aug 2017 20:59:48 +0200
 
