@@ -1,4 +1,4 @@
-apache2 (2.4.27-4) UNRELEASED; urgency=medium
+apache2 (2.4.27-4) experimental; urgency=medium
 
   * Use 'invoke-rc.d' instead of init script in logrotate script.
     Closes: #857607
@@ -17,7 +17,7 @@ apache2 (2.4.27-4) UNRELEASED; urgency=medium
     to avoid them being used by apxs.
   * deflate.conf: Remove mention of MSIE6
 
- -- Stefan Fritsch <sf@debian.org>  Sat, 05 Aug 2017 20:59:48 +0200
+ -- Stefan Fritsch <sf@debian.org>  Tue, 08 Aug 2017 21:59:37 +0200
 
 apache2 (2.4.27-3) experimental; urgency=medium
 
