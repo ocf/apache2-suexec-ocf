@@ -1,3 +1,9 @@
+apache2 (2.4.27-5) UNRELEASED; urgency=medium
+
+  * Bump Standards-Version to 4.1.0. No changes needed.
+
+ -- Stefan Fritsch <sf@debian.org>  Sun, 03 Sep 2017 16:37:25 +0200
+
 apache2 (2.4.27-4) experimental; urgency=medium
 
   * Use 'invoke-rc.d' instead of init script in logrotate script.
