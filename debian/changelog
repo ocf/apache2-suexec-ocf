@@ -1,6 +1,7 @@
 apache2 (2.4.27-5) UNRELEASED; urgency=medium
 
   * Upload to unstable.
+  * Update "Breaks:" for openssl transition.
   * Bump Standards-Version to 4.1.0. No changes needed.
 
  -- Stefan Fritsch <sf@debian.org>  Sun, 03 Sep 2017 16:37:25 +0200
