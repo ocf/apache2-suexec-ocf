@@ -1,3 +1,11 @@
+apache2 (2.4.27-6) UNRELEASED; urgency=medium
+
+  * CVE-2017-9798: Don't allow new methods to be registered in .htaccess files
+    which could result in HTTP OPTIONS method leaking Apache's server memory.
+    Closes: #876109
+
+ -- Stefan Fritsch <sf@debian.org>  Sat, 23 Sep 2017 23:59:18 +0200
+
 apache2 (2.4.27-5) unstable; urgency=medium
 
   * Upload to unstable.
