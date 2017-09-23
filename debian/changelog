@@ -1,3 +1,9 @@
+apache2 (2.4.27-7) UNRELEASED; urgency=medium
+
+  * Replace outdated dependency on dh-systemd
+
+ -- Stefan Fritsch <sf@debian.org>  Sun, 24 Sep 2017 00:11:05 +0200
+
 apache2 (2.4.27-6) unstable; urgency=high
 
   * CVE-2017-9798: Don't allow new methods to be registered in .htaccess files
