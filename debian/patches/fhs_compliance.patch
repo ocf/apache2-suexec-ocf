@@ -2,11 +2,9 @@ Description: Fix up FHS file locations for apache2 droppings.
 Forwarded: not-needed
 Author: Adam Conrad <adconrad@0c3.net>
 Last-Update: 2012-02-25
-Index: apache2/configure
-===================================================================
 --- apache2.orig/configure
 +++ apache2/configure
-@@ -36453,17 +36453,17 @@ ap_prefix="${ap_cur}"
+@@ -37115,17 +37115,17 @@ ap_prefix="${ap_cur}"
  
  
  cat >>confdefs.h <<_ACEOF
@@ -27,8 +25,6 @@ Index: apache2/configure
  _ACEOF
  
  
-Index: apache2/configure.in
-===================================================================
 --- apache2.orig/configure.in
 +++ apache2/configure.in
 @@ -834,11 +834,11 @@ rm -f modules.c
@@ -46,8 +42,6 @@ Index: apache2/configure.in
  	[Location of the MIME types config file, relative to the Apache root directory])
  
  perlbin=`$ac_aux_dir/PrintPath perl`
-Index: apache2/include/ap_config_layout.h.in
-===================================================================
 --- apache2.orig/include/ap_config_layout.h.in
 +++ apache2/include/ap_config_layout.h.in
 @@ -60,5 +60,6 @@
@@ -57,8 +51,6 @@ Index: apache2/include/ap_config_layout.h.in
 +#define DEFAULT_PIDLOG "/var/run/apache2.pid"
  
  #endif /* AP_CONFIG_LAYOUT_H */
-Index: apache2/include/httpd.h
-===================================================================
 --- apache2.orig/include/httpd.h
 +++ apache2/include/httpd.h
 @@ -109,7 +109,7 @@ extern "C" {
