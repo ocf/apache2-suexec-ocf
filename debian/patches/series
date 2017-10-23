@@ -9,5 +9,4 @@ reproducible_builds.diff
 #suexec-custom.patch
 
 fix_logresolve_segfault.patch
-CVE-2017-9798.diff
 mod_ssl_md-2.4.x-v5.diff

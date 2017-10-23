@@ -4,7 +4,7 @@ Author: Stefan Fritsch <sf@debian.org>
 Last-Update: 2012-02-25
 --- apache2.orig/Makefile.in
 +++ apache2/Makefile.in
-@@ -260,14 +260,16 @@ install-man:
+@@ -270,14 +270,16 @@ install-man:
  	fi
  
  install-suexec:
