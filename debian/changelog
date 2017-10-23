@@ -1,8 +1,17 @@
-apache2 (2.4.27-7) UNRELEASED; urgency=medium
+apache2 (2.4.29-1) unstable; urgency=medium
 
+  [ Stefan Fritsch ]
   * Replace outdated dependency on dh-systemd
 
- -- Stefan Fritsch <sf@debian.org>  Sun, 24 Sep 2017 00:11:05 +0200
+  [ Ondřej Surý ]
+  * New upstream version 2.4.29
+  * Refresh quilt patches
+  * Add mod_ssl_md patch needed for libapache2-mod-md (Closes: #877343)
+  * Refresh patches on top of upstream release 2.4.29
+  * Fix Apache crash on restarts (ASF Bug 61558)
+  * Add deconfigure to the list of recognized scripts (Closes: #877524)
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 23 Oct 2017 14:46:55 +0000
 
 apache2 (2.4.27-6) unstable; urgency=high
 
