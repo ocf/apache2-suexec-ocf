@@ -23,6 +23,10 @@ Tests: ssl-passphrase
 Restrictions: needs-root allow-stderr breaks-testbed
 Depends: apache2, curl, expect, ssl-cert
 
+Tests: check-http2
+Restrictions: needs-root allow-stderr breaks-testbed
+Depends: apache2, curl, ssl-cert, nghttp2-client
+
 Tests: chroot
 Features: no-build-needed
 Restrictions: needs-root allow-stderr breaks-testbed
