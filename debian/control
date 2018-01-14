@@ -2,11 +2,23 @@ Source: apache2
 Section: httpd
 Priority: optional
 Maintainer: Debian Apache Maintainers <debian-apache@lists.debian.org>
-Uploaders: Stefan Fritsch <sf@debian.org>, Arno Töll <arno@debian.org>, Ondřej Surý <ondrej@debian.org>
-Build-Depends: debhelper (>= 9.20160709~), lsb-release, dpkg-dev (>= 1.16.1~),
- libaprutil1-dev (>= 1.6.0), libapr1-dev (>= 1.6.0), libpcre3-dev, zlib1g-dev,
- libnghttp2-dev, libssl-dev (>= 1.1), perl,
- liblua5.2-dev, libxml2-dev, autotools-dev, gawk | awk
+Uploaders: Stefan Fritsch <sf@debian.org>,
+           Arno Töll <arno@debian.org>,
+           Ondřej Surý <ondrej@debian.org>
+Build-Depends: autotools-dev,
+               debhelper (>= 9.20160709~),
+               dpkg-dev (>= 1.16.1~),
+               gawk | awk,
+               libapr1-dev (>= 1.6.0),
+               libaprutil1-dev (>= 1.6.0),
+               liblua5.2-dev,
+               libnghttp2-dev,
+               libpcre3-dev,
+               libssl-dev (>= 1.1),
+               libxml2-dev,
+               lsb-release,
+               perl,
+               zlib1g-dev
 Build-Conflicts: autoconf2.13
 Standards-Version: 4.1.0
 Vcs-Browser: https://anonscm.debian.org/cgit/pkg-apache/apache2.git/
@@ -16,15 +28,25 @@ Homepage: http://httpd.apache.org/
 Package: apache2
 Architecture: any
 Pre-Depends: dpkg (>= 1.17.14)
-Depends: ${misc:Depends}, lsb-base, procps [!hurd-i386],
- perl, mime-support, apache2-bin (= ${binary:Version}),
- apache2-utils (= ${binary:Version}), apache2-data (= ${source:Version}),
- ${perl:Depends}
-Provides: httpd, httpd-cgi
+Depends: apache2-bin (= ${binary:Version}),
+         apache2-data (= ${source:Version}),
+         apache2-utils (= ${binary:Version}),
+         lsb-base,
+         mime-support,
+         perl,
+         procps [!hurd-i386],
+         ${misc:Depends},
+         ${perl:Depends}
+Provides: httpd,
+          httpd-cgi
 Recommends: ssl-cert
-Conflicts: apache2.2-common, apache2.2-bin
-Replaces: apache2.2-common, apache2.2-bin
-Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom
+Conflicts: apache2.2-bin,
+           apache2.2-common
+Replaces: apache2.2-bin,
+          apache2.2-common
+Suggests: apache2-doc,
+          apache2-suexec-pristine | apache2-suexec-custom,
+          www-browser
 Description: Apache HTTP Server
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
@@ -47,11 +69,15 @@ Description: Apache HTTP Server (common files)
 
 Package: apache2-bin
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
-# MODULE_MAGIC_NUMBER_MAJOR from apache2/include/ap_mmn.h
+Depends: ${misc:Depends},
+         ${perl:Depends},
+         ${shlibs:Depends}
 Provides: ${apache2:API}
-Breaks: gridsite (<< 3.0.0~20170225gitd51b2fd-1~), libapache2-mod-dacs (<= 1.4.38a-2)
-Suggests: www-browser, apache2-doc, apache2-suexec-pristine | apache2-suexec-custom
+Breaks: gridsite (<< 3.0.0~20170225gitd51b2fd-1~),
+        libapache2-mod-dacs (<= 1.4.38a-2)
+Suggests: apache2-doc,
+          apache2-suexec-pristine | apache2-suexec-custom,
+          www-browser
 Description: Apache HTTP Server (modules and other binary files)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
@@ -64,7 +90,9 @@ Description: Apache HTTP Server (modules and other binary files)
 Package: apache2-utils
 Architecture: any
 Multi-Arch: foreign
-Depends: ${misc:Depends}, ${shlibs:Depends}, ${perl:Depends}
+Depends: ${misc:Depends},
+         ${perl:Depends},
+         ${shlibs:Depends}
 Description: Apache HTTP Server (utility programs for web servers)
  Provides some add-on programs useful for any web server.  These include:
   - ab (Apache benchmark tool)
@@ -82,7 +110,9 @@ Description: Apache HTTP Server (utility programs for web servers)
 
 Package: apache2-suexec-pristine
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, apache2-bin
+Depends: apache2-bin,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Provides: apache2-suexec
 Description: Apache HTTP Server standard suexec program for mod_suexec
  Provides the standard suexec helper program for mod_suexec. This version is
@@ -91,7 +121,9 @@ Description: Apache HTTP Server standard suexec program for mod_suexec
 
 Package: apache2-suexec-custom
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, apache2-bin
+Depends: apache2-bin,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Provides: apache2-suexec
 Description: Apache HTTP Server configurable suexec program for mod_suexec
  Provides a customizable version of the suexec helper program for mod_suexec.
@@ -119,8 +151,12 @@ Description: Apache HTTP Server (on-site documentation)
 
 Package: apache2-dev
 Architecture: any
-Depends: ${misc:Depends}, openssl, libapr1-dev, libaprutil1-dev,
- debhelper (>= 9), ${perl:Depends}
+Depends: debhelper (>= 9),
+         libapr1-dev,
+         libaprutil1-dev,
+         openssl,
+         ${misc:Depends},
+         ${perl:Depends}
 Provides: dh-apache2
 Description: Apache HTTP Server (development headers)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
@@ -139,8 +175,9 @@ Description: Apache HTTP Server (development headers)
 
 Package: apache2-ssl-dev
 Architecture: any
-Depends: ${misc:Depends}, apache2-dev (= ${binary:Version}),
- libssl-dev (>= 1.1)
+Depends: apache2-dev (= ${binary:Version}),
+         libssl-dev (>= 1.1),
+         ${misc:Depends}
 Description: Apache HTTP Server (mod_ssl development headers)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
@@ -152,7 +189,8 @@ Description: Apache HTTP Server (mod_ssl development headers)
 Package: apache2-dbg
 Section: debug
 Architecture: any
-Depends: ${misc:Depends}, apache2-bin (= ${binary:Version})
+Depends: apache2-bin (= ${binary:Version}),
+         ${misc:Depends}
 Description: Apache debugging symbols
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
