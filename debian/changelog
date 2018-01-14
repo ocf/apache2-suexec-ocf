@@ -1,3 +1,12 @@
+apache2 (2.4.29-2) unstable; urgency=medium
+
+  * Add myself to Uploaders
+  * Bump required version of apr/apr-util to 1.6.0 (Closes: #879634)
+  * Run wrap-and-sort -a to canonicalize the debian/ directory
+  * Add Build-Depends on libbrotli-dev and enable brotli module
+
+ -- Ondřej Surý <ondrej@debian.org>  Sun, 14 Jan 2018 11:01:58 +0000
+
 apache2 (2.4.29-1) unstable; urgency=medium
 
   [ Stefan Fritsch ]
