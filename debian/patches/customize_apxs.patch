@@ -1,7 +1,7 @@
 Description: Adapt apxs to Debian specific changes
  - Make apxs2 use a2enmod and /etc/apache2/mods-available
  - Make libtool happier
- - Use LDFLAGS from config_vars.mk, allow to override them
+ - Use LDFLAGS from config_vars.mk, allows one to override them
 Forwarded: not-needed
 Author: Stefan Fritsch <sf@debian.org>
 Last-Update: 2012-03-17
