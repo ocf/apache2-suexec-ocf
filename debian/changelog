@@ -28,6 +28,7 @@ apache2 (2.4.33-1) UNRELEASED; urgency=medium
       renew certificates.
     - core: silently ignore a not existent file path when IncludeOptional
       is used. Closes: #878920
+    - mod_ldap: Avoid possible crashes, hangs, and busy loops. Closes: #814980
 
 
  -- Stefan Fritsch <sf@debian.org>  Fri, 30 Mar 2018 17:16:15 +0200
