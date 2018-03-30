@@ -25,7 +25,8 @@ apache2 (2.4.33-1) UNRELEASED; urgency=medium
     - CVE-2018-1302
       mod_http2: Potential crash w/ mod_http2.
 
-    - mod_md: New experimental, module for managing domains across virtual
+    - mod_proxy_uwsgi: New UWSGI proxy submodule.
+    - mod_md: New experimental module for managing domains across virtual
       hosts, implementing the Let's Encrypt ACMEv1 protocol to signup and
       renew certificates.
     - core: silently ignore a not existent file path when IncludeOptional
