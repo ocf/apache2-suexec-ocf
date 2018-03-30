@@ -30,6 +30,9 @@ apache2 (2.4.33-1) UNRELEASED; urgency=medium
       is used. Closes: #878920
     - mod_ldap: Avoid possible crashes, hangs, and busy loops. Closes: #814980
 
+  * Fix lintian warnings:
+    - Include SupportApache-small.png in apache2-doc package instead of
+      linking to apache.org, to avoid privacy issues.
 
  -- Stefan Fritsch <sf@debian.org>  Fri, 30 Mar 2018 17:16:15 +0200
 
