@@ -1,29 +1,31 @@
 apache2 (2.4.33-1) UNRELEASED; urgency=medium
 
   * New upstream version.
-    - SECURITY: CVE-2017-15710
+    Security fixes:
+    - CVE-2017-15710
       Out of bound write in mod_authnz_ldap with AuthLDAPCharsetConfig enabled
-    - SECURITY: CVE-2018-1283
+    - CVE-2018-1283
       mod_session: CGI-like applications that intend to read from mod_session's
       'SessionEnv ON' could be fooled into reading user-supplied data instead.
-    - SECURITY: CVE-2018-1303
+    - CVE-2018-1303
       mod_cache_socache: Fix request headers parsing to avoid a possible crash
       with specially crafted input data.
-    - SECURITY: CVE-2018-1301
+    - CVE-2018-1301
       core: Possible crash with excessively long HTTP request headers.
       Impractical to exploit with a production build and production LogLevel.
-    - SECURITY: CVE-2017-15715
+    - CVE-2017-15715
       core: Configure the regular expression engine to match '$' to the end of
       the input string only, excluding matching the end of any embedded
       newline characters. Behavior can be changed with new directive
       'RegexDefaultOptions'.
-    - SECURITY: CVE-2018-1312
+    - CVE-2018-1312
       mod_auth_digest: Fix generation of nonce values to prevent replay
       attacks across servers using a common Digest domain. This change
       may cause problems if used with round robin load balancers. PR 54637
-    - SECURITY: CVE-2018-1302
+    - CVE-2018-1302
       mod_http2: Potential crash w/ mod_http2.
-    - mod_md: new experimental, module for managing domains across virtual
+
+    - mod_md: New experimental, module for managing domains across virtual
       hosts, implementing the Let's Encrypt ACMEv1 protocol to signup and
       renew certificates.
     - core: silently ignore a not existent file path when IncludeOptional
