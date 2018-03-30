@@ -38,6 +38,7 @@ apache2 (2.4.33-1) UNRELEASED; urgency=medium
     - Use /usr/share/dpkg/architecture.mk instead of setting DEB_*_GNU_TYPE
     - Remove deprecated use of autotools_dev with dh.
     - Add some overrides
+  * Bump standards-version to 4.1.2 (no changes)
 
  -- Stefan Fritsch <sf@debian.org>  Fri, 30 Mar 2018 17:16:15 +0200
 
