@@ -7,7 +7,3 @@ reproducible_builds.diff
 
 # This patch is applied manually
 #suexec-custom.patch
-
-fix_logresolve_segfault.patch
-mod_ssl_md-2.4.x-v5.diff
-0011-Signals-and-hooks-cleanup-on-exit-v3-2.4.x-for-bug-6.patch
