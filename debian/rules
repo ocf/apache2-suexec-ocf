@@ -8,6 +8,7 @@ DEB_BUILD_ARCH_OS    ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH_OS)
 
 export DEB_BUILD_MAINT_OPTIONS=hardening=+bindnow
 include /usr/share/dpkg/buildflags.mk
+include /usr/share/dpkg/architecture.mk
 
 LSB_RELEASE := $(shell lsb_release -i -s)
 SERVER_VERSION := $(shell dpkg-parsechangelog | perl -ne 'print $$1 if m/Version:\s*([\d\.]+)/')
@@ -20,8 +21,6 @@ AP2_CFLAGS = -pipe $(CFLAGS)
 AP2_LDFLAGS = -Wl,--as-needed $(LDFLAGS)
 AP2_CPPFLAGS = -DPLATFORM='\"$(LSB_RELEASE)\"' -DBUILD_DATETIME='\"$(BUILD_DATETIME)\"' $(CPPFLAGS)
 AP2_LTFLAGS = --no-silent
-DEB_HOST_GNU_TYPE := $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
-DEB_BUILD_GNU_TYPE := $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
 support/suexec-custom.c: support/suexec.c debian/patches/suexec-custom.patch
 	cp support/suexec.c support/suexec-custom.c
