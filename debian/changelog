@@ -1,4 +1,4 @@
-apache2 (2.4.33-1) UNRELEASED; urgency=medium
+apache2 (2.4.33-1) unstable; urgency=medium
 
   * New upstream version.
     Security fixes:
@@ -41,7 +41,7 @@ apache2 (2.4.33-1) UNRELEASED; urgency=medium
     - Add some overrides
   * Bump standards-version to 4.1.2 (no changes)
 
- -- Stefan Fritsch <sf@debian.org>  Fri, 30 Mar 2018 17:16:15 +0200
+ -- Stefan Fritsch <sf@debian.org>  Fri, 30 Mar 2018 22:53:13 +0200
 
 apache2 (2.4.29-2) unstable; urgency=medium
 
