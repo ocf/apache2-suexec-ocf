@@ -45,7 +45,9 @@ Recommends: ssl-cert
 Conflicts: apache2.2-bin,
            apache2.2-common
 Replaces: apache2.2-bin,
-          apache2.2-common
+          apache2.2-common,
+          libapache2-mod-md (<< 2.4.33),
+          libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Suggests: apache2-doc,
           apache2-suexec-pristine | apache2-suexec-custom,
           www-browser
@@ -77,6 +79,8 @@ Depends: ${misc:Depends},
 Provides: ${apache2:API}
 Breaks: gridsite (<< 3.0.0~20170225gitd51b2fd-1~),
         libapache2-mod-dacs (<= 1.4.38a-2)
+Replaces: libapache2-mod-md (<< 2.4.33),
+          libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Suggests: apache2-doc,
           apache2-suexec-pristine | apache2-suexec-custom,
           www-browser
@@ -201,3 +205,11 @@ Description: Apache debugging symbols
  This package includes the debugging symbols. It can be used to debug
  crashing server instances and modules.  See
  /usr/share/doc/apache2/README.backtrace for more information.
+
+Package: libapache2-mod-md
+Architecture: any
+Section: oldlibs
+Depends: ${misc:Depends}, apache2 (= ${binary:Version})
+Description: transitional package
+ This is a transitional package to apache2 for users of libapache2-mod-md.
+ It can be safely removed after the installation is complete.
