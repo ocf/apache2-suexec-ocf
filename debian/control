@@ -213,3 +213,12 @@ Depends: ${misc:Depends}, apache2 (= ${binary:Version})
 Description: transitional package
  This is a transitional package to apache2 for users of libapache2-mod-md.
  It can be safely removed after the installation is complete.
+
+Package: libapache2-mod-proxy-uwsgi
+Architecture: any
+Section: oldlibs
+Depends: ${misc:Depends}, apache2 (= ${binary:Version})
+Description: transitional package
+ This is a transitional package to apache2 for users of
+ libapache2-mod-proxy-uwsgi.
+ It can be safely removed after the installation is complete.
