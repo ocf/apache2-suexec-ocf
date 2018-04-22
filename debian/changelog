@@ -1,10 +1,10 @@
-apache2 (2.4.33-2) UNRELEASED; urgency=medium
+apache2 (2.4.33-2) unstable; urgency=medium
 
   * Add Replaces: and transitional packages for libapache2-mod-proxy-uwsgi
     and libapache2-mod-md.
     Closes: #894760, #894761, #894785
 
- -- Stefan Fritsch <sf@debian.org>  Sun, 15 Apr 2018 10:59:05 +0200
+ -- Stefan Fritsch <sf@debian.org>  Sun, 22 Apr 2018 11:14:19 +0200
 
 apache2 (2.4.33-1) unstable; urgency=medium
 
