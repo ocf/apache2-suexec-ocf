@@ -1,3 +1,9 @@
+apache2 (2.4.33-3) UNRELEASED; urgency=medium
+
+  * Migrate from alioth to salsa.
+
+ -- Stefan Fritsch <sf@debian.org>  Tue, 01 May 2018 10:19:36 +0200
+
 apache2 (2.4.33-2) unstable; urgency=medium
 
   * Add Replaces: and transitional packages for libapache2-mod-proxy-uwsgi
