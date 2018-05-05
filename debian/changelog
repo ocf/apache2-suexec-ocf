@@ -1,4 +1,4 @@
-apache2 (2.4.33-3) UNRELEASED; urgency=medium
+apache2 (2.4.33-3) unstable; urgency=medium
 
   * Add Breaks for libapache2-mod-proxy-uwsgi and libapache2-mod-md, too.
     Closes: #894785
@@ -6,7 +6,7 @@ apache2 (2.4.33-3) UNRELEASED; urgency=medium
     32bit archs. Closes: #897218
   * Migrate from alioth to salsa.
 
- -- Stefan Fritsch <sf@debian.org>  Tue, 01 May 2018 10:19:36 +0200
+ -- Stefan Fritsch <sf@debian.org>  Sat, 05 May 2018 11:34:47 +0200
 
 apache2 (2.4.33-2) unstable; urgency=medium
 
