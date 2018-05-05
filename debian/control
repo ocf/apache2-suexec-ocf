@@ -44,6 +44,8 @@ Provides: httpd,
 Recommends: ssl-cert
 Conflicts: apache2.2-bin,
            apache2.2-common
+Breaks: libapache2-mod-md (<< 2.4.33),
+        libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Replaces: apache2.2-bin,
           apache2.2-common,
           libapache2-mod-md (<< 2.4.33),
@@ -78,7 +80,9 @@ Depends: ${misc:Depends},
          ${shlibs:Depends}
 Provides: ${apache2:API}
 Breaks: gridsite (<< 3.0.0~20170225gitd51b2fd-1~),
-        libapache2-mod-dacs (<= 1.4.38a-2)
+        libapache2-mod-dacs (<= 1.4.38a-2),
+        libapache2-mod-md (<< 2.4.33),
+        libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Replaces: libapache2-mod-md (<< 2.4.33),
           libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Suggests: apache2-doc,
