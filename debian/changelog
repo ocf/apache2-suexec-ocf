@@ -1,3 +1,9 @@
+apache2 (2.4.25-3ocf2) unstable; urgency=medium
+
+  * Add workaround to get suexec php wrapper working.
+
+ -- Jason Perrin <jvperrin@ocf.berkeley.edu>  Fri, 25 May 2018 13:07:51 -0700
+
 apache2 (2.4.25-3ocf1) unstable; urgency=medium
 
   * Add apache2-suexec-ocf patches.
