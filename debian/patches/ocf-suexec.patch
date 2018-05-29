@@ -5,7 +5,7 @@
  #define AP_ENVBUF 256
  
 +#define AP_DOC_ROOT "/services"
-+#define AP_SUEXEC_ROOT "/services/http/suexec"
++#define AP_SUEXEC_ROOT "/usr/local/bin/suexec"
 +
  extern char **environ;
  static FILE *log = NULL;
