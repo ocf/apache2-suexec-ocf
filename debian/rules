@@ -139,14 +139,14 @@ override_dh_install: clean-config-vars prepare-scripts debian/config-dir/apache2
 
 override_dh_fixperms-arch:
 	# standard suexec
-	chmod 4754 debian/apache2-suexec-pristine/usr/lib/apache2/suexec-pristine
 	chgrp www-data debian/apache2-suexec-pristine/usr/lib/apache2/suexec-pristine
+	chmod 4754 debian/apache2-suexec-pristine/usr/lib/apache2/suexec-pristine
 	# configurable suexec
-	chmod 4754 debian/apache2-suexec-custom/usr/lib/apache2/suexec-custom
 	chgrp www-data debian/apache2-suexec-custom/usr/lib/apache2/suexec-custom
+	chmod 4754 debian/apache2-suexec-custom/usr/lib/apache2/suexec-custom
 	# ocf suexec
-	chmod 4754 debian/apache2-suexec-ocf/usr/lib/apache2/suexec-ocf
 	chgrp www-data debian/apache2-suexec-ocf/usr/lib/apache2/suexec-ocf
+	chmod 4754 debian/apache2-suexec-ocf/usr/lib/apache2/suexec-ocf
 	dh_fixperms -a -Xusr/lib/apache2/suexec-custom -Xusr/lib/apache2/suexec-pristine -Xusr/lib/apache2/suexec-ocf
 	chown -R www-data:www-data debian/apache2/var/cache/apache2/mod_cache_disk
 	chown root:adm debian/apache2/var/log/apache2

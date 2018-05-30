@@ -1,23 +1,26 @@
 --- a/support/suexec-ocf.c
 +++ b/support/suexec-ocf.c
-@@ -14,6 +14,7 @@
-  * limitations under the License.
-  */
- 
-+
- /*
-  * suexec.c -- "Wrapper" support program for suEXEC behaviour for Apache
-  *
-@@ -69,6 +70,8 @@
+@@ -69,6 +69,9 @@
  
  #define AP_ENVBUF 256
  
 +#define AP_DOC_ROOT "/services"
++#define AP_SUEXEC_ROOT "/usr/local/bin/suexec"
 +
  extern char **environ;
  static FILE *log = NULL;
  
-@@ -579,11 +582,15 @@
+@@ -532,7 +535,8 @@
+
+     if (strlen(cwd) > strlen(dwd))
+         strncat(dwd, "/", 1);
+-    if ((strncmp(cwd, dwd, strlen(dwd))) != 0) {
++    if ((strncmp(cwd, dwd, strlen(dwd))) != 0 &&
++        (strncmp(cwd, AP_SUEXEC_ROOT, strlen(AP_SUEXEC_ROOT)) != 0)) {
+         log_err("command not in docroot (%s/%s)\n", cwd, cmd);
+         exit(114);
+     }
+@@ -579,11 +583,18 @@
      /*
       * Error out if the target name/group is different from
       * the name/group of the cwd or the program.
@@ -32,8 +35,11 @@
 +    if (((uid != dir_info.st_uid) ||
 +         (gid != dir_info.st_gid) ||
 +         (uid != prg_info.st_uid) ||
-+         (gid != prg_info.st_gid)
-+        ) && !(dir_info.st_uid == 0 && dir_info.st_gid == 0 && prg_info.st_uid == 0 && prg_info.st_gid == 0)) {
++         (gid != prg_info.st_gid)) &&
++        !((dir_info.st_uid == 0) &&
++          (dir_info.st_gid == 0) &&
++          (prg_info.st_uid == 0) &&
++          (prg_info.st_gid == 0))) {
          log_err("target uid/gid (%lu/%lu) mismatch "
                  "with directory (%lu/%lu) or program (%lu/%lu)\n",
                  (unsigned long)uid, (unsigned long)gid,
