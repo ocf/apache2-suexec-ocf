@@ -1,3 +1,11 @@
+apache2 (2.4.34-1) unstable; urgency=medium
+
+  * New upstream version 2.4.34
+  * Refresh patches for Apache2 2.4.34 release
+  * Update the suexec-custom.patch for 2.4.34 release
+
+ -- Ondřej Surý <ondrej@debian.org>  Tue, 17 Jul 2018 14:49:18 +0000
+
 apache2 (2.4.33-3) unstable; urgency=medium
 
   * Add Breaks for libapache2-mod-proxy-uwsgi and libapache2-mod-md, too.
