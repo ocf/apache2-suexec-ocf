@@ -4,7 +4,7 @@ Author: Adam Conrad <adconrad@0c3.net>
 Last-Update: 2012-02-25
 --- apache2.orig/configure
 +++ apache2/configure
-@@ -37740,17 +37740,17 @@ ap_prefix="${ap_cur}"
+@@ -39653,17 +39653,17 @@ ap_prefix="${ap_cur}"
  
  
  cat >>confdefs.h <<_ACEOF
@@ -27,7 +27,7 @@ Last-Update: 2012-02-25
  
 --- apache2.orig/configure.in
 +++ apache2/configure.in
-@@ -843,11 +843,11 @@ rm -f modules.c
+@@ -871,11 +871,11 @@ rm -f modules.c
  echo $MODLIST | $AWK -f $srcdir/build/build-modules-c.awk > modules.c
  
  APR_EXPAND_VAR(ap_prefix, $prefix)

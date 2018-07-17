@@ -4,19 +4,33 @@ Author: Stefan Fritsch <sf@debian.org>
 Last-Update: 2012-02-25
 --- apache2.orig/Makefile.in
 +++ apache2/Makefile.in
-@@ -270,14 +270,16 @@ install-man:
+@@ -272,23 +272,26 @@ install-man:
+ install-suexec: install-suexec-binary install-suexec-$(INSTALL_SUEXEC)
+ 
+ install-suexec-binary:
+-	@if test -f $(builddir)/support/suexec; then \
+-            test -d $(DESTDIR)$(sbindir) || $(MKINSTALLDIRS) $(DESTDIR)$(sbindir); \
+-            $(INSTALL_PROGRAM) $(top_builddir)/support/suexec $(DESTDIR)$(sbindir); \
++	@if test -f $(builddir)/support/suexec-pristine && test -f $(builddir)/support/suexec-custom; then \
++	    test -d $(DESTDIR)$(sbindir) || $(MKINSTALLDIRS) $(DESTDIR)$(sbindir); \
++	    $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-pristine $(DESTDIR)$(sbindir); \
++	    $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-custom $(DESTDIR)$(sbindir); \
  	fi
  
- install-suexec:
+ install-suexec-setuid:
 -	@if test -f $(builddir)/support/suexec; then \
+-	    chmod 4755 $(DESTDIR)$(sbindir)/suexec; \
 +	@if test -f $(builddir)/support/suexec-pristine && test -f $(builddir)/support/suexec-custom; then \
-             test -d $(DESTDIR)$(sbindir) || $(MKINSTALLDIRS) $(DESTDIR)$(sbindir); \
--            $(INSTALL_PROGRAM) $(top_builddir)/support/suexec $(DESTDIR)$(sbindir); \
--            chmod 4755 $(DESTDIR)$(sbindir)/suexec; \
-+            $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-pristine $(DESTDIR)$(sbindir); \
-+            chmod 4755 $(DESTDIR)$(sbindir)/suexec-pristine; \
-+            $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-custom $(DESTDIR)$(sbindir); \
-+            chmod 4755 $(DESTDIR)$(sbindir)/suexec-custom; \
++	    chmod 4755 $(DESTDIR)$(sbindir)/suexec-pristine; \
++	    chmod 4755 $(DESTDIR)$(sbindir)/suexec-custom; \
+ 	fi
+ 
+ install-suexec-caps:
+-	@if test -f $(builddir)/support/suexec; then \
+-            setcap 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec; \
++	@if test -f $(builddir)/support/suexec-pristine && test -f $(builddir)/support/suexec-custom; then \
++	    setcap 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec-pristine; \
++	    setcap 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec-custom; \
  	fi
  
  suexec:

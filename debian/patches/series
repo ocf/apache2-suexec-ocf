@@ -8,4 +8,3 @@ reproducible_builds.diff
 # This patch is applied manually
 #suexec-custom.patch
 
-mod_http2_mem_usage_32bit.diff
