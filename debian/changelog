@@ -11,6 +11,8 @@ apache2 (2.4.34-1) unstable; urgency=medium
   [ Stefan Fritsch ]
   * Remove load order dependency introduced in mod_lbmethod_* in 2.4.34
   * Remove debian/gbp.conf. Closes: #904641
+  * Fix typo in apache2_switch_mpm() in apache2-maintscript-helper.
+    Closes: #904150
 
  -- Ondřej Surý <ondrej@debian.org>  Tue, 17 Jul 2018 14:49:18 +0000
 
