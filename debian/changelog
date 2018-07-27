@@ -14,7 +14,7 @@ apache2 (2.4.34-1) unstable; urgency=medium
   * Fix typo in apache2_switch_mpm() in apache2-maintscript-helper.
     Closes: #904150
 
- -- Ondřej Surý <ondrej@debian.org>  Tue, 17 Jul 2018 14:49:18 +0000
+ -- Stefan Fritsch <sf@debian.org>  Fri, 27 Jul 2018 21:37:37 +0200
 
 apache2 (2.4.33-3) unstable; urgency=medium
 
