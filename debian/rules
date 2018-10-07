@@ -198,7 +198,4 @@ override_dh_strip:
 override_dh_auto_install:
 	dh_auto_install -- -j1
 
-override_dh_builddeb:
-	dh_builddeb -- -Zxz
-
 .PHONY: clean build build-arch build-indep binary binary-arch binary-indep
