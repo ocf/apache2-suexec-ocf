@@ -1,4 +1,4 @@
-apache2 (2.4.35-1) UNRELEASED; urgency=medium
+apache2 (2.4.35-1) unstable; urgency=medium
 
   * New upstream version 2.4.35
     Security fix:
@@ -6,7 +6,7 @@ apache2 (2.4.35-1) UNRELEASED; urgency=medium
       Closes: #909591
   * Fix lintian warning: Don't force xz in builddeb override.
 
- -- Stefan Fritsch <sf@debian.org>  Sun, 07 Oct 2018 12:40:46 +0200
+ -- Stefan Fritsch <sf@debian.org>  Sun, 07 Oct 2018 12:54:58 +0200
 
 apache2 (2.4.34-1) unstable; urgency=medium
 
