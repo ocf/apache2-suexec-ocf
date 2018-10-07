@@ -7,7 +7,7 @@
               This file is generated from xml source: DO NOT EDIT
         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       -->
-<title>Index des modules - Serveur Apache HTTP Version 2.4</title>
+<title>Index des modules - Serveur HTTP Apache Version 2.4</title>
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
@@ -17,7 +17,7 @@
 <link href="../images/favicon.ico" rel="shortcut icon" /></head>
 <body id="module-index"><div id="page-header">
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p>
-<p class="apache">Serveur Apache HTTP Version 2.4</p>
+<p class="apache">Serveur HTTP Apache Version 2.4</p>
 <img alt="" src="../images/feather.png" /></div>
 <div class="up"><a href="./"><img title="&lt;-" alt="&lt;-" src="../images/left.gif" /></a></div>
 <div id="path">
@@ -97,8 +97,8 @@ DBM</dd>
 texte</dd>
 <dt><a href="mod_authn_socache.html">mod_authn_socache</a></dt><dd>Gère un cache des données d'authentification pour diminuer
 la charge des serveurs d'arrière-plan</dd>
-<dt><a href="mod_authnz_fcgi.html">mod_authnz_fcgi</a></dt><dd>Allows a FastCGI authorizer application to handle Apache
-httpd authentication and authorization</dd>
+<dt><a href="mod_authnz_fcgi.html">mod_authnz_fcgi</a></dt><dd>Permet à une application d'autorisation FastCGI de gérer
+l'authentification et l'autorisation httpd.</dd>
 <dt><a href="mod_authnz_ldap.html">mod_authnz_ldap</a></dt><dd>Permet d'utiliser un annuaire LDAP pour l'authentification
 HTTP de base.</dd>
 <dt><a href="mod_authz_core.html">mod_authz_core</a></dt><dd>Autorisation basique</dd>
@@ -116,8 +116,7 @@ fichiers</dd>
 <dt><a href="mod_autoindex.html">mod_autoindex</a></dt><dd>Génère automatiquement des index de répertoires d'une
 manière similaire à la commande Unix <code>ls</code>, ou à la commande
 shell Win32 <code>dir</code></dd>
-<dt><a href="mod_brotli.html" id="B" name="B">mod_brotli</a></dt><dd>Compress content via Brotli before it is delivered to the
-client</dd>
+<dt><a href="mod_brotli.html" id="B" name="B">mod_brotli</a></dt><dd>Compression du contenu via Brotli avant sa livraison au client</dd>
 <dt><a href="mod_buffer.html">mod_buffer</a></dt><dd>Support de la mise en tampon des requêtes</dd>
 <dt><a href="mod_cache.html" id="C" name="C">mod_cache</a></dt><dd>Filtre de mise en cache HTTP conforme à la RFC 2616</dd>
 <dt><a href="mod_cache_disk.html">mod_cache_disk</a></dt><dd>Module de stockage sur disque pour le filtre de mise en
@@ -166,7 +165,7 @@ contexte</dd>
 HTTP</dd>
 <dt><a href="mod_heartbeat.html">mod_heartbeat</a></dt><dd>Envoie des messages d'état au mandataire frontal</dd>
 <dt><a href="mod_heartmonitor.html">mod_heartmonitor</a></dt><dd>Moniteur centralisé pour les serveurs d'origine mod_heartbeat</dd>
-<dt><a href="mod_http2.html">mod_http2</a></dt><dd>Support for the HTTP/2 transport layer</dd>
+<dt><a href="mod_http2.html">mod_http2</a></dt><dd>Support de la couche transport HTTP/2</dd>
 <dt><a href="mod_ident.html" id="I" name="I">mod_ident</a></dt><dd>Recherche d'identité conformément à la RFC
 1413</dd>
 <dt><a href="mod_imagemap.html">mod_imagemap</a></dt><dd>Traitement des cartes des zones interactives d'une image
@@ -229,20 +228,19 @@ dynamique inverse de masse</dd>
 à <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
 <dt><a href="mod_proxy_ftp.html">mod_proxy_ftp</a></dt><dd>Module fournissant le support FTP à
 <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
-<dt><a href="mod_proxy_hcheck.html">mod_proxy_hcheck</a></dt><dd>Dynamic health check of Balancer members (workers) for
-<code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
+<dt><a href="mod_proxy_hcheck.html">mod_proxy_hcheck</a></dt><dd>Check up dynamique des membres du groupe de répartition de charge
+(équipiers) pour <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
 <dt><a href="mod_proxy_html.html">mod_proxy_html</a></dt><dd>Réécrit les liens HTML afin de s'assurer qu'ils soient bien
 adressables depuis les réseaux des clients dans un contexte de
 mandataire.</dd>
 <dt><a href="mod_proxy_http.html">mod_proxy_http</a></dt><dd>Module fournissant le support HTTP à
 <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
-<dt><a href="mod_proxy_http2.html">mod_proxy_http2</a></dt><dd>HTTP/2 support module for
-<code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
+<dt><a href="mod_proxy_http2.html">mod_proxy_http2</a></dt><dd>Support de HTTP/2 pour <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
 <dt><a href="mod_proxy_scgi.html">mod_proxy_scgi</a></dt><dd>Module fournissant le support de la passerelle SCGI à
 <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
 <dt><a href="mod_proxy_uwsgi.html">mod_proxy_uwsgi</a></dt><dd>UWSGI gateway module for <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
-<dt><a href="mod_proxy_wstunnel.html">mod_proxy_wstunnel</a></dt><dd>Websockets support module for
-<code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code></dd>
+<dt><a href="mod_proxy_wstunnel.html">mod_proxy_wstunnel</a></dt><dd>Module pour <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code> supportant les
+websockets</dd>
 <dt><a href="mod_ratelimit.html" id="R" name="R">mod_ratelimit</a></dt><dd>Limitation de la bande passante pour les clients</dd>
 <dt><a href="mod_reflector.html">mod_reflector</a></dt><dd>Renvoie un corps de requête comme réponse via la pile de
 filtres en sortie.</dd>
@@ -295,11 +293,11 @@ famille Unix.</dd>
 Journalisation <em>Clickstream</em> des liens parcourus par un
 utilisateur sur un site
 </dd>
-<dt><a href="mod_version.html" id="V" name="V">mod_version</a></dt><dd>Version dependent configuration</dd>
+<dt><a href="mod_version.html" id="V" name="V">mod_version</a></dt><dd>Configuration dépendant de la version</dd>
 <dt><a href="mod_vhost_alias.html">mod_vhost_alias</a></dt><dd>Permet de configurer dynamiquement l'hébergement virtuel de
 masse</dd>
-<dt><a href="mod_watchdog.html" id="W" name="W">mod_watchdog</a></dt><dd>provides infrastructure for other modules to periodically run 
-    tasks</dd>
+<dt><a href="mod_watchdog.html" id="W" name="W">mod_watchdog</a></dt><dd>Fournit une infrastructure permettant à d'autres modules
+d'exécuter des tâches périodiques.</dd>
 <dt><a href="mod_xml2enc.html" id="X" name="X">mod_xml2enc</a></dt><dd>Support avancé de l'internationalisation et des jeux de
 caractères pour les modules de filtrage basés sur libxml2</dd>
 </dl></div></div>

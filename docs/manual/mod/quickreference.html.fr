@@ -7,7 +7,7 @@
               This file is generated from xml source: DO NOT EDIT
         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       -->
-<title>Document de référence rapide des directives - Serveur Apache HTTP Version 2.4</title>
+<title>Document de référence rapide des directives - Serveur HTTP Apache Version 2.4</title>
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
@@ -18,7 +18,7 @@
 <body id="directive-index">
 <div id="page-header">
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p>
-<p class="apache">Serveur Apache HTTP Version 2.4</p>
+<p class="apache">Serveur HTTP Apache Version 2.4</p>
 <img alt="" src="../images/feather.png" /></div>
 <div class="up"><a href="./"><img title="&lt;-" alt="&lt;-" src="../images/left.gif" /></a></div>
 <div id="path">
@@ -52,13 +52,13 @@
   </div>
 <div id="directive-ref"><table id="legend">
 <tr><td class="letters"><span><a href="#A">&nbsp;A&nbsp;</a> | <a href="#B">&nbsp;B&nbsp;</a> | <a href="#C">&nbsp;C&nbsp;</a> | <a href="#D">&nbsp;D&nbsp;</a> | <a href="#E">&nbsp;E&nbsp;</a> | <a href="#F">&nbsp;F&nbsp;</a> | <a href="#G">&nbsp;G&nbsp;</a> | <a href="#H">&nbsp;H&nbsp;</a> | <a href="#I">&nbsp;I&nbsp;</a> | <a href="#K">&nbsp;K&nbsp;</a> | <a href="#L">&nbsp;L&nbsp;</a> | <a href="#M">&nbsp;M&nbsp;</a> | <a href="#N">&nbsp;N&nbsp;</a> | <a href="#O">&nbsp;O&nbsp;</a> | <a href="#P">&nbsp;P&nbsp;</a> | <a href="#Q">&nbsp;Q&nbsp;</a> | <a href="#R">&nbsp;R&nbsp;</a> | <a href="#S">&nbsp;S&nbsp;</a> | <a href="#T">&nbsp;T&nbsp;</a> | <a href="#U">&nbsp;U&nbsp;</a> | <a href="#V">&nbsp;V&nbsp;</a> | <a href="#W">&nbsp;W&nbsp;</a> | <a href="#X">&nbsp;X&nbsp;</a></span></td>
-<td><table><tr><th>s</th><td>configuration du serveur</td></tr>
+<td><table><tr><th>s</th><td>configuration globale</td></tr>
 <tr><th>v</th><td>serveur virtuel</td></tr>
 <tr><th>d</th><td>répertoire</td></tr>
 <tr><th>h</th><td>.htaccess</td></tr>
-<tr><th /><td /></tr>
+<tr><th>p</th><td>section proxy</td></tr>
 </table></td>
-<td><table><tr><th>C</th><td>Core</td></tr>
+<td><table><tr><th>C</th><td>Noyau httpd</td></tr>
 <tr><th>M</th><td>MPM</td></tr>
 <tr><th>B</th><td>Base</td></tr>
 <tr><th>E</th><td>Extension</td></tr>
@@ -297,11 +297,11 @@ utiliser</td></tr>
 extension d'un fournisseur d'authentification de base et lui attribue
 l'alias spécifié</td></tr>
 <tr class="odd"><td><a href="mod_authnz_fcgi.html#authnzfcgicheckauthnprovider">AuthnzFcgiCheckAuthnProvider <em>provider-name</em>|<code>None</code>
-<em>option</em> ...</a></td><td></td><td>d</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Enables a FastCGI application to handle the check_authn
-authentication hook.</td></tr>
+<em>option</em> ...</a></td><td></td><td>d</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Permet à une application FastCGI de gérer l'accroche
+d'authentification check_authn.</td></tr>
 <tr><td><a href="mod_authnz_fcgi.html#authnzfcgidefineprovider">AuthnzFcgiDefineProvider <em>type</em> <em>provider-name</em>
-<em>backend-address</em></a></td><td></td><td>s</td><td>E</td></tr><tr><td class="descr" colspan="4">Defines a FastCGI application as a provider for
-authentication and/or authorization</td></tr>
+<em>backend-address</em></a></td><td></td><td>s</td><td>E</td></tr><tr><td class="descr" colspan="4">Définit une application FastCGI en tant que fournisseur
+d'authentification et/ou autorisation</td></tr>
 <tr class="odd"><td><a href="mod_authn_core.html#authtype">AuthType None|Basic|Digest|Form</a></td><td></td><td>dh</td><td>B</td></tr><tr class="odd"><td class="descr" colspan="4">Type d'authentification utilisateur</td></tr>
 <tr><td><a href="mod_authn_file.html#authuserfile">AuthUserFile <var>chemin-fichier</var></a></td><td></td><td>dh</td><td>B</td></tr><tr><td class="descr" colspan="4">Définit le nom d'un fichier texte pour l'authentification
 contenant la liste des utilisateurs et de leurs mots de
@@ -332,11 +332,13 @@ charge</td></tr>
 <tr><td><a href="mod_proxy.html#balancerpersist">BalancerPersist On|Off</a></td><td> Off </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Tente de conserver les changements effectués par le
     gestionnaire de répartition de charge après un redémarrage du
     serveur.</td></tr>
-<tr class="odd"><td><a href="mod_brotli.html#brotlialteretag">BrotliAlterETag AddSuffix|NoChange|Remove</a></td><td> AddSuffix </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">How the outgoing ETag header should be modified during compression</td></tr>
-<tr><td><a href="mod_brotli.html#brotlicompressionmaxinputblock">BrotliCompressionMaxInputBlock <var>value</var></a></td><td></td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Maximum input block size</td></tr>
-<tr class="odd"><td><a href="mod_brotli.html#brotlicompressionquality">BrotliCompressionQuality <var>value</var></a></td><td> 5 </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Compression quality</td></tr>
-<tr><td><a href="mod_brotli.html#brotlicompressionwindow">BrotliCompressionWindow <var>value</var></a></td><td> 18 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Brotli sliding compression window size</td></tr>
-<tr class="odd"><td><a href="mod_brotli.html#brotlifilternote">BrotliFilterNote [<var>type</var>] <var>notename</var></a></td><td></td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Places the compression ratio in a note for logging</td></tr>
+<tr class="odd"><td><a href="mod_brotli.html#brotlialteretag">BrotliAlterETag AddSuffix|NoChange|Remove</a></td><td> AddSuffix </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Comment l'en-tête de réponse ETag doit être modifié au cours de la
+compression</td></tr>
+<tr><td><a href="mod_brotli.html#brotlicompressionmaxinputblock">BrotliCompressionMaxInputBlock <var>value</var></a></td><td></td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Taille maximale du bloc de données en entrée</td></tr>
+<tr class="odd"><td><a href="mod_brotli.html#brotlicompressionquality">BrotliCompressionQuality <var>value</var></a></td><td> 5 </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Qualité de la compression</td></tr>
+<tr><td><a href="mod_brotli.html#brotlicompressionwindow">BrotliCompressionWindow <var>value</var></a></td><td> 18 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Taille de la fenêtre de compression glissante brotli</td></tr>
+<tr class="odd"><td><a href="mod_brotli.html#brotlifilternote">BrotliFilterNote [<var>type</var>] <var>notename</var></a></td><td></td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Enregistre le taux de compression dans une note à des fins de
+journalisation</td></tr>
 <tr><td><a href="mod_setenvif.html#browsermatch">BrowserMatch <em>regex [!]env-variable</em>[=<em>valeur</em>]
 [[!]<em>env-variable</em>[=<em>valeur</em>]] ...</a></td><td></td><td>svdh</td><td>B</td></tr><tr><td class="descr" colspan="4">Définit des variables d'environnement en fonction du
 contenu de l'en-tête HTTP User-Agent</td></tr>
@@ -588,24 +590,31 @@ gmon.out.</td></tr>
 s'arrêter dans le cas d'un arrêt "en douceur"</td></tr>
 <tr><td><a href="mod_unixd.html#group">Group <var>groupe unix</var></a></td><td> #-1 </td><td>s</td><td>B</td></tr><tr><td class="descr" colspan="4">Groupe sous lequel le serveur va traiter les
 requêtes</td></tr>
-<tr class="odd"><td><a href="mod_http2.html#h2copyfiles" id="H" name="H">H2CopyFiles on|off</a></td><td> off </td><td>svdh</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Determine file handling in responses</td></tr>
-<tr><td><a href="mod_http2.html#h2direct">H2Direct on|off</a></td><td> on for h2c, off for +</td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">H2 Direct Protocol Switch</td></tr>
-<tr class="odd"><td><a href="mod_http2.html#h2earlyhints">H2EarlyHints on|off</a></td><td> off </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Determine sending of 103 status codes</td></tr>
-<tr><td><a href="mod_http2.html#h2maxsessionstreams">H2MaxSessionStreams <em>n</em></a></td><td> 100 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Maximum number of active streams per HTTP/2 session.</td></tr>
-<tr class="odd"><td><a href="mod_http2.html#h2maxworkeridleseconds">H2MaxWorkerIdleSeconds <em>n</em></a></td><td> 600 </td><td>s</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Maximum number of seconds h2 workers remain idle until shut down.</td></tr>
-<tr><td><a href="mod_http2.html#h2maxworkers">H2MaxWorkers <em>n</em></a></td><td></td><td>s</td><td>E</td></tr><tr><td class="descr" colspan="4">Maximum number of worker threads to use per child process.</td></tr>
-<tr class="odd"><td><a href="mod_http2.html#h2minworkers">H2MinWorkers <em>n</em></a></td><td></td><td>s</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Minimal number of worker threads to use per child process.</td></tr>
-<tr><td><a href="mod_http2.html#h2moderntlsonly">H2ModernTLSOnly on|off</a></td><td> on </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Require HTTP/2 connections to be "modern TLS" only</td></tr>
-<tr class="odd"><td><a href="mod_http2.html#h2push">H2Push on|off</a></td><td> on </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">H2 Server Push Switch</td></tr>
-<tr><td><a href="mod_http2.html#h2pushdiarysize">H2PushDiarySize <em>n</em></a></td><td> 256 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">H2 Server Push Diary Size</td></tr>
-<tr class="odd"><td><a href="mod_http2.html#h2pushpriority">H2PushPriority <em>mime-type</em> [after|before|interleaved] [weight]</a></td><td> * After 16 </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">H2 Server Push Priority</td></tr>
-<tr><td><a href="mod_http2.html#h2pushresource">H2PushResource [add] path [critical]</a></td><td></td><td>svdh</td><td>E</td></tr><tr><td class="descr" colspan="4">Declares resources for early pushing to the client</td></tr>
-<tr class="odd"><td><a href="mod_http2.html#h2serializeheaders">H2SerializeHeaders on|off</a></td><td> off </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Serialize Request/Response Processing Switch</td></tr>
-<tr><td><a href="mod_http2.html#h2streammaxmemsize">H2StreamMaxMemSize <em>bytes</em></a></td><td> 65536 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Maximum amount of output data buffered per stream.</td></tr>
+<tr class="odd"><td><a href="mod_http2.html#h2copyfiles" id="H" name="H">H2CopyFiles on|off</a></td><td> off </td><td>svdh</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Contrôle la gestion des fichiers dans les réponses</td></tr>
+<tr><td><a href="mod_http2.html#h2direct">H2Direct on|off</a></td><td> on pour h2c, off po +</td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Activation du protocole H2 Direct</td></tr>
+<tr class="odd"><td><a href="mod_http2.html#h2earlyhints">H2EarlyHints on|off</a></td><td> off </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Contrôle l'envoi de codes d'état 103</td></tr>
+<tr><td><a href="mod_http2.html#h2maxsessionstreams">H2MaxSessionStreams <em>n</em></a></td><td> 100 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Nombre maximal de flux actifs par session HTTP/2.</td></tr>
+<tr class="odd"><td><a href="mod_http2.html#h2maxworkeridleseconds">H2MaxWorkerIdleSeconds <em>n</em></a></td><td> 600 </td><td>s</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Nombre maximal de secondes pendant lequel une unité de
+	traitement h2 pourra rester inactive sans être arrêtée.</td></tr>
+<tr><td><a href="mod_http2.html#h2maxworkers">H2MaxWorkers <em>n</em></a></td><td></td><td>s</td><td>E</td></tr><tr><td class="descr" colspan="4">Nombre maximal de threads à utiliser pour chaque processus
+	enfant.</td></tr>
+<tr class="odd"><td><a href="mod_http2.html#h2minworkers">H2MinWorkers <em>n</em></a></td><td></td><td>s</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Nombre minimal de threads à utiliser pour chaque processus
+	enfant.</td></tr>
+<tr><td><a href="mod_http2.html#h2moderntlsonly">H2ModernTLSOnly on|off</a></td><td> on </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Impose les connexions HTTP/2 en mode "TLS moderne"
+	seulement</td></tr>
+<tr class="odd"><td><a href="mod_http2.html#h2push">H2Push on|off</a></td><td> on </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Activation/désactivation du server push H2</td></tr>
+<tr><td><a href="mod_http2.html#h2pushdiarysize">H2PushDiarySize n</a></td><td> 256 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Taille du journal des Pushes H2</td></tr>
+<tr class="odd"><td><a href="mod_http2.html#h2pushpriority">H2PushPriority mime-type [after|before|interleaved] [weight]</a></td><td> * After 16 </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Priorité des pushes H2</td></tr>
+<tr><td><a href="mod_http2.html#h2pushresource">H2PushResource [add] path [critical]</a></td><td></td><td>svdh</td><td>E</td></tr><tr><td class="descr" colspan="4">Déclare des ressources à proposer ("pusher") au client</td></tr>
+<tr class="odd"><td><a href="mod_http2.html#h2serializeheaders">H2SerializeHeaders on|off</a></td><td> off </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Active/désactive la sérialisation du traitement des
+	requêtes/réponses</td></tr>
+<tr><td><a href="mod_http2.html#h2streammaxmemsize">H2StreamMaxMemSize <em>bytes</em></a></td><td> 65536 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Quantité maximale de données en sortie mises en tampon par
+	flux.</td></tr>
 <tr class="odd"><td><a href="mod_http2.html#h2tlscooldownsecs">H2TLSCoolDownSecs <em>seconds</em></a></td><td> 1 </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">-</td></tr>
 <tr><td><a href="mod_http2.html#h2tlswarmupsize">H2TLSWarmUpSize <em>amount</em></a></td><td> 1048576 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">-</td></tr>
-<tr class="odd"><td><a href="mod_http2.html#h2upgrade">H2Upgrade on|off</a></td><td> on for h2c, off for +</td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">H2 Upgrade Protocol Switch</td></tr>
-<tr><td><a href="mod_http2.html#h2windowsize">H2WindowSize <em>bytes</em></a></td><td> 65535 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Size of Stream Window for upstream data.</td></tr>
+<tr class="odd"><td><a href="mod_http2.html#h2upgrade">H2Upgrade on|off</a></td><td> on pour h2c, off po +</td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Activation/Désactivation du protocole de mise à jour H2</td></tr>
+<tr><td><a href="mod_http2.html#h2windowsize">H2WindowSize <em>bytes</em></a></td><td> 65535 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Taille maximale des paquets de données pour les transmissions client
+	vers serveur.</td></tr>
 <tr class="odd"><td><a href="mod_headers.html#header">Header [<var>condition</var>] add|append|echo|edit|edit*|merge|set|setifempty|unset|note
 <var>en-tête</var> [[expr=]<var>valeur</var>
 [<var>remplacement</var>]
@@ -615,7 +624,7 @@ requêtes</td></tr>
 contenant l'index</td></tr>
 <tr class="odd"><td><a href="mod_heartbeat.html#heartbeataddress">HeartbeatAddress <var>addr:port</var></a></td><td></td><td>s</td><td>X</td></tr><tr class="odd"><td class="descr" colspan="4">Adresse multicast à laquelle envoyer les requêtes
 heartbeat</td></tr>
-<tr><td><a href="mod_heartmonitor.html#heartbeatlisten">HeartbeatListen<var>addr:port</var></a></td><td></td><td>s</td><td>X</td></tr><tr><td class="descr" colspan="4">Adresse multicast d'écoute des requêtes entrantes heartbeat</td></tr>
+<tr><td><a href="mod_heartmonitor.html#heartbeatlisten">HeartbeatListen <var>addr:port</var></a></td><td></td><td>s</td><td>X</td></tr><tr><td class="descr" colspan="4">Adresse multicast d'écoute des requêtes entrantes heartbeat</td></tr>
 <tr class="odd"><td><a href="mod_heartmonitor.html#heartbeatmaxservers">HeartbeatMaxServers <var>nombre-de-serveurs</var></a></td><td> 10 </td><td>s</td><td>X</td></tr><tr class="odd"><td class="descr" colspan="4">Spécifie le nombre maximal de serveurs qui pourront envoyer
 des requêtes heartbeat à ce serveur.</td></tr>
 <tr><td><a href="mod_heartmonitor.html#heartbeatstorage">HeartbeatStorage <var>chemin fichier</var></a></td><td> logs/hb.dat </td><td>s</td><td>X</td></tr><tr><td class="descr" colspan="4">Chemin vers le stockage des données heartbeat</td></tr>
@@ -647,8 +656,9 @@ de la présence ou de l'absence d'un module spécifique</td></tr>
 <tr class="odd"><td><a href="core.html#ifsection">&lt;IfSection [!]<var>section-name</var>&gt; ...
     &lt;/IfSection&gt;</a></td><td></td><td>svdh</td><td>C</td></tr><tr class="odd"><td class="descr" colspan="4">Regroupe des directives dont le traitement est conditionné par la
 présence ou l'absence d'une section particulière</td></tr>
-<tr><td><a href="mod_version.html#ifversion">&lt;IfVersion [[!]<var>operator</var>] <var>version</var>&gt; ...
-&lt;/IfVersion&gt;</a></td><td></td><td>svdh</td><td>E</td></tr><tr><td class="descr" colspan="4">contains version dependent configuration</td></tr>
+<tr><td><a href="mod_version.html#ifversion">&lt;IfVersion [[!]<var>opérateur</var>] <var>version</var>&gt; ...
+&lt;/IfVersion&gt;</a></td><td></td><td>svdh</td><td>E</td></tr><tr><td class="descr" colspan="4">Contient des portions de configuration dépendantes de la
+version</td></tr>
 <tr class="odd"><td><a href="mod_imagemap.html#imapbase">ImapBase map|referer|<var>URL</var></a></td><td> http://nom_serveur/ +</td><td>svdh</td><td>B</td></tr><tr class="odd"><td class="descr" colspan="4">Valeur par défaut de la directive <code>base</code> des
 fichiers imagemap</td></tr>
 <tr><td><a href="mod_imagemap.html#imapdefault">ImapDefault error|nocontent|map|referer|<var>URL</var></a></td><td> nocontent </td><td>svdh</td><td>B</td></tr><tr><td class="descr" colspan="4">Action à entreprendre par défaut lorsqu'un fichier imagemap
@@ -942,15 +952,19 @@ mandatés</td></tr>
     [!]<var>environment-variable-name</var>
     [<var>value-expression</var>]</a></td><td></td><td>svdh</td><td>E</td></tr><tr><td class="descr" colspan="4">Permet d'adapter la valeur des variables envoyées aux serveurs
 FastCGI</td></tr>
-<tr class="odd"><td><a href="mod_proxy_ftp.html#proxyftpdircharset">ProxyFtpDirCharset <var>jeu-caractères</var></a></td><td> ISO-8859-1 </td><td>svd</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Définit le jeu de caractères des listings FTP
+<tr class="odd"><td><a href="mod_proxy_ftp.html#proxyftpdircharset">ProxyFtpDirCharset <var>character_set</var></a></td><td> ISO-8859-1 </td><td>svd</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Définit le jeu de caractères des listings FTP
 mandatés</td></tr>
-<tr><td><a href="mod_proxy_ftp.html#proxyftpescapewildcards">ProxyFtpEscapeWildcards [on|off]</a></td><td></td><td>svd</td><td>E</td></tr><tr><td class="descr" colspan="4">Les caractères génériques dans les noms de fichiers
+<tr><td><a href="mod_proxy_ftp.html#proxyftpescapewildcards">ProxyFtpEscapeWildcards on|off</a></td><td> on </td><td>svd</td><td>E</td></tr><tr><td class="descr" colspan="4">Les caractères génériques dans les noms de fichiers
 doivent-ils être échappés lorsqu'ils sont envoyés au serveur FTP ?</td></tr>
-<tr class="odd"><td><a href="mod_proxy_ftp.html#proxyftplistonwildcard">ProxyFtpListOnWildcard [on|off]</a></td><td></td><td>svd</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Les caractères génériques dans les noms de fichiers
+<tr class="odd"><td><a href="mod_proxy_ftp.html#proxyftplistonwildcard">ProxyFtpListOnWildcard on|off</a></td><td> on </td><td>svd</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Les caractères génériques dans les noms de fichiers
 demandés doivent-ils déclencher l'affichage d'un listing ?</td></tr>
-<tr><td><a href="mod_proxy_hcheck.html#proxyhcexpr">ProxyHCExpr <em>name</em> {<em>ap_expr expression</em>}</a></td><td></td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Creates a named condition expression to use to determine health of the backend based on its response</td></tr>
-<tr class="odd"><td><a href="mod_proxy_hcheck.html#proxyhctemplate">ProxyHCTemplate <em>name</em> <em>parameter</em>=<em>setting</em> [...]</a></td><td></td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Creates a named template for setting various health check parameters</td></tr>
-<tr><td><a href="mod_proxy_hcheck.html#proxyhctpsize">ProxyHCTPsize <em>size</em></a></td><td></td><td>s</td><td>E</td></tr><tr><td class="descr" colspan="4">Sets the total server-wide size of the threadpool used for the health check workers</td></tr>
+<tr><td><a href="mod_proxy_hcheck.html#proxyhcexpr">ProxyHCExpr <em>name</em> {<em>ap_expr expression</em>}</a></td><td></td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Crée et nomme une expression conditionnelle à utiliser pour
+déterminer la santé d'un serveur d'arrière-plan en fonction de sa valeur</td></tr>
+<tr class="odd"><td><a href="mod_proxy_hcheck.html#proxyhctemplate">ProxyHCTemplate <em>name</em> <em>parameter</em>=<em>setting</em> [...]</a></td><td></td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Crée et nomme un modèle permettant de définir différents
+paramètres de check up</td></tr>
+<tr><td><a href="mod_proxy_hcheck.html#proxyhctpsize">ProxyHCTPsize <em>size</em></a></td><td> 16 </td><td>s</td><td>E</td></tr><tr><td class="descr" colspan="4">Définit la taille totale, pour l'ensemble du
+serveur, du jeu de threads utilisé pour le check up des
+équipiers</td></tr>
 <tr class="odd"><td><a href="mod_proxy_html.html#proxyhtmlbufsize">ProxyHTMLBufSize <var>nb-octets</var></a></td><td> 8192 </td><td>svd</td><td>B</td></tr><tr class="odd"><td class="descr" colspan="4">Définit l'incrément de la taille du tampon, ainsi que sa
 taille initiale, pour la mise en
 tampon des scripts en ligne et des feuilles de style.</td></tr>
@@ -1297,40 +1311,40 @@ réponses OCSP</td></tr>
 privées chiffrées</td></tr>
 <tr><td><a href="mod_ssl.html#sslprotocol">SSLProtocol [+|-]<em>protocole</em> ...</a></td><td> all -SSLv3 (jusqu'à +</td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Indique les versions du protocole SSL/TLS
 disponibles</td></tr>
-<tr class="odd"><td><a href="mod_ssl.html#sslproxycacertificatefile">SSLProxyCACertificateFile <em>file-path</em></a></td><td></td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Fichier contenant la concaténation des certificats de CA
+<tr class="odd"><td><a href="mod_ssl.html#sslproxycacertificatefile">SSLProxyCACertificateFile <em>file-path</em></a></td><td></td><td>svp</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Fichier contenant la concaténation des certificats de CA
 codés en PEM pour l'authentification des serveurs distants</td></tr>
-<tr><td><a href="mod_ssl.html#sslproxycacertificatepath">SSLProxyCACertificatePath <em>chemin-répertoire</em></a></td><td></td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Répertoire des certificats de CA codés en PEM pour
+<tr><td><a href="mod_ssl.html#sslproxycacertificatepath">SSLProxyCACertificatePath <em>chemin-répertoire</em></a></td><td></td><td>svp</td><td>E</td></tr><tr><td class="descr" colspan="4">Répertoire des certificats de CA codés en PEM pour
 l'authentification des serveurs distants</td></tr>
-<tr class="odd"><td><a href="mod_ssl.html#sslproxycarevocationcheck">SSLProxyCARevocationCheck chain|leaf|none</a></td><td> none </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Active la vérification des révocations basée sur les CRLs
+<tr class="odd"><td><a href="mod_ssl.html#sslproxycarevocationcheck">SSLProxyCARevocationCheck chain|leaf|none</a></td><td> none </td><td>svp</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Active la vérification des révocations basée sur les CRLs
 pour l'authentification du serveur distant</td></tr>
-<tr><td><a href="mod_ssl.html#sslproxycarevocationfile">SSLProxyCARevocationFile <em>chemin-fichier</em></a></td><td></td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Fichier contenant la concaténation des CRLs de CA codés en
+<tr><td><a href="mod_ssl.html#sslproxycarevocationfile">SSLProxyCARevocationFile <em>chemin-fichier</em></a></td><td></td><td>svp</td><td>E</td></tr><tr><td class="descr" colspan="4">Fichier contenant la concaténation des CRLs de CA codés en
 PEM pour l'authentification des serveurs distants</td></tr>
-<tr class="odd"><td><a href="mod_ssl.html#sslproxycarevocationpath">SSLProxyCARevocationPath <em>chemin-répertoire</em></a></td><td></td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Répertoire des CRLs de CA codés en PEM pour
+<tr class="odd"><td><a href="mod_ssl.html#sslproxycarevocationpath">SSLProxyCARevocationPath <em>chemin-répertoire</em></a></td><td></td><td>svp</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Répertoire des CRLs de CA codés en PEM pour
 l'authentification des serveurs distants</td></tr>
-<tr><td><a href="mod_ssl.html#sslproxycheckpeercn">SSLProxyCheckPeerCN on|off</a></td><td> on </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Configuration de la vérification du champ CN du certificat
+<tr><td><a href="mod_ssl.html#sslproxycheckpeercn">SSLProxyCheckPeerCN on|off</a></td><td> on </td><td>svp</td><td>E</td></tr><tr><td class="descr" colspan="4">Configuration de la vérification du champ CN du certificat
 du serveur distant
 </td></tr>
-<tr class="odd"><td><a href="mod_ssl.html#sslproxycheckpeerexpire">SSLProxyCheckPeerExpire on|off</a></td><td> on </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Configuration de la vérification de l'expiration du
+<tr class="odd"><td><a href="mod_ssl.html#sslproxycheckpeerexpire">SSLProxyCheckPeerExpire on|off</a></td><td> on </td><td>svp</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Configuration de la vérification de l'expiration du
 certificat du serveur distant
 </td></tr>
-<tr><td><a href="mod_ssl.html#sslproxycheckpeername">SSLProxyCheckPeerName on|off</a></td><td> on </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Configure la vérification du nom d'hôte dans les
+<tr><td><a href="mod_ssl.html#sslproxycheckpeername">SSLProxyCheckPeerName on|off</a></td><td> on </td><td>svp</td><td>E</td></tr><tr><td class="descr" colspan="4">Configure la vérification du nom d'hôte dans les
 certificats serveur distants
 </td></tr>
-<tr class="odd"><td><a href="mod_ssl.html#sslproxyciphersuite">SSLProxyCipherSuite <em>algorithmes</em></a></td><td> ALL:!ADH:RC4+RSA:+H +</td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Algorithmes de chiffrement disponibles pour la négociation
+<tr class="odd"><td><a href="mod_ssl.html#sslproxyciphersuite">SSLProxyCipherSuite <em>algorithmes</em></a></td><td> ALL:!ADH:RC4+RSA:+H +</td><td>svp</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Algorithmes de chiffrement disponibles pour la négociation
 lors de l'initialisation d'une connexion SSL de mandataire</td></tr>
-<tr><td><a href="mod_ssl.html#sslproxyengine">SSLProxyEngine on|off</a></td><td> off </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Interrupteur marche/arrêt du moteur de mandataire
+<tr><td><a href="mod_ssl.html#sslproxyengine">SSLProxyEngine on|off</a></td><td> off </td><td>svp</td><td>E</td></tr><tr><td class="descr" colspan="4">Interrupteur marche/arrêt du moteur de mandataire
 SSL</td></tr>
-<tr class="odd"><td><a href="mod_ssl.html#sslproxymachinecertificatechainfile">SSLProxyMachineCertificateChainFile <em>nom-fichier</em></a></td><td></td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Fichier de certificats de CA encodés PEM concaténés permettant au
+<tr class="odd"><td><a href="mod_ssl.html#sslproxymachinecertificatechainfile">SSLProxyMachineCertificateChainFile <em>nom-fichier</em></a></td><td></td><td>svp</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Fichier de certificats de CA encodés PEM concaténés permettant au
 mandataire de choisir un certificat</td></tr>
-<tr><td><a href="mod_ssl.html#sslproxymachinecertificatefile">SSLProxyMachineCertificateFile <em>chemin-fichier</em></a></td><td></td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Fichier contenant la concaténation des clés et certificats
+<tr><td><a href="mod_ssl.html#sslproxymachinecertificatefile">SSLProxyMachineCertificateFile <em>chemin-fichier</em></a></td><td></td><td>svp</td><td>E</td></tr><tr><td class="descr" colspan="4">Fichier contenant la concaténation des clés et certificats
 clients codés en PEM que le mandataire doit utiliser</td></tr>
-<tr class="odd"><td><a href="mod_ssl.html#sslproxymachinecertificatepath">SSLProxyMachineCertificatePath <em>chemin-répertoire</em></a></td><td></td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Répertoire des clés et certificats clients codés en PEM que
+<tr class="odd"><td><a href="mod_ssl.html#sslproxymachinecertificatepath">SSLProxyMachineCertificatePath <em>chemin-répertoire</em></a></td><td></td><td>svp</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Répertoire des clés et certificats clients codés en PEM que
 le mandataire doit utiliser</td></tr>
-<tr><td><a href="mod_ssl.html#sslproxyprotocol">SSLProxyProtocol [+|-]<em>protocole</em> ...</a></td><td> all -SSLv3 (jusqu'à +</td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Définit les protocoles SSL disponibles pour la fonction de
+<tr><td><a href="mod_ssl.html#sslproxyprotocol">SSLProxyProtocol [+|-]<em>protocole</em> ...</a></td><td> all -SSLv3 (jusqu'à +</td><td>svp</td><td>E</td></tr><tr><td class="descr" colspan="4">Définit les protocoles SSL disponibles pour la fonction de
 mandataire</td></tr>
-<tr class="odd"><td><a href="mod_ssl.html#sslproxyverify">SSLProxyVerify <em>niveau</em></a></td><td> none </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Niveau de vérification du certificat du serveur
+<tr class="odd"><td><a href="mod_ssl.html#sslproxyverify">SSLProxyVerify <em>niveau</em></a></td><td> none </td><td>svp</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Niveau de vérification du certificat du serveur
 distant</td></tr>
-<tr><td><a href="mod_ssl.html#sslproxyverifydepth">SSLProxyVerifyDepth <em>niveau</em></a></td><td> 1 </td><td>sv</td><td>E</td></tr><tr><td class="descr" colspan="4">Niveau de profondeur maximum dans les certificats de CA
+<tr><td><a href="mod_ssl.html#sslproxyverifydepth">SSLProxyVerifyDepth <em>niveau</em></a></td><td> 1 </td><td>svp</td><td>E</td></tr><tr><td class="descr" colspan="4">Niveau de profondeur maximum dans les certificats de CA
 lors de la vérification du certificat du serveur distant</td></tr>
 <tr class="odd"><td><a href="mod_ssl.html#sslrandomseed">SSLRandomSeed <em>contexte</em> <em>source</em>
 [<em>nombre</em>]</a></td><td></td><td>s</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Source de déclenchement du Générateur de Nombres
@@ -1436,7 +1450,7 @@ d'hôte spécifique ou à une adresse IP</td></tr>
 un serveur virtuel donné</td></tr>
 <tr class="odd"><td><a href="mod_vhost_alias.html#virtualscriptaliasip">VirtualScriptAliasIP <em>répertoire-interpolé</em>|none</a></td><td> none </td><td>sv</td><td>E</td></tr><tr class="odd"><td class="descr" colspan="4">Configuration dynamique du répertoire des scripts CGI pour
 un serveur virtuel donné</td></tr>
-<tr><td><a href="mod_watchdog.html#watchdoginterval" id="W" name="W">WatchdogInterval <var>number-of-seconds</var></a></td><td> 1 </td><td>s</td><td>B</td></tr><tr><td class="descr" colspan="4">Watchdog interval in seconds</td></tr>
+<tr><td><a href="mod_watchdog.html#watchdoginterval" id="W" name="W">WatchdogInterval <var>time-interval</var>[s]</a></td><td> 1 </td><td>s</td><td>B</td></tr><tr><td class="descr" colspan="4">Intervalle Watchdog en secondes</td></tr>
 <tr class="odd"><td><a href="mod_include.html#xbithack" id="X" name="X">XBitHack on|off|full</a></td><td> off </td><td>svdh</td><td>B</td></tr><tr class="odd"><td class="descr" colspan="4">Interprète les directives SSI dans les fichiers dont le bit
 d'exécution est positionné</td></tr>
 <tr><td><a href="mod_xml2enc.html#xml2encalias">xml2EncAlias <var>jeu-de-caractères alias [alias ...]</var></a></td><td></td><td>s</td><td>B</td></tr><tr><td class="descr" colspan="4">Définit des alias pour les valeurs d'encodage</td></tr>
