@@ -1,3 +1,12 @@
+apache2 (2.4.35-1) UNRELEASED; urgency=medium
+
+  * New upstream version 2.4.35
+    Security fix:
+    - CVE-2018-11763: DoS for HTTP/2 connections by continuous SETTINGS
+      Closes: #909591
+
+ -- Stefan Fritsch <sf@debian.org>  Sun, 07 Oct 2018 12:40:46 +0200
+
 apache2 (2.4.34-1) unstable; urgency=medium
 
   [ Ondřej Surý ]
