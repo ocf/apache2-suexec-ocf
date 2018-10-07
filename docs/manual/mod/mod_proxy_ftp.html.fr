@@ -7,7 +7,7 @@
               This file is generated from xml source: DO NOT EDIT
         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       -->
-<title>mod_proxy_ftp - Serveur Apache HTTP Version 2.4</title>
+<title>mod_proxy_ftp - Serveur HTTP Apache Version 2.4</title>
 <link href="../style/css/manual.css" rel="stylesheet" media="all" type="text/css" title="Main stylesheet" />
 <link href="../style/css/manual-loose-100pc.css" rel="alternate stylesheet" media="all" type="text/css" title="No Sidebar - Default font size" />
 <link href="../style/css/manual-print.css" rel="stylesheet" media="print" type="text/css" /><link rel="stylesheet" type="text/css" href="../style/css/prettify.css" />
@@ -18,7 +18,7 @@
 <body>
 <div id="page-header">
 <p class="menu"><a href="../mod/">Modules</a> | <a href="../mod/directives.html">Directives</a> | <a href="http://wiki.apache.org/httpd/FAQ">FAQ</a> | <a href="../glossary.html">Glossaire</a> | <a href="../sitemap.html">Plan du site</a></p>
-<p class="apache">Serveur Apache HTTP Version 2.4</p>
+<p class="apache">Serveur HTTP Apache Version 2.4</p>
 <img alt="" src="../images/feather.png" /></div>
 <div class="up"><a href="./"><img title="&lt;-" alt="&lt;-" src="../images/left.gif" /></a></div>
 <div id="path">
@@ -87,8 +87,8 @@
       peut y remédier :</p>
 
       <div class="example"><pre>application/octet-stream   bin dms lha lzh exe class tgz taz</pre></div>
-    <p>Vous pouvez aussi définir par défaut tous les types de fichiers
-    en tant que fichiers binaires :</p>
+    <p>Vous pouvez aussi utiliser la directive <code class="directive"><a href="../mod/core.html#forcetype">ForceType</a></code> pour définir par défaut tous les types
+    de fichiers en tant que fichiers binaires :</p>
       <div class="example"><pre class="prettyprint lang-config">ForceType application/octet-stream</pre>
 </div>
     </div><div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
@@ -108,7 +108,7 @@
 <h2><a name="ftpnonget" id="ftpnonget">Comment puis-je effectuer un
     chargement FTP ?</a></h2>
     <p>Actuellement, seule la méthode GET est supportée pour FTP dans
-    mod_proxy. Vous pouvez en revanche utiliser le chargement HTTP (POST
+    <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code>. Vous pouvez par contre utiliser le chargement HTTP (POST
     or PUT) via un mandataire Apache.</p>
     </div><div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
 <div class="section">
@@ -144,7 +144,7 @@
 
       <div class="example"><p><code>
         utilisateur : anonymous<br />
-        mot de passe : apache_proxy@
+        mot de passe : apache-proxy@
       </code></p></div>
 
       <p>Ceci fonctionne avec tous les serveurs FTP courants configurés
@@ -169,8 +169,7 @@
       aurait fait si vous aviez utilisé l'URL :</p>
 
       <div class="example"><p><code>
-        ftp://<var>nom-utilisateur</var>:<var>mot-de-passe</var>
-	@<var>serveur</var>/mon-fichier
+        ftp://<var>nom-utilisateur</var>:<var>mot-de-passe</var>@<var>serveur</var>/mon-fichier
       </code></p></div>
 
       <div class="note"><h3>Note</h3>
@@ -198,7 +197,7 @@
       téléchargement.</p>
       <p>Vous pouvez désactiver le traitement spécial des noms contenant
       des caractères génériques. Voir à cet effet la directive
-      <code class="directive">ProxyFtpListOnWildcard</code>.
+      <code class="directive"><a href="#proxyftplistonwildcard">ProxyFtpListOnWildcard</a></code>.
       </p>
     </div>
 <div class="top"><a href="#page-header"><img alt="top" src="../images/up.gif" /></a></div>
@@ -206,13 +205,13 @@
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Définit le jeu de caractères des listings FTP
 mandatés</td></tr>
-<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>ProxyFtpDirCharset <var>jeu-caractères</var></code></td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>ProxyFtpDirCharset <var>character_set</var></code></td></tr>
 <tr><th><a href="directive-dict.html#Default">Défaut:</a></th><td><code>ProxyFtpDirCharset ISO-8859-1</code></td></tr>
-<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration du serveur, serveur virtuel, répertoire</td></tr>
+<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration globale, serveur virtuel, répertoire</td></tr>
 <tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Extension</td></tr>
 <tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_proxy_ftp</td></tr>
-<tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>Disponible depuis la version 2.2.7 d'Apache. Déplacé
-depuis <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code> à partir de la version 2.3.5 d'Apache</td></tr>
+<tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>Disponible à partir de la version 2.2.7 du serveur HTTP Apache. Déplacé
+depuis <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code> à partir de la version 2.3.5</td></tr>
 </table>
     <p>La directive <code class="directive">ProxyFtpDirCharset</code> permet de
     définir le jeu de caractères à utiliser pour les listings FTP en
@@ -224,9 +223,9 @@ depuis <code class="module"><a href="../mod/mod_proxy.html">mod_proxy</a></code>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Les caractères génériques dans les noms de fichiers
 doivent-ils être échappés lorsqu'ils sont envoyés au serveur FTP ?</td></tr>
-<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>ProxyFtpEscapeWildcards [on|off]</code></td></tr>
-<tr><th><a href="directive-dict.html#Default">Défaut:</a></th><td><code>on</code></td></tr>
-<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration du serveur, serveur virtuel, répertoire</td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>ProxyFtpEscapeWildcards on|off</code></td></tr>
+<tr><th><a href="directive-dict.html#Default">Défaut:</a></th><td><code>ProxyFtpEscapeWildcards on</code></td></tr>
+<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration globale, serveur virtuel, répertoire</td></tr>
 <tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Extension</td></tr>
 <tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_proxy_ftp</td></tr>
 <tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>Disponible depuis la version 2.3.3 du serveur HTTP Apache</td></tr>
@@ -250,9 +249,9 @@ doivent-ils être échappés lorsqu'ils sont envoyés au serveur FTP ?</td></tr>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Description:</a></th><td>Les caractères génériques dans les noms de fichiers
 demandés doivent-ils déclencher l'affichage d'un listing ?</td></tr>
-<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>ProxyFtpListOnWildcard [on|off]</code></td></tr>
-<tr><th><a href="directive-dict.html#Default">Défaut:</a></th><td><code>on</code></td></tr>
-<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration du serveur, serveur virtuel, répertoire</td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Syntaxe:</a></th><td><code>ProxyFtpListOnWildcard on|off</code></td></tr>
+<tr><th><a href="directive-dict.html#Default">Défaut:</a></th><td><code>ProxyFtpListOnWildcard on</code></td></tr>
+<tr><th><a href="directive-dict.html#Context">Contexte:</a></th><td>configuration globale, serveur virtuel, répertoire</td></tr>
 <tr><th><a href="directive-dict.html#Status">Statut:</a></th><td>Extension</td></tr>
 <tr><th><a href="directive-dict.html#Module">Module:</a></th><td>mod_proxy_ftp</td></tr>
 <tr><th><a href="directive-dict.html#Compatibility">Compatibilité:</a></th><td>Disponible depuis la version 2.3.3 du serveur HTTP Apache</td></tr>
@@ -261,8 +260,8 @@ demandés doivent-ils déclencher l'affichage d'un listing ?</td></tr>
   de déterminer si les caractères génériques ("*?[{~") que contiennent
   les noms de fichiers demandés provoquent l'affichage d'un listing de
   fichiers par <code class="module"><a href="../mod/mod_proxy_ftp.html">mod_proxy_ftp</a></code> au lieu de télécharger un
-  fichier. Il s'agit de leur comportement par défaut (valeur on).
-  Définissez cette directive à "off" pour permettre le téléchargement de
+  fichier. Il s'agit de leur comportement par défaut (valeur on).</p>
+  <p>Définissez cette directive à "off" pour permettre le téléchargement de
   fichiers même si leur nom contient des caractères génériques.</p>
 
 </div>

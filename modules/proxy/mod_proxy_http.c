@@ -1623,9 +1623,7 @@ apr_status_t ap_proxy_http_process_response(apr_pool_t * p, request_rec *r,
              */
             r->status = HTTP_OK;
             /* Discard body, if one is expected */
-            if (!r->header_only && /* not HEAD request */
-                (proxy_status != HTTP_NO_CONTENT) && /* not 204 */
-                (proxy_status != HTTP_NOT_MODIFIED)) { /* not 304 */
+        if (!r->header_only && !AP_STATUS_IS_HEADER_ONLY(proxy_status)) {
                 const char *tmp;
                 /* Add minimal headers needed to allow http_in filter
                  * detecting end of body without waiting for a timeout. */
@@ -2037,14 +2035,12 @@ static int proxy_http_post_config(apr_pool_t *pconf, apr_pool_t *plog,
         return OK;
     }
 
+    ap_proxy_clear_connection_fn =
+            APR_RETRIEVE_OPTIONAL_FN(ap_proxy_clear_connection);
     if (!ap_proxy_clear_connection_fn) {
-        ap_proxy_clear_connection_fn =
-                APR_RETRIEVE_OPTIONAL_FN(ap_proxy_clear_connection);
-        if (!ap_proxy_clear_connection_fn) {
-            ap_log_error(APLOG_MARK, APLOG_EMERG, 0, s, APLOGNO(02477)
-                         "mod_proxy must be loaded for mod_proxy_http");
-            return !OK;
-        }
+        ap_log_error(APLOG_MARK, APLOG_EMERG, 0, s, APLOGNO(02477)
+                     "mod_proxy must be loaded for mod_proxy_http");
+        return !OK;
     }
 
     return OK;
