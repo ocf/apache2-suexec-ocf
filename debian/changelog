@@ -4,7 +4,12 @@ apache2 (2.4.37-1) UNRELEASED; urgency=medium
     - mod_ssl: Add support for TLSv1.3
   * Add docs symlink for libapache2-mod-proxy-uwsgi.  Closes: #910218
   * Update test-framework to r1845652
-
+  * Fix test suite to actually run by creating a test user. It turns out
+    the test suite refuses to run as root but returns true even in that
+    case. It seems this has been broken since 2.4.27-4, where the test suite
+    had been updated and the debci test duration dropped from 15min to
+    3min. Also, don't rely on the exit status anymore but parse the test
+    output.
 
  -- Stefan Fritsch <sf@debian.org>  Fri, 26 Oct 2018 12:25:14 +0200
 
