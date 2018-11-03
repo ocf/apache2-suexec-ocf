@@ -193,7 +193,7 @@ override_dh_installman:
 	dh_installman
 
 override_dh_strip:
-	dh_strip --dbg-package=apache2-dbg
+	dh_strip --dbgsym-migration='apache2-dbg (<< 2.4.37-2~)'
 
 override_dh_auto_install:
 	dh_auto_install -- -j1

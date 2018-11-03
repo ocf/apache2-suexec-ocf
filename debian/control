@@ -196,20 +196,6 @@ Description: Apache HTTP Server (mod_ssl development headers)
  This package provides the development header and the dependencies for
  modules that interact with mod_ssl's internal openssl state.
 
-Package: apache2-dbg
-Section: debug
-Architecture: any
-Depends: apache2-bin (= ${binary:Version}),
-         ${misc:Depends}
-Description: Apache debugging symbols
- The Apache HTTP Server Project's goal is to build a secure, efficient and
- extensible HTTP server as standards-compliant open source software. The
- result has long been the number one web server on the Internet.
- .
- This package includes the debugging symbols. It can be used to debug
- crashing server instances and modules.  See
- /usr/share/doc/apache2/README.backtrace for more information.
-
 Package: libapache2-mod-md
 Architecture: any
 Section: oldlibs
