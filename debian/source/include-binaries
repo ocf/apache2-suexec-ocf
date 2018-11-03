@@ -219,6 +219,7 @@ debian/perl-framework/t/htdocs/modules/cgi/stderr2.pl.PL
 debian/perl-framework/t/htdocs/modules/cgi/stderr3.pl.PL
 debian/perl-framework/t/htdocs/modules/cgi/unique-id.pl.PL
 debian/perl-framework/t/htdocs/modules/cgi/xother.pl.PL
+debian/perl-framework/t/htdocs/modules/data/SupportApache-small.png
 debian/perl-framework/t/htdocs/modules/deflate/apache_pb.gif
 debian/perl-framework/t/htdocs/modules/deflate/asf_logo_wide.jpg
 debian/perl-framework/t/htdocs/modules/deflate/bucketeer/BB.txt

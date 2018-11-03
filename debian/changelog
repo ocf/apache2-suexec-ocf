@@ -3,6 +3,8 @@ apache2 (2.4.37-1) UNRELEASED; urgency=medium
   * New upstream version
     - mod_ssl: Add support for TLSv1.3
   * Add docs symlink for libapache2-mod-proxy-uwsgi.  Closes: #910218
+  * Update test-framework to r1845652
+
 
  -- Stefan Fritsch <sf@debian.org>  Fri, 26 Oct 2018 12:25:14 +0200
 

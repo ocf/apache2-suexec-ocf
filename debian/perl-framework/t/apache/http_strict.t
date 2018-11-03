@@ -5,6 +5,12 @@ use Apache::Test;
 use Apache::TestRequest;
 use MIME::Base64;
 use Data::Dumper;
+use HTTP::Response;
+
+
+my $test_underscore = defined(&need_min_apache_fix) ? 
+                need_min_apache_fix("2.4.34", "2.5.1") :
+                need_min_apache_version('2.4.34');
 
 # possible expected results:
 #   0:       any HTTP error
@@ -91,6 +97,9 @@ my @test_cases = (
     [ "GET http://foo:81/ HTTP/1.0\r\nHost: bar\r\n\r\n"      => 200],
     [ "GET http://[::1]:81/ HTTP/1.0\r\nHost: bar\r\n\r\n"    => 200],
     [ "GET http://10.0.0.1:81/ HTTP/1.0\r\nHost: bar\r\n\r\n" => 200],
+    [ "GET / HTTP/1.0\r\nHost: foo-bar.example.com\r\n\r\n"   => 200],
+    [ "GET / HTTP/1.0\r\nHost: foo_bar.example.com\r\n\r\n"   => 200, 200, $test_underscore],
+    [ "GET http://foo_bar/ HTTP/1.0\r\n\r\n"   => 200, 200, $test_underscore],
 
     #
     # tests for response headers
@@ -119,7 +128,9 @@ my @test_cases = (
       have_module qw(mod_headers) ],
 );
 
-my $test_fold = need_min_apache_fix("2.2.33", "2.4.26", "2.5.0");
+my $test_fold = defined(&need_min_apache_fix) ? 
+                need_min_apache_fix("2.2.33", "2.4.26", "2.5.0") : 
+                need_min_apache_version('2.4.26');
 
 plan tests => scalar(@test_cases) * 2 + $test_fold * 2,
      need_min_apache_version('2.2.32');
