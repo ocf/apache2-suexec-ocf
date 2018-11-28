@@ -1,5 +1,11 @@
 apache2 (2.4.37-2) UNRELEASED; urgency=medium
 
+  [ Jelmer Vernooĳ ]
+  * Transition to automatic debug package (from: apache2-dbg).
+  * Trim trailing whitespace.
+  * Use secure copyright file specification URI.
+
+  [ Xavier Guimard ]
   * Convert signing-key.pgp into signing-key.asc
   * Add http2.conf (Closes: #880993)
   * Add Rules-Requires-Root: binary-targets
