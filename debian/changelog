@@ -5,10 +5,12 @@ apache2 (2.4.37-2) UNRELEASED; urgency=medium
   * Trim trailing whitespace.
   * Use secure copyright file specification URI.
 
+  [ Niels Thykier ]
+  * Add Rules-Requires-Root: binary-targets
+
   [ Xavier Guimard ]
   * Convert signing-key.pgp into signing-key.asc
   * Add http2.conf (Closes: #880993)
-  * Add Rules-Requires-Root: binary-targets
   * Update debian/copyright format to https
   * Remove unnecessary greater-than versioned dependency to dpkg-dev,
     libbrotli-dev and libapache2-mod-md
