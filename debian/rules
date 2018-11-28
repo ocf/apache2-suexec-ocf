@@ -177,7 +177,7 @@ override_dh_installdocs-indep:
 	dh_installdocs -i
 
 override_dh_installdocs-arch:
-	dh_installdocs --link-doc=apache2 -papache2 -papache2-dbg -plibapache2-mod-md -plibapache2-mod-proxy-uwsgi
+	dh_installdocs --link-doc=apache2 -papache2 -plibapache2-mod-md -plibapache2-mod-proxy-uwsgi
 	dh_installdocs --link-doc=apache2-dev -papache2-ssl-dev
 	dh_installdocs -a
 
