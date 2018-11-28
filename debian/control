@@ -1,16 +1,16 @@
 Source: apache2
-Section: httpd
-Priority: optional
 Maintainer: Debian Apache Maintainers <debian-apache@lists.debian.org>
 Uploaders: Stefan Fritsch <sf@debian.org>,
            Arno Töll <arno@debian.org>,
            Ondřej Surý <ondrej@debian.org>
+Section: httpd
+Priority: optional
 Build-Depends: debhelper (>= 9.20160709~),
-               dpkg-dev (>= 1.16.1~),
+               dpkg-dev,
                gawk | awk,
                libapr1-dev (>= 1.6.0),
                libaprutil1-dev (>= 1.6.0),
-               libbrotli-dev (>= 1.0.0),
+               libbrotli-dev,
                liblua5.2-dev,
                libnghttp2-dev,
                libpcre3-dev,
@@ -22,7 +22,7 @@ Build-Depends: debhelper (>= 9.20160709~),
                libcurl4-openssl-dev | libcurl4-dev,
                libjansson-dev
 Build-Conflicts: autoconf2.13
-Standards-Version: 4.1.2
+Standards-Version: 4.2.1
 Vcs-Browser: https://salsa.debian.org/apache-team/apache2
 Vcs-Git: https://salsa.debian.org/apache-team/apache2.git
 Homepage: http://httpd.apache.org/
@@ -30,30 +30,27 @@ Rules-Requires-Root: binary-targets
 
 Package: apache2
 Architecture: any
-Pre-Depends: dpkg (>= 1.17.14)
 Depends: apache2-bin (= ${binary:Version}),
          apache2-data (= ${source:Version}),
          apache2-utils (= ${binary:Version}),
          lsb-base,
          mime-support,
-         perl,
+         ${perl:Depends},
          procps [!hurd-i386],
-         ${misc:Depends},
-         ${perl:Depends}
-Provides: httpd,
-          httpd-cgi
+         ${misc:Depends}
 Recommends: ssl-cert
-Conflicts: apache2.2-bin,
-           apache2.2-common
-Breaks: libapache2-mod-md (<< 2.4.33),
-        libapache2-mod-proxy-uwsgi (<< 2.4.33)
-Replaces: apache2.2-bin,
-          apache2.2-common,
-          libapache2-mod-md (<< 2.4.33),
-          libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Suggests: apache2-doc,
           apache2-suexec-pristine | apache2-suexec-custom,
           www-browser
+Pre-Depends: dpkg (>= 1.17.14)
+Breaks: libapache2-mod-proxy-uwsgi (<< 2.4.33)
+Conflicts: apache2.2-bin,
+           apache2.2-common
+Provides: httpd,
+          httpd-cgi
+Replaces: apache2.2-bin,
+          apache2.2-common,
+          libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Description: Apache HTTP Server
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
@@ -64,8 +61,8 @@ Description: Apache HTTP Server
 
 Package: apache2-data
 Architecture: all
-Depends: ${misc:Depends}
 Multi-Arch: foreign
+Depends: ${misc:Depends}
 Description: Apache HTTP Server (common files)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
@@ -79,16 +76,14 @@ Architecture: any
 Depends: ${misc:Depends},
          ${perl:Depends},
          ${shlibs:Depends}
-Provides: ${apache2:API}
-Breaks: gridsite (<< 3.0.0~20170225gitd51b2fd-1~),
-        libapache2-mod-dacs (<= 1.4.38a-2),
-        libapache2-mod-md (<< 2.4.33),
-        libapache2-mod-proxy-uwsgi (<< 2.4.33)
-Replaces: libapache2-mod-md (<< 2.4.33),
-          libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Suggests: apache2-doc,
           apache2-suexec-pristine | apache2-suexec-custom,
           www-browser
+Breaks: gridsite (<< 3.0.0~20170225gitd51b2fd-1~),
+        libapache2-mod-dacs (<= 1.4.38a-2),
+        libapache2-mod-proxy-uwsgi (<< 2.4.33)
+Provides: ${apache2:API}
+Replaces: libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Description: Apache HTTP Server (modules and other binary files)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
@@ -146,11 +141,11 @@ Description: Apache HTTP Server configurable suexec program for mod_suexec
  apache2-suexec-pristine package instead.
 
 Package: apache2-doc
-Section: doc
 Architecture: all
-Pre-Depends: ${misc:Pre-Depends}
-Recommends: apache2
+Section: doc
 Depends: ${misc:Depends}
+Recommends: apache2
+Pre-Depends: ${misc:Pre-Depends}
 Description: Apache HTTP Server (on-site documentation)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
@@ -198,8 +193,8 @@ Description: Apache HTTP Server (mod_ssl development headers)
  modules that interact with mod_ssl's internal openssl state.
 
 Package: apache2-dbg
-Section: debug
 Architecture: any
+Section: debug
 Depends: apache2-bin (= ${binary:Version}),
          ${misc:Depends}
 Description: Apache debugging symbols
@@ -214,7 +209,8 @@ Description: Apache debugging symbols
 Package: libapache2-mod-md
 Architecture: any
 Section: oldlibs
-Depends: ${misc:Depends}, apache2 (= ${binary:Version})
+Depends: ${misc:Depends},
+         apache2 (= ${binary:Version})
 Description: transitional package
  This is a transitional package to apache2 for users of libapache2-mod-md.
  It can be safely removed after the installation is complete.
@@ -222,7 +218,8 @@ Description: transitional package
 Package: libapache2-mod-proxy-uwsgi
 Architecture: any
 Section: oldlibs
-Depends: ${misc:Depends}, apache2 (= ${binary:Version})
+Depends: ${misc:Depends},
+         apache2 (= ${binary:Version})
 Description: transitional package
  This is a transitional package to apache2 for users of
  libapache2-mod-proxy-uwsgi.
