@@ -2,9 +2,9 @@ Description: Fix up FHS file locations for apache2 droppings.
 Forwarded: not-needed
 Author: Adam Conrad <adconrad@0c3.net>
 Last-Update: 2012-02-25
---- apache2.orig/configure
-+++ apache2/configure
-@@ -39653,17 +39653,17 @@ ap_prefix="${ap_cur}"
+--- a/configure
++++ b/configure
+@@ -39653,17 +39653,17 @@
  
  
  cat >>confdefs.h <<_ACEOF
@@ -25,9 +25,9 @@ Last-Update: 2012-02-25
  _ACEOF
  
  
---- apache2.orig/configure.in
-+++ apache2/configure.in
-@@ -871,11 +871,11 @@ rm -f modules.c
+--- a/configure.in
++++ b/configure.in
+@@ -871,11 +871,11 @@
  echo $MODLIST | $AWK -f $srcdir/build/build-modules-c.awk > modules.c
  
  APR_EXPAND_VAR(ap_prefix, $prefix)
@@ -42,8 +42,8 @@ Last-Update: 2012-02-25
  	[Location of the MIME types config file, relative to the Apache root directory])
  
  perlbin=`$ac_aux_dir/PrintPath perl`
---- apache2.orig/include/ap_config_layout.h.in
-+++ apache2/include/ap_config_layout.h.in
+--- a/include/ap_config_layout.h.in
++++ b/include/ap_config_layout.h.in
 @@ -60,5 +60,6 @@
  #define DEFAULT_REL_LOGFILEDIR "@rel_logfiledir@"
  #define DEFAULT_EXP_PROXYCACHEDIR "@exp_proxycachedir@"
@@ -51,9 +51,9 @@ Last-Update: 2012-02-25
 +#define DEFAULT_PIDLOG "/var/run/apache2.pid"
  
  #endif /* AP_CONFIG_LAYOUT_H */
---- apache2.orig/include/httpd.h
-+++ apache2/include/httpd.h
-@@ -109,7 +109,7 @@ extern "C" {
+--- a/include/httpd.h
++++ b/include/httpd.h
+@@ -109,7 +109,7 @@
  #define DOCUMENT_LOCATION  HTTPD_ROOT "/docs"
  #else
  /* Set default for non OS/2 file system */

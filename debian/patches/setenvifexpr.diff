@@ -2,9 +2,9 @@
 # We can have expressions that become true if a regex pattern in the expression
 # does NOT match. In this case val is NULL and we should just set the value for
 # the environment variable like in the pattern case.
---- apache2.orig/modules/metadata/mod_setenvif.c
-+++ apache2/modules/metadata/mod_setenvif.c
-@@ -597,7 +597,17 @@ static int match_headers(request_rec *r)
+--- a/modules/metadata/mod_setenvif.c
++++ b/modules/metadata/mod_setenvif.c
+@@ -597,7 +597,17 @@
                      apr_table_unset(r->subprocess_env, elts[j].key);
                  }
                  else {
