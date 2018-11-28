@@ -11,17 +11,17 @@ apache2 (2.4.37-2) UNRELEASED; urgency=medium
   [ Xavier Guimard ]
   * Convert signing-key.pgp into signing-key.asc
   * Add http2.conf (Closes: #880993)
-  * Update debian/copyright format to https
   * Remove unnecessary greater-than versioned dependency to dpkg-dev,
     libbrotli-dev and libapache2-mod-md
   * Declare compliance with policy 4.2.1
-  * Convert signing-key.pgp into signing-key.asc
   * Add spelling errors patch (reported)
   * Fix some spelling errors in debian files
   * Add myself to uploaders
   * Refresh patches
   * Bump debhelper compatibility level to 10
-  * Remove unnecessary dh argument --parallel
+  * debian/rules:
+    - Remove unnecessary dh argument --parallel
+    - use /usr/share/dpkg/pkg-info.mk instead of dpkg-parsechangelog
 
  -- Xavier Guimard <yadd@debian.org>  Wed, 28 Nov 2018 09:35:41 +0100
 
