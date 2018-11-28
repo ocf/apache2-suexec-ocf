@@ -26,6 +26,7 @@ Standards-Version: 4.1.2
 Vcs-Browser: https://salsa.debian.org/apache-team/apache2
 Vcs-Git: https://salsa.debian.org/apache-team/apache2.git
 Homepage: http://httpd.apache.org/
+Rules-Requires-Root: binary-targets
 
 Package: apache2
 Architecture: any
