@@ -1,7 +1,10 @@
-# http://svn.apache.org/viewvc?view=revision&revision=1786235
-# We can have expressions that become true if a regex pattern in the expression
-# does NOT match. In this case val is NULL and we should just set the value for
-# the environment variable like in the pattern case.
+Description: fix NULL value
+ We can have expressions that become true if a regex pattern in the expression
+ does NOT match. In this case val is NULL and we should just set the value for
+ the environment variable like in the pattern case.
+Forwarded: http://svn.apache.org/viewvc?view=revision&revision=1786235
+Last-Update: 2018-11-28
+
 --- a/modules/metadata/mod_setenvif.c
 +++ b/modules/metadata/mod_setenvif.c
 @@ -597,7 +597,17 @@
