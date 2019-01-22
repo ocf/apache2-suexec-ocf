@@ -1,4 +1,4 @@
-apache2 (2.4.37-2) UNRELEASED; urgency=medium
+apache2 (2.4.38-1) UNRELEASED; urgency=medium
 
   [ Jelmer Vernooĳ ]
   * Reverted for now: Transition to automatic debug package (from: apache2-dbg)
@@ -26,8 +26,19 @@ apache2 (2.4.37-2) UNRELEASED; urgency=medium
   * Replace MIT by Expat in debian/copyright
   * debian/watch: use https url
   * Add documentation links in systemd service files
+  * Team upload
 
- -- Xavier Guimard <yadd@debian.org>  Wed, 28 Nov 2018 09:35:41 +0100
+  [ Cyrille Bollu ]
+  * Put HTTP2 configuration within <IfModule !mpm_prefork></IfModule> tags as
+    it gets automatically de-activated upon apache 'startup when using
+    mpm_prefork.
+  * Updated http2.conf to inform user that they may want to change their
+    LogFormat directives.
+
+  [ Xavier Guimard ]
+  * New upstream version 2.4.38
+
+ -- Xavier Guimard <yadd@debian.org>  Tue, 22 Jan 2019 21:27:38 +0100
 
 apache2 (2.4.37-1) unstable; urgency=medium
 
