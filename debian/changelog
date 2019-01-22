@@ -37,8 +37,10 @@ apache2 (2.4.38-1) UNRELEASED; urgency=medium
 
   [ Xavier Guimard ]
   * New upstream version 2.4.38
+  * Refresh patches
+  * Remove setenvifexpr.diff patch now included in upstream
 
- -- Xavier Guimard <yadd@debian.org>  Tue, 22 Jan 2019 21:27:38 +0100
+ -- Xavier Guimard <yadd@debian.org>  Tue, 22 Jan 2019 21:41:31 +0100
 
 apache2 (2.4.37-1) unstable; urgency=medium
 
