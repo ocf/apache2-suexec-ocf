@@ -1125,7 +1125,7 @@ static int ssl_hook_Access_modern(request_rec *r, SSLSrvConfigRec *sc, SSLDirCon
                                         : sc->server->auth.verify_depth;
                 if (sslconn->verify_depth < n) {
                     change_vmode = TRUE;
-                    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, APLOGNO()
+                    ap_log_rerror(APLOG_MARK, APLOG_DEBUG, 0, r, APLOGNO(10128)
                                   "Reduced client verification depth will "
                                   "force renegotiation");
                 }
@@ -1144,7 +1144,7 @@ static int ssl_hook_Access_modern(request_rec *r, SSLSrvConfigRec *sc, SSLDirCon
                 return HTTP_FORBIDDEN;
             }
 
-            ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, APLOGNO() "verify client post handshake");
+            ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, APLOGNO(10129) "verify client post handshake");
 
             SSL_set_verify(ssl, vmode_needed, ssl_callback_SSLVerify);
 
@@ -1342,8 +1342,7 @@ int ssl_hook_Access(request_rec *r)
  */
 int ssl_hook_UserCheck(request_rec *r)
 {
-    SSLConnRec *sslconn = myConnConfig(r->connection);
-    SSLSrvConfigRec *sc = mySrvConfig(r->server);
+    SSLConnRec *sslconn;
     SSLDirConfigRec *dc = myDirConfig(r);
     char *clientdn;
     const char *auth_line, *username, *password;
@@ -1392,15 +1391,15 @@ int ssl_hook_UserCheck(request_rec *r)
 
     /*
      * We decline operation in various situations...
+     * - TLS not enabled
+     * - client did not present a certificate
      * - SSLOptions +FakeBasicAuth not configured
      * - r->user already authenticated
-     * - ssl not enabled
-     * - client did not present a certificate
      */
-    if (!((sc->enabled == SSL_ENABLED_TRUE || sc->enabled == SSL_ENABLED_OPTIONAL)
-          && sslconn && sslconn->ssl && sslconn->client_cert) ||
-        !(dc->nOptions & SSL_OPT_FAKEBASICAUTH) || r->user)
-    {
+    if (!modssl_request_is_tls(r, &sslconn)
+        || !sslconn->client_cert
+        || !(dc->nOptions & SSL_OPT_FAKEBASICAUTH)
+        || r->user) {
         return DECLINED;
     }
 
@@ -1500,8 +1499,6 @@ static const char *const ssl_hook_Fixup_vars[] = {
 
 int ssl_hook_Fixup(request_rec *r)
 {
-    SSLConnRec *sslconn = myConnConfig(r->connection);
-    SSLSrvConfigRec *sc = mySrvConfig(r->server);
     SSLDirConfigRec *dc = myDirConfig(r);
     apr_table_t *env = r->subprocess_env;
     char *var, *val = "";
@@ -1509,19 +1506,14 @@ int ssl_hook_Fixup(request_rec *r)
     const char *servername;
 #endif
     STACK_OF(X509) *peer_certs;
+    SSLConnRec *sslconn;
     SSL *ssl;
     int i;
 
-    if (!(sslconn && sslconn->ssl) && r->connection->master) {
-        sslconn = myConnConfig(r->connection->master);
-    }
-
-    /*
-     * Check to see if SSL is on
-     */
-    if (!(((sc->enabled == SSL_ENABLED_TRUE) || (sc->enabled == SSL_ENABLED_OPTIONAL)) && sslconn && (ssl = sslconn->ssl))) {
+    if (!modssl_request_is_tls(r, &sslconn)) {
         return DECLINED;
     }
+    ssl = sslconn->ssl;
 
     /*
      * Annotate the SSI/CGI environment with standard SSL information
@@ -1595,10 +1587,7 @@ static authz_status ssl_authz_require_ssl_check(request_rec *r,
                                                 const char *require_line,
                                                 const void *parsed)
 {
-    SSLConnRec *sslconn = myConnConfig(r->connection);
-    SSL *ssl = sslconn ? sslconn->ssl : NULL;
-
-    if (ssl)
+    if (modssl_request_is_tls(r, NULL))
         return AUTHZ_GRANTED;
     else
         return AUTHZ_DENIED;
