@@ -1,4 +1,4 @@
-apache2 (2.4.38-1) UNRELEASED; urgency=medium
+apache2 (2.4.38-1) unstable; urgency=medium
 
   [ Jelmer Vernooĳ ]
   * Reverted for now: Transition to automatic debug package (from: apache2-dbg)
@@ -36,11 +36,16 @@ apache2 (2.4.38-1) UNRELEASED; urgency=medium
     LogFormat directives.
 
   [ Xavier Guimard ]
-  * New upstream version 2.4.38
+  * New upstream version 2.4.38 (Closes: #920220, #920302, #920303)
   * Refresh patches
   * Remove setenvifexpr.diff patch now included in upstream
+  * Replace libapache2-mod-proxy-uwsgi.{post*,prerm} by a maintscript
+  * Add a "sleep" in debian/tests/htcacheclean and skip result if "stop" failed
+  * Declare compliance with policy 4.3.0
+  * Fix homepage to https
+  * Update debian/copyright
 
- -- Xavier Guimard <yadd@debian.org>  Tue, 22 Jan 2019 21:41:31 +0100
+ -- Xavier Guimard <yadd@debian.org>  Tue, 29 Jan 2019 23:49:49 +0100
 
 apache2 (2.4.37-1) unstable; urgency=medium
 
