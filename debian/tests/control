@@ -12,7 +12,7 @@ Restrictions: allow-stderr, needs-root
 Depends: apache2
 
 Tests: htcacheclean
-Restrictions: allow-stderr, needs-root
+Restrictions: allow-stderr, needs-root, skippable
 Depends: apache2
 
 Tests: default-mods
