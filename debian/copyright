@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Apache HTTPD Server
-Source: http://httpd.apache.org/
+Source: https://httpd.apache.org/
 
 Files: *
 Copyright: Copyright 2009 The Apache Software Foundation
@@ -70,7 +70,7 @@ License: Apache-2.0
  (the "License"); you may not use this file except in compliance with
  the License.  You may obtain a copy of the License at
  .
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
  .
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
