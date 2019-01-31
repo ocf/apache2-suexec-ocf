@@ -23,7 +23,6 @@ my @test_cases = (
     [ $get, $post, 405 ],
     [ $head, $post, 405 ],
     [ $post, $post, 200 ],
-    [ $get, $post . '/reset', 200 ],
 );
 
 plan tests => (scalar @test_cases), have_module 'allowmethods';
