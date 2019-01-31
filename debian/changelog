@@ -1,3 +1,9 @@
+apache2 (2.4.38-2) unstable; urgency=medium
+
+  * Disable "reset" test in allowmethods.t (Closes: #921024)
+
+ -- Xavier Guimard <yadd@debian.org>  Thu, 31 Jan 2019 21:54:05 +0100
+
 apache2 (2.4.38-1) unstable; urgency=medium
 
   [ Jelmer Vernooĳ ]
