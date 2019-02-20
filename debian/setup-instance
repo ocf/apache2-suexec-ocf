@@ -52,7 +52,12 @@ echo
 
 echo Setting up /etc/logrotate.d/apache2-$SUFFIX and /var/log/apache2-$SUFFIX ...
 cp -a /etc/logrotate.d/apache2 /etc/logrotate.d/apache2-$SUFFIX
-perl -p -i -e s,apache2,apache2-$SUFFIX,g /etc/logrotate.d/apache2-$SUFFIX
+perl -p -i -e s,/var/log/apache2,/var/log/apache2-$SUFFIX,g /etc/logrotate.d/apache2-$SUFFIX
+if is_systemd ; then
+	perl -p -i -e "s,\sapache2\s, apache2\@$SUFFIX ,g" /etc/logrotate.d/apache2-$SUFFIX
+else
+	perl -p -i -e "s,\sapache2\s, apache2-$SUFFIX ,g" /etc/logrotate.d/apache2-$SUFFIX
+fi
 mkdir /var/log/apache2-$SUFFIX
 chmod 750 /var/log/apache2-$SUFFIX
 chown root:adm /var/log/apache2-$SUFFIX
