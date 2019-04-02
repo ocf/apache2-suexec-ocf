@@ -193,10 +193,20 @@
       <dt><code class="module"><a href="./mod/mod_http2.html">mod_http2</a></code> (2.4.17'den itibaren kullanılabilir)</dt>
       <dd>HTTP/2 aktarım katmanı desteği.</dd>
       
+      <dt><code class="module"><a href="./mod/mod_proxy_http2.html">mod_proxy_http2</a></code> (2.4.19'dan itibaren kullanılabilir)</dt>
+      <dd><code class="module"><a href="./mod/mod_proxy.html">mod_proxy</a></code> için HTTP/2 Protokol arayüzü</dd>
+
       <dt><code class="module"><a href="./mod/mod_proxy_hcheck.html">mod_proxy_hcheck</a></code> (2.4.21'den itibaren
         kullanılabilir)</dt>
       <dd>Uzak vekil artuç sunucuları için bağımsız özdevinimli sağlık sınamalarını 
-        destekler.</dd>      
+        destekler.</dd>
+      
+      <dt><code class="module"><a href="./mod/mod_brotli.html">mod_brotli</a></code> (2.4.26'dan itibaren kullanılabilir)</dt>
+      <dd>Brotli sıkıştırma algoritması desteği.</dd>
+
+      <dt><code class="module"><a href="./mod/mod_md.html">mod_md</a></code> (2.4.30'dan itibaren kullanılabilir)</dt>
+      <dd>Sertifika sağlama işlemi için ACME protokolü desteği.</dd>
+
     </dl>
   </div><div class="top"><a href="#page-header"><img alt="top" src="./images/up.gif" /></a></div>
 <div class="section">
