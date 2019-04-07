@@ -1,4 +1,4 @@
-apache2 (2.4.38-3) UNRELEASED; urgency=high
+apache2 (2.4.38-3) unstable; urgency=high
 
   [ Marc Deslauriers ]
   * SECURITY UPDATE: read-after-free on a string compare in mod_http2
@@ -33,7 +33,7 @@ apache2 (2.4.38-3) UNRELEASED; urgency=high
   * Pull security fixes from 2.4.39 via Ubuntu
   * CVE-2019-0197: mod_http2: Fix possible crash on late upgrade
 
- -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Wed, 03 Apr 2019 14:31:46 -0400
+ -- Stefan Fritsch <sf@debian.org>  Sun, 07 Apr 2019 20:15:40 +0200
 
 apache2 (2.4.38-2) unstable; urgency=medium
 
