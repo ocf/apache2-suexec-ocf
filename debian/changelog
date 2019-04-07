@@ -1,3 +1,39 @@
+apache2 (2.4.38-3) UNRELEASED; urgency=high
+
+  [ Marc Deslauriers ]
+  * SECURITY UPDATE: read-after-free on a string compare in mod_http2
+    - debian/patches/CVE-2019-0196.patch: disentangelment of stream and
+      request method in modules/http2/h2_request.c.
+    - CVE-2019-0196
+  * SECURITY UPDATE: privilege escalation from modules' scripts
+    - debian/patches/CVE-2019-0211.patch: bind the bucket number of each
+      child to its slot number in include/scoreboard.h,
+      server/mpm/event/event.c, server/mpm/prefork/prefork.c,
+      server/mpm/worker/worker.c.
+    - CVE-2019-0211
+  * SECURITY UPDATE: mod_ssl access control bypass
+    - debian/patches/CVE-2019-0215.patch: restore SSL verify state after
+      PHA failure in TLSv1.3 in modules/ssl/ssl_engine_kernel.c.
+    - CVE-2019-0215
+  * SECURITY UPDATE: mod_auth_digest access control bypass
+    - debian/patches/CVE-2019-0217.patch: fix a race condition in
+      modules/aaa/mod_auth_digest.c.
+    - CVE-2019-0217
+  * SECURITY UPDATE: URL normalization inconsistincy
+    - debian/patches/CVE-2019-0220-1.patch: merge consecutive slashes in
+      the path in include/http_core.h, include/httpd.h, server/core.c,
+      server/request.c, server/util.c.
+    - debian/patches/CVE-2019-0220-2.patch: fix r->parsed_uri.path safety
+      in server/request.c, server/util.c.
+    - debian/patches/CVE-2019-0220-3.patch: maintainer mode fix in
+      server/util.c.
+    - CVE-2019-0220
+
+  [ Stefan Fritsch ]
+  * Pull security fixes from 2.4.39 via Ubuntu
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Wed, 03 Apr 2019 14:31:46 -0400
+
 apache2 (2.4.38-2) unstable; urgency=medium
 
   * Disable "reset" test in allowmethods.t (Closes: #921024)
