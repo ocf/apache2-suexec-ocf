@@ -181,6 +181,10 @@ override_dh_installdocs-arch:
 	dh_installdocs --link-doc=apache2-dev -papache2-ssl-dev
 	dh_installdocs -a
 
+override_dh_link:
+	dh_link -i
+	jdupes -rl debian/apache2-doc/usr/share/doc
+
 override_dh_installchangelogs:
 	# Do not install changelogs the -data package not to reduce
 	# disk space usage.
