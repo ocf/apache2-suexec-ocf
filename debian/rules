@@ -182,7 +182,7 @@ override_dh_installdocs-arch:
 	dh_installdocs -a
 
 override_dh_link:
-	dh_link -i
+	dh_link
 	jdupes -rl debian/apache2-doc/usr/share/doc
 
 override_dh_installchangelogs:
