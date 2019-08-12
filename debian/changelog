@@ -1,9 +1,13 @@
-apache2 (2.4.38-4) UNRELEASED; urgency=medium
+apache2 (2.4.39-1) UNRELEASED; urgency=medium
 
   [ Helmut Grohne ]
   * Do not install /usr/share/apache2/build/config.nice (Closes: #929510)
 
- -- Xavier Guimard <yadd@debian.org>  Sat, 25 May 2019 10:13:03 +0200
+  [ Xavier Guimard ]
+  * New upstream version 2.4.39
+  * Refresh patches
+
+ -- Xavier Guimard <yadd@debian.org>  Tue, 02 Apr 2019 23:10:23 +0200
 
 apache2 (2.4.38-3) unstable; urgency=high
 
