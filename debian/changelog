@@ -1,3 +1,9 @@
+apache2 (2.4.39-2) unstable; urgency=medium
+
+  * Fix bad call of dh_link. Thanks to Daniel Baumann (Closes: #934640)
+
+ -- Xavier Guimard <yadd@debian.org>  Mon, 12 Aug 2019 22:52:47 +0200
+
 apache2 (2.4.39-1) unstable; urgency=medium
 
   [ Helmut Grohne ]
