@@ -1,4 +1,4 @@
-apache2 (2.4.39-1) UNRELEASED; urgency=medium
+apache2 (2.4.39-1) unstable; urgency=medium
 
   [ Helmut Grohne ]
   * Do not install /usr/share/apache2/build/config.nice (Closes: #929510)
@@ -6,8 +6,11 @@ apache2 (2.4.39-1) UNRELEASED; urgency=medium
   [ Xavier Guimard ]
   * New upstream version 2.4.39
   * Refresh patches
+  * Remove patches now included in upstream
+  * Replace duplicate doc files by links using jdupes
+  * Add bison in build dependencies
 
- -- Xavier Guimard <yadd@debian.org>  Tue, 02 Apr 2019 23:10:23 +0200
+ -- Xavier Guimard <yadd@debian.org>  Mon, 12 Aug 2019 21:30:33 +0200
 
 apache2 (2.4.38-3) unstable; urgency=high
 
