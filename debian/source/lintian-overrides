@@ -4,3 +4,6 @@ source-is-missing docs/manual/style/scripts/prettify.js .*
 missing-notice-file-for-apache-license NOTICE debian/perl-framework/NOTICE
 # Variable not exported by pkg-info.mk
 apache2 source: debian-rules-parses-dpkg-parsechangelog (line 15)
+# False positive: data
+insane-line-length-in-source-file docs/manual/style/scripts/prettify.js line length is 10750 characters (>512)
+source-contains-prebuilt-javascript-object docs/manual/style/scripts/prettify.js line length is 10748 characters (>512)
