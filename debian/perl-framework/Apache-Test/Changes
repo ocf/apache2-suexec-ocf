@@ -6,7 +6,33 @@ Changes - Apache::Test change logfile
 
 =over 3
 
-=item 1.41-dev
+=item 1.42-dev
+
+=item 1.41 Jul 11 2019
+
+Set DefaultStateDir for > 2.5.1 and add -t_state to override. [jorton]
+
+Inherit config via IncludeOptional as well as Include. [jorton]
+
+Increase size of MinSpare, MaxSpare and MaxClients to improve httpd test
+framework runs with worker and preform MPMs. [rjung]
+
+Changed the openssl version detection to work with other *SSL libraries.
+[icing]
+
+Switch test framework from using Net::SSL for
+raw TLS sockets to IO::Socket::SSL. [rjung]
+
+Fix mod_ssl tests under OpenSSL 1.1.1 / TLSv1.3. [jorton]
+
+Add cwd to generated lib path in TEST script since Perl >=5.26 don't
+do that any more. [jorton]
+
+Override loglevel to trace8 if running in 2.4. [covener]
+
+Allow an empty PREFIX. [sf]
+
+Add need_min_apache_fix(). [covener]
 
 =item 1.40 Sep 6 2016
 
@@ -585,7 +611,7 @@ not required between runs.  [Geoffrey Young]
 
 Apache::TestSmoke imrovements: [Stas]
  o the command line option -iterations=N should always be respected
-   (previously it was internally overridden for order!='random').
+   (previously it was internally overriden for order!='random').
  o since IPC::Run3 broke the Ctrl-C handler, we started to loose any
    intermediate results, should the run be aborted. So for now, try to
    always store those results in the temp file:
@@ -1111,7 +1137,7 @@ filename and the line number the function was called from. If the
 with the name of the subroutine the function was called from. [Stas]
 
 add support for a new env var APACHE_TEST_TRACE_LEVEL, used to
-override the tracing level. It propogates the overridden (either by env
+override the tracing level. It propogates the overriden (either by env
 var APACHE_TEST_TRACE_LEVEL or -trace option) value to the
 server-side, so we can use Apache::TestTrace in mod_perl handlers, and
 be able enable/disable tracing from the commmand line. This way we

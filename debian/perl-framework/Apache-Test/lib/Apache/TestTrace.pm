@@ -126,9 +126,9 @@ sub nc_trace {
 }
 
 sub trace_level {
-    # overridden by user/-trace
+    # overriden by user/-trace
     (defined $Level && $levels{$Level}) ||
-    # or overridden by env var
+    # or overriden by env var
     (exists $ENV{APACHE_TEST_TRACE_LEVEL} &&
         $levels{$ENV{APACHE_TEST_TRACE_LEVEL}}) ||
     # or default

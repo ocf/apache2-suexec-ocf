@@ -97,6 +97,7 @@
     AddLanguage fr .fr
     AddLanguage de .de
     AddLanguage fu .fu
+    AddLanguage zh-TW .zh-TW
     AddHandler type-map .var
 </IfModule>
 
@@ -111,22 +112,27 @@
 
     <Directory @SERVERROOT@/htdocs/modules/negotiation/en>
         Options +MultiViews
-        LanguagePriority en fr de fu
+        LanguagePriority en fr de fu zh-TW
     </Directory>
 
     <Directory @SERVERROOT@/htdocs/modules/negotiation/de>
         Options +MultiViews
-        LanguagePriority de en fr fu
+        LanguagePriority de en fr fu zh-TW
     </Directory>
 
     <Directory @SERVERROOT@/htdocs/modules/negotiation/fr>
         Options +MultiViews
-        LanguagePriority fr en de fu
+        LanguagePriority fr en de fu zh-TW
     </Directory>
 
     <Directory @SERVERROOT@/htdocs/modules/negotiation/fu>
         Options +MultiViews
-        LanguagePriority fu fr en de
+        LanguagePriority fu fr en de zh-TW
+    </Directory>
+
+    <Directory @SERVERROOT@/htdocs/modules/negotiation/zh-TW>
+        Options +MultiViews
+        LanguagePriority zh-TW fr fu en de 
     </Directory>
 
    <IfDefine APACHE2>
@@ -417,6 +423,24 @@
     </IfDefine>
 </IfModule>
 
+
+<IfVersion >= 2.5.1>
+    <Location /redirect_relative/default>
+        Redirect /out-default
+    </Location>
+    <Location /redirect_relative/on>
+        RedirectRelative ON
+        Redirect /out-on
+    </Location>
+    <Location /redirect_relative/off>
+        RedirectRelative OFF
+        Redirect /out-off
+    </Location>
+    <Location /redirect_relative/off/fail>
+        Redirect fail-to-construct-url
+    </Location>
+</IfVersion>
+
 Alias /manual @inherit_documentroot@/manual
 <Location /manual>
     Order deny,allow
@@ -506,7 +530,9 @@ Alias /manual @inherit_documentroot@/manual
 ##
 
 <IfModule mod_dav.c>
-    DAVLockDB @SERVERROOT@/logs/davlock.db
+    <IfVersion < 2.5.1>
+      DAVLockDB @SERVERROOT@/logs/davlock.db
+    </IfVersion>
 
     <Directory @SERVERROOT@/htdocs/modules/dav>
         DAV On

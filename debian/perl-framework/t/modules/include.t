@@ -235,7 +235,7 @@ my $tests = (scalar keys %tests) + @patterns + 1 + 1 + 1 + 2 + 14 + 14;
 
 plan tests => $tests,
               todo => \@todo,
-              need need_lwp, need_module 'include';
+              need 'DateTime', need_lwp, need_module 'include';
 
 foreach $doc (sort keys %tests) {
     # do as much from %test as we can
@@ -311,6 +311,10 @@ unless(eval "require POSIX") {
 else {
     # use DateTime and avoid the system locale messing things up
     use DateTime;
+    # Only for checking, whether system strftime supports %s
+    use POSIX;
+    my $strftime_gnu = (POSIX::strftime("%s", gmtime()) eq '%s' ? 0 : 1);
+
     my $result = super_chomp(GET_BODY "${dir}file.shtml");
     $result = single_space($result);
 
@@ -325,8 +329,8 @@ else {
     my $expected = join ' ' =>
         $dt->strftime("%A, %B %e, %G"),
         $dt->strftime("%A, %B %e, %G"),
-        $dt->strftime("%s"),
-        $dt->strftime("%s");
+        $strftime_gnu ? $dt->strftime("%s") : '%s',
+        $strftime_gnu ? $dt->strftime("%s") : '%s';
 
     # trim output
     $expected = single_space($expected);

@@ -23,7 +23,7 @@ use DirHandle ();
 use File::Path ();
 use File::Copy 'cp';
 use File::Basename;
-use Net::SSLeay;
+use File::Spec::Functions qw(devnull);
 use Apache::TestConfig ();
 use Apache::TestTrace;
 
@@ -73,6 +73,7 @@ if (Apache::Test::normalize_vstring($version) <
 
 my $sslproto = "all";
 
+eval { require Net::SSLeay; };
 if (Apache::Test::normalize_vstring($version) >= 
     Apache::Test::normalize_vstring("1.1.1")
     && !defined(&Net::SSLeay::CTX_set_post_handshake_auth)) {
@@ -572,9 +573,10 @@ sub gendir {
 }
 
 sub version {
-    my $version = qx($openssl version);
-    return $1 if $version =~ /^OpenSSL (\S+) /;
-    return 0;
+    my $devnull = devnull();
+    my $version = qx($openssl version 2>$devnull);
+    return $1 if $version =~ /^\S+SSL (\S+)/;
+    die "FATAL: unable to determine openssl version via `$openssl version` from: $version";
 }
 
 sub dgst {
