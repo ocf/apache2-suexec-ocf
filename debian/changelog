@@ -1,3 +1,14 @@
+apache2 (2.4.38-3+deb10u1) buster-security; urgency=high
+
+  * Add patch to limit cross-site scripting in mod_proxy (Closes: CVE-2019-10092)
+  * Add patch to fix stack buffer overflow and NULL pointer dereference in
+    mod_remoteip (Closes: CVE-2019-10097)
+  * Import http2 modules from 2.4.41 (Closes: CVE-2019-9517, CVE-2019-10082 and
+    CVE-2019-10081
+  * Add patch to set PCRE_DOTALL by default (Closes: CVE-2019-10098)
+
+ -- Xavier Guimard <yadd@debian.org>  Sun, 18 Aug 2019 15:34:20 +0200
+
 apache2 (2.4.38-3) unstable; urgency=high
 
   [ Marc Deslauriers ]
