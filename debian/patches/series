@@ -20,3 +20,4 @@ CVE-2019-0197.patch
 CVE-2019-10092.patch
 CVE-2019-10097.patch
 import-http2-module-from-2.4.41.patch
+CVE-2019-10098.patch
