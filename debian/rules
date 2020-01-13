@@ -117,7 +117,7 @@ configure-stamp: prebuild-checks-stamp support/suexec-custom.c
 		--enable-mods-shared="all brotli cgi ident authnz_fcgi imagemap cern_meta proxy_fdpass proxy_http2 bucketeer case_filter case_filter_in" \
 		--enable-mods-static="unixd logio watchdog version" \
 		CFLAGS="$(AP2_CFLAGS)" CPPFLAGS="$(AP2_CPPFLAGS)" LDFLAGS="$(AP2_LDFLAGS)" \
-		LTFLAGS="$(AP2_LTFLAGS)" SHELL=/bin/bash
+		LTFLAGS="$(AP2_LTFLAGS)" SHELL=/bin/bash GREP=/bin/grep
 	touch $@
 
 debian/config-dir/apache2.conf: debian/config-dir/apache2.conf.in
