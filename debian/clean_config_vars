@@ -6,6 +6,7 @@ my %FLAGS = {
 	'CFLAGS' => $ARGV[0],
 	'CPPFLAGS' => $ARGV[1],
 	'LDDFLAGS' => $ARGV[2],
+    'CXXFLAGS' => $ARGV[3],
 };
 
 
@@ -22,7 +23,8 @@ sub clean_and_deduplicate
 		$return_flags .= "$flag " unless
 			$flag =~ m/PLATFORM/ ||
 			$flag =~ m/-DBUILD_DATETIME/ ||
-			$flag =~ m/-fdebug-prefix-map/;
+			$flag =~ m/-fdebug-prefix-map/ ||
+            $flag =~ m/-ffile-prefix-map/;
 	}
 	return $return_flags;
 }
@@ -36,7 +38,7 @@ open(TMP_CONFIG_VARS, ">", "tmp_config_vars.mk") || die("tmp_config_vars.mk: $1"
 while(my $line = <CONFIG_VARS>)
 {
 	chomp $line;
-	unless ($line =~ m/(^|_)(LD|CPP|C)FLAGS/)
+	unless ($line =~ m/(^|_)(LD|CPP|C|CXX)FLAGS/)
 	{
 		print TMP_CONFIG_VARS "$line\n";
 	}
