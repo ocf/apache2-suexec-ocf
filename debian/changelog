@@ -1,4 +1,4 @@
-apache2 (2.4.41-2) UNRELEASED; urgency=medium
+apache2 (2.4.41-2) unstable; urgency=medium
 
   [ Stefan Fritsch ]
   * Add *.load file for mod_socache_redis
@@ -7,7 +7,7 @@ apache2 (2.4.41-2) UNRELEASED; urgency=medium
   * Embeds path to EGREP in config_vars.mk (Closes: #948757)
   * Sanitize CXXFLAGS/-ffile-prefix-map in config_vars.mk (Closes: #948759)
 
- -- Xavier Guimard <yadd@debian.org>  Mon, 13 Jan 2020 06:09:41 +0100
+ -- Xavier Guimard <yadd@debian.org>  Mon, 13 Jan 2020 06:14:45 +0100
 
 apache2 (2.4.41-1) unstable; urgency=medium
 
