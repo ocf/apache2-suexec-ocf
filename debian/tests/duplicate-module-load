@@ -9,7 +9,7 @@ set -exu
 #   https://bugs.launchpad.net/ubuntu/+source/apache2/+bug/1251939
 #   https://issues.apache.org/bugzilla/show_bug.cgi?id=55787
 
-cd $ADTTMP
+cd $AUTOPKGTEST_TMP
 
 apache2ctl -l -M > unsorted
 sort unsorted > sorted
