@@ -1,3 +1,10 @@
+apache2 (2.4.41-3) unstable; urgency=medium
+
+  * Don't use hardcoded libgcc_s.so.1 path in autopkgtest files. Thanks to
+    Aurelien Jarno (Closes: #950711)
+
+ -- Xavier Guimard <yadd@debian.org>  Wed, 05 Feb 2020 13:18:04 +0100
+
 apache2 (2.4.41-2) unstable; urgency=medium
 
   [ Stefan Fritsch ]
