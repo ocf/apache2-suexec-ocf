@@ -16,7 +16,7 @@ set -ex
 
 sed -i 's_DocumentRoot.*$_DocumentRoot /_' /etc/apache2/sites-available/000-default.conf
 
-LIBGCC_S_PATH=/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/libgcc_s.so.1
+LIBGCC_S_PATH=`gcc --print-file-name=libgcc_s.so.1`
 cat > /etc/apache2/conf-available/chroot.conf <<EOT
 LoadFile $LIBGCC_S_PATH
 ChrootDir /var/www
