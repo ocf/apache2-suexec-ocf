@@ -1,3 +1,9 @@
+apache2 (2.4.41-4) unstable; urgency=medium
+
+  * Add gcc in chroot autopkgtest (fixes debci)
+
+ -- Xavier Guimard <yadd@debian.org>  Fri, 07 Feb 2020 06:14:33 +0100
+
 apache2 (2.4.41-3) unstable; urgency=medium
 
   * Don't use hardcoded libgcc_s.so.1 path in autopkgtest files. Thanks to
