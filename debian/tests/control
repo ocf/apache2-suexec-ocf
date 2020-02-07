@@ -26,4 +26,4 @@ Depends: apache2, curl, expect, ssl-cert
 Tests: chroot
 Features: no-build-needed
 Restrictions: needs-root allow-stderr breaks-testbed
-Depends: apache2, wget, dpkg-dev
+Depends: apache2, wget, dpkg-dev, gcc
