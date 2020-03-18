@@ -1,3 +1,15 @@
+apache2 (2.4.41-5) unstable; urgency=medium
+
+  [ Xavier Guimard ]
+  * Avoid double mod_dav load (Closes: #951753)
+
+  [ Timo Aaltonen ]
+  * mod_proxy_ajp-add-secret-parameter.diff: Apply a patch from 2.4.x to fix
+    AJP with current tomcat.
+    (Closes: #954201)
+
+ -- Xavier Guimard <yadd@debian.org>  Wed, 18 Mar 2020 21:06:49 +0100
+
 apache2 (2.4.41-4) unstable; urgency=medium
 
   * Add gcc in chroot autopkgtest (fixes debci)
