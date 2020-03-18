@@ -8,3 +8,4 @@ reproducible_builds.diff
 # This patch is applied manually
 #suexec-custom.patch
 spelling-errors.patch
+mod_proxy_ajp-add-secret-parameter.diff
