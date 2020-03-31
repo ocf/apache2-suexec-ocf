@@ -3519,14 +3519,14 @@ On Windows from Apache 2.3.3 and later.</td></tr>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Descripción:</a></th><td>Controls whether the REDIRECT_URL environment variable is
              fully qualified</td></tr>
-<tr><th><a href="directive-dict.html#Syntax">Sintaxis:</a></th><td><code>QualifyRedirectURL ON|OFF</code></td></tr>
-<tr><th><a href="directive-dict.html#Default">Valor por defecto:</a></th><td><code>QualifyRedirectURL OFF</code></td></tr>
+<tr><th><a href="directive-dict.html#Syntax">Sintaxis:</a></th><td><code>QualifyRedirectURL On|Off</code></td></tr>
+<tr><th><a href="directive-dict.html#Default">Valor por defecto:</a></th><td><code>QualifyRedirectURL Off</code></td></tr>
 <tr><th><a href="directive-dict.html#Context">Contexto:</a></th><td>server config, virtual host, directory</td></tr>
 <tr><th><a href="directive-dict.html#Override">Anula:</a></th><td>FileInfo</td></tr>
 <tr><th><a href="directive-dict.html#Status">Estado:</a></th><td>Core</td></tr>
 <tr><th><a href="directive-dict.html#Module">Módulo:</a></th><td>core</td></tr>
 <tr><th><a href="directive-dict.html#Compatibility">Compatibilidad:</a></th><td>Directive supported in 2.4.18 and later. 2.4.17 acted
-as if 'QualifyRedirectURL ON' was configured.</td></tr>
+as if 'QualifyRedirectURL On' was configured.</td></tr>
 </table><p>The documentation for this directive has
             not been translated yet. Please have a look at the English
             version.</p></div>
@@ -4515,7 +4515,7 @@ hostname or IP address</td></tr>
 <a href="../fr/mod/core.html" hreflang="fr" rel="alternate" title="Français">&nbsp;fr&nbsp;</a> |
 <a href="../ja/mod/core.html" hreflang="ja" rel="alternate" title="Japanese">&nbsp;ja&nbsp;</a> |
 <a href="../tr/mod/core.html" hreflang="tr" rel="alternate" title="Türkçe">&nbsp;tr&nbsp;</a></p>
-</div><div class="top"><a href="#page-header"><img src="../images/up.gif" alt="top" /></a></div><div class="section"><h2><a id="comments_section" name="comments_section">Comentarios</a></h2><div class="warning"><strong>Notice:</strong><br />This is not a Q&amp;A section. Comments placed here should be pointed towards suggestions on improving the documentation or server, and may be removed again by our moderators if they are either implemented or considered invalid/off-topic. Questions on how to manage the Apache HTTP Server should be directed at either our IRC channel, #httpd, on Freenode, or sent to our <a href="http://httpd.apache.org/lists.html">mailing lists</a>.</div>
+</div><div class="top"><a href="#page-header"><img src="../images/up.gif" alt="top" /></a></div><div class="section"><h2><a id="comments_section" name="comments_section">Comentarios</a></h2><div class="warning"><strong>Notice:</strong><br />This is not a Q&amp;A section. Comments placed here should be pointed towards suggestions on improving the documentation or server, and may be removed by our moderators if they are either implemented or considered invalid/off-topic. Questions on how to manage the Apache HTTP Server should be directed at either our IRC channel, #httpd, on Freenode, or sent to our <a href="https://httpd.apache.org/lists.html">mailing lists</a>.</div>
 <script type="text/javascript"><!--//--><![CDATA[//><!--
 var comments_shortname = 'httpd';
 var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/core.html';
@@ -4533,7 +4533,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/core.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2019 The Apache Software Foundation.<br />Licencia bajo los términos de la <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+<p class="apache">Copyright 2020 The Apache Software Foundation.<br />Licencia bajo los términos de la <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
 <p class="menu"><a href="../mod/">Módulos</a> | <a href="../mod/directives.html">Directivas</a> | <a href="http://wiki.apache.org/httpd/FAQ">Preguntas Frecuentes</a> | <a href="../glossary.html">Glosario</a> | <a href="../sitemap.html">Mapa del sitio web</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();
