@@ -1,13 +1,17 @@
-apache2 (2.4.41-6) UNRELEASED; urgency=medium
+apache2 (2.4.43-1) unstable; urgency=medium
 
   [ Timo Aaltonen ]
-  * mod_ssl: Add patches to fix TLS 1.3 client cert authentication for POST requests.
-    (Closes: #955348)
+  * mod_ssl: Add patches to fix TLS 1.3 client cert authentication for POST
+    requests (Closes: #955348)
 
   [ Moritz Schlarb ]
   * Fix logrotate script for multi-instance (Closes: #914606)
 
- -- Xavier Guimard <yadd@debian.org>  Tue, 31 Mar 2020 07:52:43 +0200
+  [ Xavier Guimard ]
+  * New upstream version 2.4.43
+  * Refresh patches
+
+ -- Xavier Guimard <yadd@debian.org>  Tue, 31 Mar 2020 08:02:12 +0200
 
 apache2 (2.4.41-5) unstable; urgency=medium
 
