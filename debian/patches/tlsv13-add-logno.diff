@@ -8,11 +8,9 @@ git-svn-id: https://svn.apache.org/repos/asf/httpd/httpd/trunk@1870097 13f79535-
  modules/ssl/ssl_engine_kernel.c   | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/modules/ssl/ssl_engine_kernel.c b/modules/ssl/ssl_engine_kernel.c
-index 516e7082bb0..408ffd90202 100644
 --- a/modules/ssl/ssl_engine_kernel.c
 +++ b/modules/ssl/ssl_engine_kernel.c
-@@ -1148,7 +1148,7 @@ static int ssl_hook_Access_modern(request_rec *r, SSLSrvConfigRec *sc, SSLDirCon
+@@ -1148,7 +1148,7 @@
          if (change_vmode) {
              rc = fill_reneg_buffer(r, dc);
              if (rc) {

@@ -17,11 +17,9 @@ git-svn-id: https://svn.apache.org/repos/asf/httpd/httpd/trunk@1870095 13f79535-
  modules/ssl/ssl_engine_kernel.c | 87 +++++++++++++++++++++------------
  1 file changed, 55 insertions(+), 32 deletions(-)
 
-diff --git a/modules/ssl/ssl_engine_kernel.c b/modules/ssl/ssl_engine_kernel.c
-index 758cc09bb69..516e7082bb0 100644
 --- a/modules/ssl/ssl_engine_kernel.c
 +++ b/modules/ssl/ssl_engine_kernel.c
-@@ -114,6 +114,45 @@ static int has_buffered_data(request_rec *r)
+@@ -114,6 +114,45 @@
      return result;
  }
  
@@ -67,7 +65,7 @@ index 758cc09bb69..516e7082bb0 100644
  #ifdef HAVE_TLSEXT
  static int ap_array_same_str_set(apr_array_header_t *s1, apr_array_header_t *s2)
  {
-@@ -814,41 +853,14 @@ static int ssl_hook_Access_classic(request_rec *r, SSLSrvConfigRec *sc, SSLDirCo
+@@ -814,41 +853,14 @@
          }
      }
  
@@ -114,7 +112,7 @@ index 758cc09bb69..516e7082bb0 100644
          }
      }
  
-@@ -1132,6 +1144,17 @@ static int ssl_hook_Access_modern(request_rec *r, SSLSrvConfigRec *sc, SSLDirCon
+@@ -1132,6 +1144,17 @@
              }
          }
  
