@@ -257,7 +257,7 @@ static int fsmagic(request_rec *r, const char *fn);
 #define L_MAIL    8   /* Electronic mail */
 #define L_NEWS    9   /* Usenet Netnews */
 
-static const char *types[] =
+static const char *const types[] =
 {
     "text/html",             /* HTML */
     "text/plain",            /* "c program text", */
@@ -462,7 +462,6 @@ typedef struct {
 typedef struct {
     magic_rsl *head;          /* result string list */
     magic_rsl *tail;
-    unsigned suf_recursion;   /* recursion depth in suffix check */
 } magic_req_rec;
 
 /*
@@ -2044,12 +2043,12 @@ static int ascmagic(request_rec *r, unsigned char *buf, apr_size_t nbytes)
  * - uncompress old into new, using method, return sizeof new
  */
 
-static struct {
-    char *magic;
+static const struct {
+    const char *magic;
     apr_size_t maglen;
-    char *argv[3];
+    const char *argv[3];
     int silent;
-    char *encoding;  /* MUST be lowercase */
+    const char *encoding;  /* MUST be lowercase */
 } compr[] = {
 
     /* we use gzip here rather than uncompress because we have to pass
@@ -2077,7 +2076,7 @@ static struct {
     },
 };
 
-static int ncompr = sizeof(compr) / sizeof(compr[0]);
+#define ncompr (sizeof(compr) / sizeof(compr[0]))
 
 static int zmagic(request_rec *r, unsigned char *buf, apr_size_t nbytes)
 {
@@ -2177,7 +2176,7 @@ static int uncompress(request_rec *r, int method,
     parm.method = method;
 
     /* We make a sub_pool so that we can collect our child early, otherwise
-     * there are cases (i.e. generating directory indicies with mod_autoindex)
+     * there are cases (i.e. generating directory indices with mod_autoindex)
      * where we would end up with LOTS of zombies.
      */
     if (apr_pool_create(&sub_context, r->pool) != APR_SUCCESS)

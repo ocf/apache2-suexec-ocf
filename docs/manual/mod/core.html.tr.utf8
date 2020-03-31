@@ -4059,7 +4059,7 @@ davranılır.</td></tr>
 <table class="directive">
 <tr><th><a href="directive-dict.html#Description">Açıklama:</a></th><td>Regex düzenli ifadeleri için öntanımlı/küresel seçenekleri yapılandırır</td></tr>
 <tr><th><a href="directive-dict.html#Syntax">Sözdizimi:</a></th><td><code>RegexDefaultOptions [none] [+|-]<var>seçenek</var> [[+|-]<var>seçenek</var>] ...</code></td></tr>
-<tr><th><a href="directive-dict.html#Default">Öntanımlı:</a></th><td><code>RegexDefaultOptions DOLLAR_ENDONLY</code></td></tr>
+<tr><th><a href="directive-dict.html#Default">Öntanımlı:</a></th><td><code>RegexDefaultOptions DOTALL DOLLAR_ENDONLY</code></td></tr>
 <tr><th><a href="directive-dict.html#Context">Bağlam:</a></th><td>sunucu geneli</td></tr>
 <tr><th><a href="directive-dict.html#Status">Durum:</a></th><td>Çekirdek</td></tr>
 <tr><th><a href="directive-dict.html#Module">Modül:</a></th><td>core</td></tr>
@@ -4081,20 +4081,24 @@ davranılır.</td></tr>
             <dt><code>ICASE</code></dt>
             <dd>Harf büyüklüğüne duyarlı eşleşmeler kullanılır.</dd>
 
+            <dt><code>EXTENDED</code></dt>
+            <dd>Perl'ün /x seçeneği; kalıp içindeki açıklamaları ve 
+            (öncelenmemiş) boşlukları yoksayar.</dd>
+
             <dt><code>DOTALL</code></dt>
-            <dd>Perl'ün /s seçeneği.</dd>
+            <dd>Perl'ün /s seçeneği; '.' karakteri, satırsonu karakteri ile 
+             eşleşir.</dd>
 
             <dt><code>DOLLAR_ENDONLY</code></dt>
             <dd>'$' dizgenin sonu ile eşleşir.</dd>
-            <dd>.</dd>
         </dl>
-        <pre class="prettyprint lang-config"># 
-RegexDefaultOptions +ICASE +DOLLAR_ENDONLY
+        <pre class="prettyprint lang-config"># Tüm düzenli ifadeler için öntanımlı olarak ICASE seçeneğini ekler:
+RegexDefaultOptions +ICASE
 ...
-# ICASE seçeneği silinir, diğer seçenekler tutulur:
-RegexDefaultOptions -ICASE
+# Öntanımlı DOLLAR_ENDONLY seçeneği silinir, diğer seçenekler tutulur:
+RegexDefaultOptions -DOLLAR_ENDONLY
 ...
-# Atanmuş seçenekler silinir, DOTALL öntanımlı seçenek yapılır:
+# Atanmış seçenekler silinir, DOTALL öntanımlı seçenek yapılır:
 RegexDefaultOptions DOTALL
 ...
 # Tüm seçenekler silinir, öntanımlı seçenek kalmaz.
@@ -5096,7 +5100,7 @@ gerçekleşmesi için sunucunun geçmesini bekleyeceği süre.</td></tr>
 <a href="../fr/mod/core.html" hreflang="fr" rel="alternate" title="Français">&nbsp;fr&nbsp;</a> |
 <a href="../ja/mod/core.html" hreflang="ja" rel="alternate" title="Japanese">&nbsp;ja&nbsp;</a> |
 <a href="../tr/mod/core.html" title="Türkçe">&nbsp;tr&nbsp;</a></p>
-</div><div class="top"><a href="#page-header"><img src="../images/up.gif" alt="top" /></a></div><div class="section"><h2><a id="comments_section" name="comments_section">Yorumlar</a></h2><div class="warning"><strong>Notice:</strong><br />This is not a Q&amp;A section. Comments placed here should be pointed towards suggestions on improving the documentation or server, and may be removed again by our moderators if they are either implemented or considered invalid/off-topic. Questions on how to manage the Apache HTTP Server should be directed at either our IRC channel, #httpd, on Freenode, or sent to our <a href="http://httpd.apache.org/lists.html">mailing lists</a>.</div>
+</div><div class="top"><a href="#page-header"><img src="../images/up.gif" alt="top" /></a></div><div class="section"><h2><a id="comments_section" name="comments_section">Yorumlar</a></h2><div class="warning"><strong>Notice:</strong><br />This is not a Q&amp;A section. Comments placed here should be pointed towards suggestions on improving the documentation or server, and may be removed by our moderators if they are either implemented or considered invalid/off-topic. Questions on how to manage the Apache HTTP Server should be directed at either our IRC channel, #httpd, on Freenode, or sent to our <a href="https://httpd.apache.org/lists.html">mailing lists</a>.</div>
 <script type="text/javascript"><!--//--><![CDATA[//><!--
 var comments_shortname = 'httpd';
 var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/core.html';
@@ -5114,7 +5118,7 @@ var comments_identifier = 'http://httpd.apache.org/docs/2.4/mod/core.html';
     }
 })(window, document);
 //--><!]]></script></div><div id="footer">
-<p class="apache">Copyright 2019 The Apache Software Foundation.<br /><a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a> altında lisanslıdır.</p>
+<p class="apache">Copyright 2020 The Apache Software Foundation.<br /><a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a> altında lisanslıdır.</p>
 <p class="menu"><a href="../mod/">Modüller</a> | <a href="../mod/directives.html">Yönergeler</a> | <a href="http://wiki.apache.org/httpd/FAQ">SSS</a> | <a href="../glossary.html">Terimler</a> | <a href="../sitemap.html">Site Haritası</a></p></div><script type="text/javascript"><!--//--><![CDATA[//><!--
 if (typeof(prettyPrint) !== 'undefined') {
     prettyPrint();

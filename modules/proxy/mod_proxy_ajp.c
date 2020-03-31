@@ -193,6 +193,7 @@ static int ap_proxy_ajp_request(apr_pool_t *p, request_rec *r,
     apr_off_t content_length = 0;
     int original_status = r->status;
     const char *original_status_line = r->status_line;
+    const char *secret = NULL;
 
     if (psf->io_buffer_size_set)
        maxsize = psf->io_buffer_size;
@@ -202,12 +203,15 @@ static int ap_proxy_ajp_request(apr_pool_t *p, request_rec *r,
        maxsize = AJP_MSG_BUFFER_SZ;
     maxsize = APR_ALIGN(maxsize, 1024);
 
+    if (*conn->worker->s->secret)
+        secret = conn->worker->s->secret;
+
     /*
      * Send the AJP request to the remote server
      */
 
     /* send request headers */
-    status = ajp_send_header(conn->sock, r, maxsize, uri);
+    status = ajp_send_header(conn->sock, r, maxsize, uri, secret);
     if (status != APR_SUCCESS) {
         conn->close = 1;
         ap_log_rerror(APLOG_MARK, APLOG_ERR, status, r, APLOGNO(00868)
@@ -242,7 +246,7 @@ static int ap_proxy_ajp_request(apr_pool_t *p, request_rec *r,
         return HTTP_INTERNAL_SERVER_ERROR;
     }
 
-    /* read the first bloc of data */
+    /* read the first block of data */
     input_brigade = apr_brigade_create(p, r->connection->bucket_alloc);
     tenc = apr_table_get(r->headers_in, "Transfer-Encoding");
     if (tenc && (strcasecmp(tenc, "chunked") == 0)) {

@@ -74,7 +74,7 @@ void modssl_set_app_data2(SSL *ssl, void *arg)
 **  _________________________________________________________________
 */
 
-EVP_PKEY *modssl_read_privatekey(const char* filename, EVP_PKEY **key, pem_password_cb *cb, void *s)
+EVP_PKEY *modssl_read_privatekey(const char *filename, pem_password_cb *cb, void *s)
 {
     EVP_PKEY *rc;
     BIO *bioS;
@@ -83,7 +83,7 @@ EVP_PKEY *modssl_read_privatekey(const char* filename, EVP_PKEY **key, pem_passw
     /* 1. try PEM (= DER+Base64+headers) */
     if ((bioS=BIO_new_file(filename, "r")) == NULL)
         return NULL;
-    rc = PEM_read_bio_PrivateKey(bioS, key, cb, s);
+    rc = PEM_read_bio_PrivateKey(bioS, NULL, cb, s);
     BIO_free(bioS);
 
     if (rc == NULL) {
@@ -107,39 +107,7 @@ EVP_PKEY *modssl_read_privatekey(const char* filename, EVP_PKEY **key, pem_passw
             BIO_free(bioS);
         }
     }
-    if (rc != NULL && key != NULL) {
-        if (*key != NULL)
-            EVP_PKEY_free(*key);
-        *key = rc;
-    }
     return rc;
-}
-
-typedef struct {
-    const char *pass;
-    int pass_len;
-} pass_ctx;
-
-static int provide_pass(char *buf, int size, int rwflag, void *baton)
-{
-    pass_ctx *ctx = baton;
-    if (ctx->pass_len > 0) {
-        if (ctx->pass_len < size) {
-            size = (int)ctx->pass_len;
-        }
-        memcpy(buf, ctx->pass, size);
-    }
-    return ctx->pass_len;
-}
-
-EVP_PKEY   *modssl_read_encrypted_pkey(const char *filename, EVP_PKEY **key, 
-                                       const char *pass, apr_size_t pass_len)
-{
-    pass_ctx ctx;
-    
-    ctx.pass = pass;
-    ctx.pass_len = pass_len;
-    return modssl_read_privatekey(filename, key, provide_pass, &ctx);
 }
 
 /*  _________________________________________________________________
@@ -156,7 +124,7 @@ int modssl_smart_shutdown(SSL *ssl)
 
     /*
      * Repeat the calls, because SSL_shutdown internally dispatches through a
-     * little state machine. Usually only one or two interation should be
+     * little state machine. Usually only one or two iterations should be
      * needed, so we restrict the total number of restrictions in order to
      * avoid process hangs in case the client played bad with the socket
      * connection and OpenSSL cannot recognize it.
@@ -166,7 +134,7 @@ int modssl_smart_shutdown(SSL *ssl)
     for (i = 0; i < 4 /* max 2x pending + 2x data = 4 */; i++) {
         rc = SSL_shutdown(ssl);
         if (rc >= 0 && flush && (SSL_get_shutdown(ssl) & SSL_SENT_SHUTDOWN)) {
-            /* Once the close notity is sent through the output filters,
+            /* Once the close notify is sent through the output filters,
              * ensure it is flushed through the socket.
              */
             if (BIO_flush(SSL_get_wbio(ssl)) <= 0) {
