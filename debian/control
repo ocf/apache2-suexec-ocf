@@ -187,6 +187,7 @@ Architecture: any
 Depends: apache2-dev (= ${binary:Version}),
          libssl-dev (>= 1.1),
          ${misc:Depends}
+Multi-Arch: same
 Description: Apache HTTP Server (mod_ssl development headers)
  The Apache HTTP Server Project's goal is to build a secure, efficient and
  extensible HTTP server as standards-compliant open source software. The
@@ -200,6 +201,7 @@ Architecture: any
 Section: oldlibs
 Depends: ${misc:Depends},
          apache2 (= ${binary:Version})
+Multi-Arch: same
 Description: transitional package
  This is a transitional package to apache2 for users of libapache2-mod-md.
  It can be safely removed after the installation is complete.
