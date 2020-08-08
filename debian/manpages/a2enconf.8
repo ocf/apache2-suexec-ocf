@@ -19,12 +19,14 @@
 a2enconf, a2disconf \- enable or disable an apache2 configuration file
 .SH SYNOPSIS
 .B a2enconf
-[ [\-q|\-\-quiet]
-.IR configuration ]
+[\-q|\-\-quiet] [\-m|\-\-maintmode] [
+.IR configuration
+]
 .PP
 .B a2disconf
-[ [\-q|\-\-quiet]
-.IR configuration ]
+[\-q|\-\-quiet] [\-m|\-\-maintmode] [\-p|\-\-purge] [
+.IR configuration
+]
 .SH DESCRIPTION
 This manual page documents briefly the
 .B a2enconf
@@ -91,7 +93,9 @@ for enabled configuration files.
 .SH "SEE ALSO"
 .BR apache2ctl (8),
 .BR a2enmod (8),
-.BR a2dismod (8).
+.BR a2dismod (8),
+.BR a2ensite (8),
+.BR a2dissite (8).
 .SH AUTHOR
 This manual page was written by Arno Toell <debian@toell.net> for the Debian
 GNU/Linux distribution, as it is a Debian-specific script with the package.
