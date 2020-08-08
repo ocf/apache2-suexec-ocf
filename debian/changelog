@@ -1,3 +1,19 @@
+apache2 (2.4.46-1) unstable; urgency=medium
+
+  [ Xavier Guimard ]
+  * Add "Multi-Arch: same" to apache2-ssl-dev and libapache2-mod-md
+
+  [ Timo Tijhof ]
+  * Compress text/javascript with mod_deflate by default (Closes: #959195)
+
+  [ Xavier Guimard ]
+  * Add "Multi-Arch: same" to apache2-ssl-dev and libapache2-mod-md
+  * Update upstream keys
+  * New upstream version 2.4.46 (Closes: CVE-2020-11984, CVE-2020-11993,
+    CVE-2020-9490)
+
+ -- Xavier Guimard <yadd@debian.org>  Sat, 08 Aug 2020 08:33:36 +0200
+
 apache2 (2.4.43-1) unstable; urgency=medium
 
   [ Timo Aaltonen ]
