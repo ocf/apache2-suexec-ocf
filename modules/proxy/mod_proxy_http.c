@@ -548,6 +548,14 @@ static int spool_reqbody_cl(proxy_http_req_t *req, apr_off_t *bytes_spooled)
         e = apr_bucket_immortal_create(CRLF_ASCII, 2, bucket_alloc);
         APR_BRIGADE_INSERT_TAIL(input_brigade, e);
     }
+    if (tmpfile) {
+        /* We dropped metadata buckets when spooling to tmpfile,
+         * terminate with EOS for stream_reqbody() to flush the
+         * whole in one go.
+         */
+        e = apr_bucket_eos_create(bucket_alloc);
+        APR_BRIGADE_INSERT_TAIL(input_brigade, e);
+    }
     return OK;
 }
 
@@ -761,9 +769,7 @@ static int ap_proxy_http_prefetch(proxy_http_req_t *req,
     }
     else if (req->old_cl_val) {
         if (r->input_filters == r->proto_input_filters) {
-            char *endstr;
-            status = apr_strtoff(&req->cl_val, req->old_cl_val, &endstr, 10);
-            if (status != APR_SUCCESS || *endstr || req->cl_val < 0) {
+            if (!ap_parse_strict_length(&req->cl_val, req->old_cl_val)) {
                 ap_log_rerror(APLOG_MARK, APLOG_ERR, status, r, APLOGNO(01085)
                               "could not parse request Content-Length (%s)",
                               req->old_cl_val);

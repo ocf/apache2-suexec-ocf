@@ -7908,27 +7908,6 @@ done
 $as_echo "$as_me: WARNING: Your system does not support systemd." >&2;}
       else
 
-  if test "x$HTTPD_LIBS" = "x"; then
-    test "x$silent" != "xyes" && echo "  setting HTTPD_LIBS to \"$SYSTEMD_LIBS\""
-    HTTPD_LIBS="$SYSTEMD_LIBS"
-  else
-    apr_addto_bugger="$SYSTEMD_LIBS"
-    for i in $apr_addto_bugger; do
-      apr_addto_duplicate="0"
-      for j in $HTTPD_LIBS; do
-        if test "x$i" = "x$j"; then
-          apr_addto_duplicate="1"
-          break
-        fi
-      done
-      if test $apr_addto_duplicate = "0"; then
-        test "x$silent" != "xyes" && echo "  adding \"$i\" to HTTPD_LIBS"
-        HTTPD_LIBS="$HTTPD_LIBS $i"
-      fi
-    done
-  fi
-
-
 $as_echo "#define HAVE_SYSTEMD 1" >>confdefs.h
 
       fi
