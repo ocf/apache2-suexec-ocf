@@ -49,13 +49,6 @@ enable_default_modules()
 	if [ -z "$2" ] ; then
 		return 0
 	fi
-	# mod_reqtimeout activation was missed in some versions
-	if dpkg --compare-versions "$2" lt "2.4.10-10+deb8u8" || \
-		(dpkg --compare-versions "$2" gt "2.4.10-11" && \
-		 dpkg --compare-versions "$2" lt "2.4.25-2~")
-	then
-			a2enmod -m -q reqtimeout
-	fi
 }
 
 enable_default_conf()
@@ -134,16 +127,6 @@ install_default_files()
 	fi
 }
 
-refresh_modules()
-{
-	if dpkg --compare-versions "$2" lt-nl "2.4.10-12~" ; then
-		if [ -e "/etc/apache2/mods-enabled/proxy_html.load" ]
-		then
-			a2enmod -q proxy_html
-		fi
-	fi
-}
-
 start_htcacheclean ()
 {
 	local action
@@ -170,18 +153,6 @@ disable_htcacheclean()
 # call, or the former will fail.
 handle_htcacheclean ()
 {
-	if dpkg --compare-versions "$2" lt "2.4.18-2~"; then
-		# Disable on initial installation or when upgrading from an old
-		# version without that init script and with the module disabled
-		# (or when configured to run from cron)
-		if [ ! -e "/etc/apache2/mods-enabled/cache_disk.load" ]; then
-			disable_htcacheclean
-			return
-		elif (. /etc/default/apache-htcacheclean && [ "$HTCACHECLEAN_MODE" = "cron" ]); then
-			disable_htcacheclean
-			return
-		fi
-	fi
 
 	# Restart it if applicable
 	start_htcacheclean "$@"
@@ -273,16 +244,7 @@ list_fixup_conffiles () {
 case "$1" in
 	configure)
 
-		if dpkg --compare-versions "$2" lt-nl "2.4.23-3~" ; then
-			list_fixup_conffiles | while read FILE ; do
-				if [ -e "${FILE}.dpkg-remove-fixup" ] ; then
-					echo "Removing backup copy of $FILE"
-					rm "${FILE}.dpkg-remove-fixup"
-				fi
-			done
-		fi
 		enable_default_mpm $@
-		refresh_modules $@
 		install_default_files $@
 		enable_default_modules $@
 		enable_default_conf $@
