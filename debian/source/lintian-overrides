@@ -10,3 +10,5 @@ national-encoding debian/perl-framework/t/php/strings3.t
 national-encoding debian/perl-framework/t/php/strings4.t
 # Ignore this
 national-encoding debian/upstream/signing-key.asc
+# Uninstalled files
+missing-notice-file-for-apache-license NOTICE debian/perl-framework/NOTICE
