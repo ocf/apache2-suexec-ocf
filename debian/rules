@@ -99,7 +99,7 @@ suexec-scripts-stamp: $(wildcard debian/debian/apache2-suexec.*.in)
 	touch $@
 
 clean build build-arch build-indep binary binary-arch binary-indep: %:
-	dh $@ --with systemd
+	dh $@
 
 override_dh_auto_configure: configure-stamp
 configure-stamp: prebuild-checks-stamp support/suexec-custom.c
@@ -141,8 +141,11 @@ override_dh_install: clean-config-vars-stamp \
 		     debian/apache2.preinst \
 		     suexec-scripts-stamp
 	# don't install mod_ssl_openssl.h in apache2-dev
-	dh_install --list-missing -papache2-dev -Xopenssl
-	dh_install --list-missing --remaining-packages
+	dh_install -papache2-dev -Xopenssl
+	dh_install --remaining-packages
+
+override_dh_missing:
+	dh_missing --list-missing
 
 override_dh_fixperms-arch:
 	# standard suexec
@@ -166,11 +169,11 @@ override_dh_installinit:
 	# start the service
 	dh_installinit --name apache-htcacheclean --no-start
 
-override_dh_systemd_enable:
-	dh_systemd_enable -papache2 apache2.service
-	dh_systemd_enable -papache2 --name=apache2@ apache2@.service
-	dh_systemd_enable -papache2 --name=apache-htcacheclean apache-htcacheclean.service
-	dh_systemd_enable -papache2 --name=apache-htcacheclean@ apache-htcacheclean@.service
+override_dh_installsystemd:
+	dh_installsystemd -papache2 apache2.service
+	dh_installsystemd -papache2 --name=apache2@ apache2@.service
+	dh_installsystemd -papache2 --name=apache-htcacheclean apache-htcacheclean.service
+	dh_installsystemd -papache2 --name=apache-htcacheclean@ apache-htcacheclean@.service
 
 override_dh_installdocs-indep:
 	perl debian/convert_docs debian/apache2-doc/usr/share/doc/apache2-doc/manual
