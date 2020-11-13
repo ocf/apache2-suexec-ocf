@@ -1,4 +1,12 @@
 # Even though one line is very long, it's still hand-editable source code
 source-is-missing docs/manual/style/scripts/prettify.js .*
 # Variable not exported by pkg-info.mk
-apache2 source: debian-rules-parses-dpkg-parsechangelog (line 15)
+debian-rules-parses-dpkg-parsechangelog (line 15)
+# Upstream framework
+national-encoding debian/perl-framework/Apache-Test/Changes
+national-encoding debian/perl-framework/t/htdocs/php/strings3.php
+national-encoding debian/perl-framework/t/htdocs/php/strings4.php
+national-encoding debian/perl-framework/t/php/strings3.t
+national-encoding debian/perl-framework/t/php/strings4.t
+# Ignore this
+national-encoding debian/upstream/signing-key.asc
