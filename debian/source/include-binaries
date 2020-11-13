@@ -985,4 +985,3 @@ debian/perl-framework/t/htdocs/security/CAN-2004-0959.php
 debian/perl-framework/t/htdocs/security/CAN-2005-2491/one/.htaccess
 debian/perl-framework/t/htdocs/security/CAN-2005-2491/two/.htaccess
 debian/perl-framework/t/htdocs/security/CVE-2005-3352.map
-debian/upstream/signing-key.pgp
