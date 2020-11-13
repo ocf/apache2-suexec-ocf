@@ -45,7 +45,8 @@ Recommends: ssl-cert
 Suggests: apache2-doc,
           apache2-suexec-pristine | apache2-suexec-custom,
           www-browser
-Pre-Depends: dpkg (>= 1.17.14)
+Pre-Depends: dpkg (>= 1.17.14),
+             ${misc:Pre-Depends}
 Breaks: libapache2-mod-proxy-uwsgi (<< 2.4.33)
 Conflicts: apache2.2-bin,
            apache2.2-common
