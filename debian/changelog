@@ -3809,7 +3809,7 @@ apache2 (2.0.39+cvs.1027964860-1) unstable; urgency=low
   * David Kimdon
     - add build depends on zlib1g-dev (Closes: #151286)
 
- -- Thom May <thom@debian.org>  Fri, 29 Jul 2002 19:12:56 +0100
+ -- Thom May <thom@debian.org>  Mon, 29 Jul 2002 19:12:56 +0100
 
 apache2 (2.0.39-1) unstable; urgency=low
 
