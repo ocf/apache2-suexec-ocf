@@ -1,0 +1,27 @@
+Description: little spelling errors
+Author: Xavier Guimard <yadd@debian.org>
+Forwarded: no
+Last-Update: 2020-11-13
+
+--- a/modules/http2/h2_config.c
++++ b/modules/http2/h2_config.c
+@@ -721,7 +721,7 @@
+     else if (!strcasecmp("BEFORE", sdependency)) {
+         dependency = H2_DEPENDANT_BEFORE;
+         if (sweight) {
+-            return "dependecy 'Before' does not allow a weight";
++            return "dependency 'Before' does not allow a weight";
+         }
+     } 
+     else if (!strcasecmp("INTERLEAVED", sdependency)) {
+--- a/modules/mappers/mod_imagemap.c
++++ b/modules/mappers/mod_imagemap.c
+@@ -858,7 +858,7 @@
+         /* There's not much else we can do ... we've already sent the headers
+          * to the client.
+          */
+-        ap_rputs("\n\n[an internal server error occured]\n", r);
++        ap_rputs("\n\n[an internal server error occurred]\n", r);
+         menu_footer(r);
+         return OK;
+     }
