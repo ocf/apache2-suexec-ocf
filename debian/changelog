@@ -1,3 +1,11 @@
+apache2 (2.4.46-3) UNRELEASED; urgency=medium
+
+  * Remove postinst/preinst hooks concerning old versions
+  * Clean include-binaries
+  * Enable verbose test output during autopkgtest
+
+ -- Xavier Guimard <yadd@debian.org>  Fri, 13 Nov 2020 17:38:46 +0100
+
 apache2 (2.4.46-2) unstable; urgency=medium
 
   [ Jean-Michel Vourgère ]
