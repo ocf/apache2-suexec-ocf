@@ -1,18 +1,31 @@
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -239,16 +239,18 @@
- 	fi
+@@ -272,26 +272,29 @@
+ install-suexec: install-suexec-$(INSTALL_SUEXEC)
  
- install-suexec:
+ install-suexec-binary:
 -	@if test -f $(builddir)/support/suexec-pristine && test -f $(builddir)/support/suexec-custom; then \
 +	@if test -f $(builddir)/support/suexec-pristine && test -f $(builddir)/support/suexec-custom && test -f $(builddir)/support/suexec-ocf; then \
-             test -d $(DESTDIR)$(sbindir) || $(MKINSTALLDIRS) $(DESTDIR)$(sbindir); \
-             $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-pristine $(DESTDIR)$(sbindir); \
-             chmod 4755 $(DESTDIR)$(sbindir)/suexec-pristine; \
-             $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-custom $(DESTDIR)$(sbindir); \
-             chmod 4755 $(DESTDIR)$(sbindir)/suexec-custom; \
-+            $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-ocf $(DESTDIR)$(sbindir); \
-+            chmod 4755 $(DESTDIR)$(sbindir)/suexec-ocf; \
+ 	    test -d $(DESTDIR)$(sbindir) || $(MKINSTALLDIRS) $(DESTDIR)$(sbindir); \
+ 	    $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-pristine $(DESTDIR)$(sbindir); \
+ 	    $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-custom $(DESTDIR)$(sbindir); \
++	    $(INSTALL_PROGRAM) $(top_builddir)/support/suexec-ocf $(DESTDIR)$(sbindir); \
+ 	fi
+ 
+ install-suexec-setuid: install-suexec-binary
+-	@if test -f $(builddir)/support/suexec-pristine && test -f $(builddir)/support/suexec-custom; then \
++	@if test -f $(builddir)/support/suexec-pristine && test -f $(builddir)/support/suexec-custom && test -f $(builddir)/support/suexec-ocf; then \
+ 	    chmod 4755 $(DESTDIR)$(sbindir)/suexec-pristine; \
+ 	    chmod 4755 $(DESTDIR)$(sbindir)/suexec-custom; \
++	    chmod 4755 $(DESTDIR)$(sbindir)/suexec-ocf; \
+ 	fi
+ 
+ install-suexec-caps: install-suexec-binary
+-	@if test -f $(builddir)/support/suexec-pristine && test -f $(builddir)/support/suexec-custom; then \
++	@if test -f $(builddir)/support/suexec-pristine && test -f $(builddir)/support/suexec-custom && test -f $(builddir)/support/suexec-ocf; then \
+ 	    setcap 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec-pristine; \
+ 	    setcap 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec-custom; \
++	    setcap 'cap_setuid,cap_setgid+pe' $(DESTDIR)$(sbindir)/suexec-ocf; \
  	fi
  
  suexec:
