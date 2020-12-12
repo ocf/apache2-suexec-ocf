@@ -1,3 +1,9 @@
+apache2 (2.4.38-3+deb10u4ocf1) buster; urgency=medium
+
+  * Apply OCF apache2-suexec-ocf patches
+
+ -- Jason Perrin <jvperrin@ocf.berkeley.edu>  Sat, 12 Dec 2020 11:13:53 -0800
+
 apache2 (2.4.38-3+deb10u4) buster-security; urgency=high
 
   * Import http2 modules from 2.4.46 (Closes: CVE-2020-9490, CVE-2020-11993)
