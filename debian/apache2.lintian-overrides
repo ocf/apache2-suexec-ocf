@@ -9,4 +9,5 @@ package-contains-empty-directory usr/lib/cgi-bin/
 apache2: dir-or-file-in-var-www var/www/html/
 # Second update-rc.d call is to disable the service
 duplicate-updaterc.d-calls-in-postinst apache-htcacheclean
-
+# Uninstalled files
+missing-notice-file-for-apache-license NOTICE debian/perl-framework/NOTICE
