@@ -3731,7 +3731,7 @@ apache2 (2.0.42-2) unstable; urgency=low
   * PERCHILD IS NOT WORKING IN THIS RELEASE. DON'T EXPECT IT TO. BUGS ABOUT
     THIS WILL BE CLOSED WITH EXTREME PREJUDICE.
 
- -- Thom May <thom@debian.org>  Mon, 27 Sep 2002 13:06:59 +0100
+ -- Thom May <thom@debian.org>  Fri, 27 Sep 2002 13:06:59 +0100
 
 apache2 (2.0.42-1) unstable; urgency=low
 
