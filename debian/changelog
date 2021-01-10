@@ -1,12 +1,13 @@
-apache2 (2.4.46-3) UNRELEASED; urgency=medium
+apache2 (2.4.46-3) unstable; urgency=medium
 
   * Remove postinst/preinst hooks concerning old versions
   * Clean include-binaries
   * Enable verbose test output during autopkgtest
   * Declare compliance with policy 4.5.1
   * Add debian/gbp.conf
+  * Disable temporary 3 subtests (Closes: #979664)
 
- -- Xavier Guimard <yadd@debian.org>  Sat, 09 Jan 2021 18:45:26 +0100
+ -- Xavier Guimard <yadd@debian.org>  Sun, 10 Jan 2021 22:43:21 +0100
 
 apache2 (2.4.46-2) unstable; urgency=medium
 
