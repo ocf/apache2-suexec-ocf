@@ -1,3 +1,9 @@
+apache2 (2.4.46-4) unstable; urgency=medium
+
+  * Ignore other random another test failures (Closes: #979664)
+
+ -- Xavier Guimard <yadd@debian.org>  Mon, 11 Jan 2021 11:58:23 +0100
+
 apache2 (2.4.46-3) unstable; urgency=medium
 
   * Remove postinst/preinst hooks concerning old versions
