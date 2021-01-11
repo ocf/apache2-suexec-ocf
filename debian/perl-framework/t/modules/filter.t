@@ -9,7 +9,7 @@ use File::Spec;
 my @testcases = (
     ['/modules/cgi/xother.pl'           => 'HELLOWORLD'],
     ['/modules/filter/bytype/test.txt'  => 'HELLOWORLD'],
-    #['/modules/filter/bytype/test.xml'  => 'HELLOWORLD'],
+    ['/modules/filter/bytype/test.xml'  => 'HELLOWORLD'],
     ['/modules/filter/bytype/test.css'  => 'helloworld'],
     ['/modules/filter/bytype/test.html' => 'helloworld'],
 );

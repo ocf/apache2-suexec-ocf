@@ -10,7 +10,7 @@ use Apache::TestUtil;
 ##
 
 # Code, session data, dirty, expiry, content.
-my $checks_per_test = 3;
+my $checks_per_test = 5;
 
 # Session, API, Encoding, SessionEnv, SessionHeader, SessionMaxAge,
 # SessionExpiryUpdateInterval, SessionInclude/Exclude.
@@ -74,9 +74,9 @@ sub check_result
         ok !$expiry;
     }
 
-    #ok t_cmp($sessionData, $session, "session header ($name)");
+    ok t_cmp($sessionData, $session, "session header ($name)");
     my $got = $res->header('X-Test-Session-Dirty') // 0;
-    #ok t_cmp($got, $dirty, "session dirty ($name)");
+    ok t_cmp($got, $dirty, "session dirty ($name)");
     $got = $res->content;
     chomp($got);
     ok t_cmp($got, $response, "body ($name)");
@@ -172,8 +172,8 @@ check_get 'Keep non-expired session',
 check_post 'Session writable after expired', '/on/expire?expiry=1',
     $create_session, $session, 1, 1;
 
-# SessionExpiryUpdateInterval directive - new in 2.5
-if (have_module('version') && have_min_apache_version('2.5')) {
+# SessionExpiryUpdateInterval directive - new in 2.4.41
+if (have_module('version') && have_min_apache_version('2.4.41')) {
     my $max_expiry = expiry_from_seconds(time() + 100);
     my $threshold_expiry = expiry_from_seconds(time() + 40);
 
