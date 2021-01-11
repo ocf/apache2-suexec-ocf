@@ -9,7 +9,10 @@ use File::stat;
 my $have_apache_2 = have_apache 2;
 my $have_apache_2050 = have_min_apache_version "2.0.50";
 
-my $script_log_length = 40960;
+my $script_log_length = 8192;
+if (have_module 'mod_cgi') {
+    $script_log_length = 40960;
+}
 
 ## mod_cgi test
 ##
@@ -18,7 +21,12 @@ my $script_log_length = 40960;
 ## AddHandler cgi-script .sh
 ## AddHandler cgi-script .pl
 ## ScriptLog logs/mod_cgi.log
-## ScriptLogLength 40960
+## <IfModule mod_cgi.c>
+##     ScriptLogLength 40960
+## </IfModule mod_cgi>
+## <IfModule !mod_cgi.c>
+##     ScriptLogLength 8192
+## </IfModule mod_cgi>
 ## ScriptLogBuffer 256
 ## <Directory @SERVERROOT@/htdocs/modules/cgi>
 ## Options +ExecCGI
@@ -183,8 +191,9 @@ foreach my $length (@post_content) {
     $actual = POST_RC "$path/bogus-perl.pl", content => "$content"x$length;
 
     print "# posted content (length $length) to bogus-perl.pl\n";
+    print "# got return code of: $actual, expecting: $expected\n";
     ## should get rc 500
-    ok t_cmp($actual, $expected, "POST to $path/bogus-perl.pl [content: $content x $length]");
+    ok ($actual eq $expected);
 
     if (-e $cgi_log) {
         ## cgi log should be bigger.
@@ -197,7 +206,7 @@ foreach my $length (@post_content) {
             ## should not fall in here at this point,
             ## but just in case...
             print "# verifying log did not increase in size...\n";
-            ok t_cmp($$stat[7], $log_size, "log size should not have increased");
+            ok ($$stat[7] eq $log_size);
         }
         $log_size = $$stat[7];
     

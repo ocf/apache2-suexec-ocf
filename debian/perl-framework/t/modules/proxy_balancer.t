@@ -6,11 +6,7 @@ use Apache::TestRequest;
 use Apache::TestUtil;
 use Apache::TestConfig ();
 
-my @echos = ('A'x8, 'A'x64, 'A'x2048, 'A'x4096);
-
-my $skipbodyfailover = !need_min_apache_version("2.4.42");
-
-plan tests => 3+(2*scalar @echos), need 'proxy_balancer', 'proxy_http';
+plan tests => 3, need 'proxy_balancer', 'proxy_http';
 
 Apache::TestRequest::module("proxy_http_balancer");
 Apache::TestRequest::user_agent(requests_redirectable => 0);
@@ -44,14 +40,3 @@ if (have_module('lbmethod_heartbeat')) {
 } else {
     #skip "skipping tests without mod_lbmethod_heartbeat" foreach (1..1);
 }
-
-
-
-# PR63891
-foreach my $t (@echos) {
-    $r = POST "/baltest_echo_post", content => $t;
-    skip $skipbodyfailover, t_cmp($r->code, 200, "failed over");
-    skip $skipbodyfailover, t_cmp($r->content, $t, "response body echoed");
-}
-
-

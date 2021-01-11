@@ -29,7 +29,6 @@ for my $module (sort keys %urls) {
     print "# testing $module with $urls{$module}\n";
     print "# expected 200\n";
     print "# received ".$r->code."\n";
-    print "# body: ".$r->content."\n";
     verify($r);
 }
 

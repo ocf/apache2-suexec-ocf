@@ -3,11 +3,9 @@ use warnings FATAL => 'all';
 
 use Apache::Test;
 use Apache::TestRequest;
-use Apache::TestUtil qw(t_write_file t_start_error_log_watch t_finish_error_log_watch t_cmp);
+use Apache::TestUtil qw(t_write_file t_start_error_log_watch t_finish_error_log_watch);
 
 use File::Spec;
-
-use Time::HiRes qw(usleep);
 
 # test ap_expr
 
@@ -64,8 +62,6 @@ foreach my $t (@test_cases) {
                        'SomeHeader' => 'SomeValue',
                        'User-Agent' => 'SomeAgent',
                        'Referer'    => 'SomeReferer');
-    ### Sleep here, attempt to avoid intermittent failures.
-    usleep(250000);
     my @loglines = t_finish_error_log_watch();
 
     my @evalerrors = grep {/(?:internal evaluation error|flex scanner jammed)/i
@@ -101,7 +97,8 @@ foreach my $t (@test_cases) {
                              [ ]\(log_transaction)  # trailing hook info (LogLevel debug and higher)
                            }x ) {
             my $result = $1;
-            ok t_cmp($result, $expect, "log message @msg didn't match");
+            print "Got '$result', expected '$expect'\n";
+            ok($result eq $expect);
         }
         else {
             print "Can't extract expr result from log message:\n@msg\n";
