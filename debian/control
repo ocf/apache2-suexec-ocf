@@ -3,7 +3,7 @@ Maintainer: Debian Apache Maintainers <debian-apache@lists.debian.org>
 Uploaders: Stefan Fritsch <sf@debian.org>,
            Arno Töll <arno@debian.org>,
            Ondřej Surý <ondrej@debian.org>,
-           Xavier Guimard <yadd@debian.org>
+           Yadd <yadd@debian.org>
 Section: httpd
 Priority: optional
 Build-Depends: debhelper-compat (= 13),
