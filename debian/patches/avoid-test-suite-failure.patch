@@ -1,0 +1,28 @@
+Description: Avoid test suite failure
+ due to timing issue reading error log too quickly after request, by
+ adding a sleep
+Author: Andreas Hasenack <andreas@canonical.com>
+Forwarded: no
+Reviewed-By: Xavier Guimard <yadd@debian.org>
+Last-Update: 2021-03-12
+
+--- a/debian/perl-framework/t/apache/expr_string.t
++++ b/debian/perl-framework/t/apache/expr_string.t
+@@ -7,6 +7,8 @@
+ 
+ use File::Spec;
+ 
++use Time::HiRes qw(usleep);
++
+ # test ap_expr
+ 
+ Apache::TestRequest::user_agent(keep_alive => 1);
+@@ -62,6 +64,8 @@
+                        'SomeHeader' => 'SomeValue',
+                        'User-Agent' => 'SomeAgent',
+                        'Referer'    => 'SomeReferer');
++    ### Sleep here, attempt to avoid intermittent failures. (LP: #1890302)
++    usleep(250000);
+     my @loglines = t_finish_error_log_watch();
+ 
+     my @evalerrors = grep {/(?:internal evaluation error|flex scanner jammed)/i

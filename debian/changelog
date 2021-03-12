@@ -1,3 +1,13 @@
+apache2 (2.4.46-5) UNRELEASED; urgency=medium
+
+  [ Daniel Lewart ]
+  * Update apache2.logrotate (Closes: #979813)
+
+  [ Andreas Hasenack ]
+  * Avoid test suite failure (Closes: #985012)
+
+ -- Yadd <yadd@debian.org>  Fri, 12 Mar 2021 11:02:20 +0100
+
 apache2 (2.4.46-4) unstable; urgency=medium
 
   * Ignore other random another test failures (Closes: #979664)
