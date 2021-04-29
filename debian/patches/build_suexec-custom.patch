@@ -4,7 +4,7 @@ Author: Stefan Fritsch <sf@debian.org>
 Last-Update: 2012-02-25
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -272,23 +272,26 @@
+@@ -292,23 +292,26 @@
  install-suexec: install-suexec-$(INSTALL_SUEXEC)
  
  install-suexec-binary:
