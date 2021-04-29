@@ -1,4 +1,4 @@
-apache2 (2.4.46-5) UNRELEASED; urgency=medium
+apache2 (2.4.47-2) UNRELEASED; urgency=medium
 
   [ Daniel Lewart ]
   * Update apache2.logrotate (Closes: #979813)
@@ -7,6 +7,14 @@ apache2 (2.4.46-5) UNRELEASED; urgency=medium
   * Avoid test suite failure (Closes: #985012)
 
  -- Yadd <yadd@debian.org>  Fri, 12 Mar 2021 11:02:20 +0100
+
+apache2 (2.4.47-1) experimental; urgency=medium
+
+  * Update upstream keys file
+  * New upstream version 2.4.47
+  * Refresh patches
+
+ -- Yadd <yadd@debian.org>  Thu, 29 Apr 2021 08:03:33 +0200
 
 apache2 (2.4.46-4) unstable; urgency=medium
 

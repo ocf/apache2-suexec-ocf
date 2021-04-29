@@ -317,7 +317,7 @@ static int ap_expr_eval_comp(ap_expr_eval_ctx_t *ctx, const ap_expr_t *node)
 /* combined string/int comparison for compatibility with ssl_expr */
 static int strcmplex(const char *str1, const char *str2)
 {
-    int i, n1, n2;
+    apr_size_t i, n1, n2;
 
     if (str1 == NULL)
         return -1;
@@ -1075,7 +1075,7 @@ static const char *sha1_func(ap_expr_eval_ctx_t *ctx, const void *data,
     out = apr_palloc(ctx->p, APR_SHA1_DIGESTSIZE*2+1);
 
     apr_sha1_init(&context);
-    apr_sha1_update(&context, arg, strlen(arg));
+    apr_sha1_update(&context, arg, (unsigned int)strlen(arg));
     apr_sha1_final(sha1, &context);
 
     ap_bin2hex(sha1, APR_SHA1_DIGESTSIZE, out);
@@ -1706,7 +1706,7 @@ static int core_expr_lookup(ap_expr_lookup_parms *parms)
             while (prov->func) {
                 const char **name = prov->names;
                 while (*name) {
-                    if (strcasecmp(*name, parms->name) == 0) {
+                    if (ap_cstr_casecmp(*name, parms->name) == 0) {
                         *parms->func = prov->func;
                         *parms->data = name;
                         return OK;
@@ -1739,7 +1739,7 @@ static int core_expr_lookup(ap_expr_lookup_parms *parms)
                 if (parms->type == AP_EXPR_FUNC_OP_UNARY)
                     match = !strcmp(prov->name, parms->name);
                 else
-                    match = !strcasecmp(prov->name, parms->name);
+                    match = !ap_cstr_casecmp(prov->name, parms->name);
                 if (match) {
                     if ((parms->flags & AP_EXPR_FLAG_RESTRICTED)
                         && prov->restricted) {
