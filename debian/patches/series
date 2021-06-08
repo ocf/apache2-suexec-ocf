@@ -11,4 +11,3 @@ tlsv13-add-logno.diff
 # This patch is applied manually
 #suexec-custom.patch
 spelling-errors.diff
-import-http2-module-from-2.4.48.patch
