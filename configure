@@ -32284,7 +32284,7 @@ EOF
   > $modpath_current/modules.mk
 
 
-md_objs="md_acme.lo md_acme_acct.lo md_acme_authz.lo md_acme_drive.lo md_acmev1_drive.lo md_acmev2_drive.lo md_acme_order.lo md_core.lo md_curl.lo md_crypt.lo md_http.lo md_json.lo md_jws.lo md_log.lo md_ocsp.lo md_result.lo md_reg.lo md_status.lo md_store.lo md_store_fs.lo md_time.lo md_util.lo mod_md.lo mod_md_config.lo mod_md_drive.lo mod_md_ocsp.lo mod_md_os.lo mod_md_status.lo "
+md_objs="md_acme.lo md_acme_acct.lo md_acme_authz.lo md_acme_drive.lo md_acmev2_drive.lo md_acme_order.lo md_core.lo md_curl.lo md_crypt.lo md_event.lo md_http.lo md_json.lo md_jws.lo md_log.lo md_ocsp.lo md_result.lo md_reg.lo md_status.lo md_store.lo md_store_fs.lo md_time.lo md_util.lo mod_md.lo mod_md_config.lo mod_md_drive.lo mod_md_ocsp.lo mod_md_os.lo mod_md_status.lo "
 
 # Ensure that other modules can pick up mod_md.h
 
