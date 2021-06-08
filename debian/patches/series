@@ -11,4 +11,3 @@ reproducible_builds.diff
 # This patch is applied manually
 #suexec-custom.patch
 spelling-errors.diff
-avoid-test-suite-failure.patch
