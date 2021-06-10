@@ -110,7 +110,7 @@ apache2 (2.4.43-1) unstable; urgency=medium
   * Fix logrotate script for multi-instance (Closes: #914606)
 
   [ Xavier Guimard ]
-  * New upstream version 2.4.43
+  * New upstream version 2.4.43 (Closes: CVE-2020-1927, CVE-2020-1934)
   * Refresh patches
 
  -- Xavier Guimard <yadd@debian.org>  Tue, 31 Mar 2020 08:02:12 +0200
@@ -153,7 +153,8 @@ apache2 (2.4.41-2) unstable; urgency=medium
 
 apache2 (2.4.41-1) unstable; urgency=medium
 
-  * New upstream version 2.4.41
+  * New upstream version 2.4.41 (Closes: CVE-2019-9517, CVE-2019-10081,
+    CVE-2019-10082, CVE-2019-10092, CVE-2019-10098)
   * Update lintian overrides
   * Remove README in usr/share/apache2
   * Move httxt2dbm manpage in section 8
@@ -173,7 +174,8 @@ apache2 (2.4.39-1) unstable; urgency=medium
   * Do not install /usr/share/apache2/build/config.nice (Closes: #929510)
 
   [ Xavier Guimard ]
-  * New upstream version 2.4.39
+  * New upstream version 2.4.39 (Closes: CVE-2019-0196, CVE-2019-0197,
+    CVE-2019-0211, CVE-2019-0215, CVE-2019-0217, CVE-2019-0220)
   * Refresh patches
   * Remove patches now included in upstream
   * Replace duplicate doc files by links using jdupes
@@ -262,7 +264,8 @@ apache2 (2.4.38-1) unstable; urgency=medium
     LogFormat directives.
 
   [ Xavier Guimard ]
-  * New upstream version 2.4.38 (Closes: #920220, #920302, #920303)
+  * New upstream version 2.4.38 (Closes: #920220, #920302, #920303,
+    CVE-2018-17189, CVE-2018-17199, CVE-2019-0190)
   * Refresh patches
   * Remove setenvifexpr.diff patch now included in upstream
   * Replace libapache2-mod-proxy-uwsgi.{post*,prerm} by a maintscript
