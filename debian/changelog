@@ -1,3 +1,10 @@
+apache2 (2.4.48-2) UNRELEASED; urgency=medium
+
+  [ Christian Ehrhardt ]
+  * d/t/control, d/t/check-http2: basic test for http2 (Closes: #884068)
+
+ -- Yadd <yadd@debian.org>  Thu, 10 Jun 2021 18:15:54 +0200
+
 apache2 (2.4.48-1) experimental; urgency=medium
 
   [ Daniel Lewart ]
@@ -11,7 +18,8 @@ apache2 (2.4.48-1) experimental; urgency=medium
   * Re-export upstream signing key without extra signatures.
 
   [ Ondřej Surý ]
-  * New upstream version 2.4.48 (Closes: CVE-2021-31618)
+  * New upstream version 2.4.48 (Closes: CVE-2021-31618, CVE-2020-13950,
+    CVE-2020-35452, CVE-2021-26690, CVE-2021-26691, CVE-2021-30641)
 
  -- Ondřej Surý <ondrej@debian.org>  Tue, 08 Jun 2021 08:29:35 +0200
 
