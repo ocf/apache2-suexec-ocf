@@ -1,3 +1,10 @@
+apache2 (2.4.46-5) unstable; urgency=medium
+
+  * Fix "NULL pointer dereference on specially crafted HTTP/2 request"
+    (Closes: #989562, CVE-2021-31618)
+
+ -- Yadd <yadd@debian.org>  Thu, 10 Jun 2021 11:57:38 +0200
+
 apache2 (2.4.46-4) unstable; urgency=medium
 
   * Ignore other random another test failures (Closes: #979664)
