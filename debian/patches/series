@@ -12,3 +12,8 @@ tlsv13-add-logno.diff
 #suexec-custom.patch
 spelling-errors.diff
 CVE-2021-31618.patch
+CVE-2021-30641.patch
+CVE-2021-26691.patch
+CVE-2021-26690.patch
+CVE-2020-35452.patch
+CVE-2020-13950.patch
