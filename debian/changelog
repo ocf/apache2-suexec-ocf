@@ -18,17 +18,16 @@ apache2 (2.4.48-1) experimental; urgency=medium
   * Re-export upstream signing key without extra signatures.
 
   [ Ondřej Surý ]
-  * New upstream version 2.4.48 (Closes: CVE-2021-31618, CVE-2020-13950,
-    CVE-2020-35452, CVE-2021-26690, CVE-2021-26691, CVE-2021-30641)
+  * New upstream version 2.4.48 (Closes: CVE-2019-17567, CVE-2020-13938,
+    CVE-2020-13950, CVE-2020-35452, CVE-2021-26690, CVE-2021-26691,
+    CVE-2021-30641, CVE-2021-31618)
 
  -- Ondřej Surý <ondrej@debian.org>  Tue, 08 Jun 2021 08:29:35 +0200
 
 apache2 (2.4.47-1) experimental; urgency=medium
 
   * Update upstream keys file
-  * New upstream version 2.4.47 (Closes: CVE-2021-30641, CVE-2020-35452,
-    CVE-2021-26691, CVE-2021-26690, CVE-2020-13950, CVE-2020-13938,
-    CVE-2019-17567)
+  * New upstream version 2.4.47
   * Refresh patches
 
  -- Yadd <yadd@debian.org>  Thu, 29 Apr 2021 08:03:33 +0200
