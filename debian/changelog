@@ -25,6 +25,13 @@ apache2 (2.4.47-1) experimental; urgency=medium
 
  -- Yadd <yadd@debian.org>  Thu, 29 Apr 2021 08:03:33 +0200
 
+apache2 (2.4.48-1) experimental; urgency=medium
+
+  * Fix various low security issues (Closes: CVE-2020-13950, CVE-2020-35452,
+    CVE-2021-26690, CVE-2021-26691, CVE-2021-30641)
+
+ -- Yadd <yadd@debian.org>  Thu, 10 Jun 2021 13:40:11 +0200
+
 apache2 (2.4.46-5) unstable; urgency=medium
 
   * Fix "NULL pointer dereference on specially crafted HTTP/2 request"
