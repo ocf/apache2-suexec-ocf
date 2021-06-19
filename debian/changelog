@@ -1,9 +1,11 @@
-apache2 (2.4.48-2) UNRELEASED; urgency=medium
+apache2 (2.4.48-2) unstable; urgency=medium
+
+  * Back to unstable: Apache2 will follow upstream changes for Bullseye
 
   [ Christian Ehrhardt ]
   * d/t/control, d/t/check-http2: basic test for http2 (Closes: #884068)
 
- -- Yadd <yadd@debian.org>  Thu, 10 Jun 2021 18:15:54 +0200
+ -- Yadd <yadd@debian.org>  Sat, 19 Jun 2021 17:50:29 +0200
 
 apache2 (2.4.48-1) experimental; urgency=medium
 
