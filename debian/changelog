@@ -1,3 +1,9 @@
+apache2 (2.4.48-3) unstable; urgency=medium
+
+  * Fix debian/changelog
+
+ -- Yadd <yadd@debian.org>  Sun, 20 Jun 2021 16:39:33 +0200
+
 apache2 (2.4.48-2) unstable; urgency=medium
 
   * Back to unstable: Apache2 will follow upstream changes for Bullseye
