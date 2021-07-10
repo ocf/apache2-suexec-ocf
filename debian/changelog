@@ -1,3 +1,11 @@
+apache2 (2.4.48-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Direct init script reload output from logrotate to syslog, to
+    avoid mail-spamming the local admin (Closes: #990580)
+
+ -- Thorsten Glaser <tg@mirbsd.de>  Sat, 10 Jul 2021 23:31:28 +0200
+
 apache2 (2.4.48-3) unstable; urgency=medium
 
   * Fix debian/changelog
