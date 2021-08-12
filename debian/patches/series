@@ -11,3 +11,4 @@ reproducible_builds.diff
 # This patch is applied manually
 #suexec-custom.patch
 spelling-errors.diff
+CVE-2021-33193.patch
