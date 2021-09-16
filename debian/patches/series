@@ -7,8 +7,7 @@ reproducible_builds.diff
 #mod_proxy_ajp-add-secret-parameter.diff
 #buffer-http-request-bodies-for-tlsv13.diff
 #tlsv13-add-logno.diff
+spelling-errors.diff
 
 # This patch is applied manually
 #suexec-custom.patch
-spelling-errors.diff
-CVE-2021-33193.patch

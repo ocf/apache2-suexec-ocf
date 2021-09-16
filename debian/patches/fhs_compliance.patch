@@ -4,7 +4,7 @@ Author: Adam Conrad <adconrad@0c3.net>
 Last-Update: 2012-02-25
 --- a/configure
 +++ b/configure
-@@ -40439,17 +40439,17 @@
+@@ -40427,17 +40427,17 @@
  
  
  cat >>confdefs.h <<_ACEOF
