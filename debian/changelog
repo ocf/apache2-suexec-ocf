@@ -1,3 +1,11 @@
+apache2 (2.4.49-1+deb11u1) UNRELEASED; urgency=medium
+
+  * Update upstream GPG keys
+  * New upstream version 2.4.49
+  * Refresh patches
+
+ -- Yadd <yadd@debian.org>  Thu, 16 Sep 2021 05:54:22 +0200
+
 apache2 (2.4.48-3.1+deb11u1) bullseye-security; urgency=medium
 
   * Fix mod_proxy HTTP2 request line injection (Closes: CVE-2021-33193)
