@@ -1,4 +1,4 @@
-apache2 (2.4.49-1+deb11u1) UNRELEASED; urgency=medium
+apache2 (2.4.49-1~deb11u1) UNRELEASED; urgency=medium
 
   * Update upstream GPG keys
   * New upstream version 2.4.49
