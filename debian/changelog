@@ -1,7 +1,8 @@
-apache2 (2.4.49-1~deb11u1) UNRELEASED; urgency=medium
+apache2 (2.4.49-1~deb11u1) bullseye-security; urgency=high
 
   * Update upstream GPG keys
-  * New upstream version 2.4.49
+  * New upstream version 2.4.49 (Closes: CVE-2021-34798, CVE-2021-36160,
+    CVE-2021-39275, CVE-2021-40438)
   * Refresh patches
 
  -- Yadd <yadd@debian.org>  Thu, 16 Sep 2021 05:54:22 +0200
