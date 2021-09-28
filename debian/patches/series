@@ -8,7 +8,8 @@ reproducible_builds.diff
 #buffer-http-request-bodies-for-tlsv13.diff
 #tlsv13-add-logno.diff
 spelling-errors.diff
+CVE-2021-40438-improvement.patch
+correctly-count-active-child-processes.patch
 
 # This patch is applied manually
 #suexec-custom.patch
-CVE-2021-40438-improvement.patch
