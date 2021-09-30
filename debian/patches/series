@@ -11,3 +11,4 @@ spelling-errors.diff
 
 # This patch is applied manually
 #suexec-custom.patch
+CVE-2021-40438-improvement.patch
