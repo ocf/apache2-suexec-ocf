@@ -1,3 +1,13 @@
+apache2 (2.4.49-1~deb11u2) bullseye-security; urgency=medium
+
+  [ Yadd ]
+  * Re-export upstream signing key without extra signatures.
+
+  [ Moritz Muehlenhoff ]
+  * Fix CVE-2021-40438 regression
+
+ -- Yadd <yadd@debian.org>  Thu, 30 Sep 2021 06:06:35 +0200
+
 apache2 (2.4.49-1~deb11u1) bullseye-security; urgency=high
 
   * Update upstream GPG keys
