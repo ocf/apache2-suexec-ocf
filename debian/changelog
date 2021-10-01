@@ -1,3 +1,10 @@
+apache2 (2.4.49-1~deb11u3) bullseye-security; urgency=medium
+
+  [ Ondřej Surý ]
+  * Add upstream patch to fix crash in 2.4.49
+
+ -- Yadd <yadd@debian.org>  Fri, 01 Oct 2021 11:26:56 +0200
+
 apache2 (2.4.49-1~deb11u2) bullseye-security; urgency=medium
 
   [ Yadd ]
