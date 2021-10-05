@@ -1,3 +1,14 @@
+apache2 (2.4.50-1~deb11u1) bullseye-security; urgency=medium
+
+  [ Ondřej Surý ]
+  * New upstream version 2.4.50 (Closes: CVE-2021-41524, CVE-2021-41773)
+
+  [ Yadd ]
+  * Refresh patches and drop CVE-2021-40438-improvement,
+    correctly-count-active-child-processes and spelling-errors patches
+
+ -- Yadd <yadd@debian.org>  Tue, 05 Oct 2021 18:10:37 +0200
+
 apache2 (2.4.49-1~deb11u3) bullseye-security; urgency=medium
 
   [ Ondřej Surý ]
