@@ -4,7 +4,7 @@ Author: Adam Conrad <adconrad@0c3.net>
 Last-Update: 2012-02-25
 --- a/configure
 +++ b/configure
-@@ -40427,17 +40427,17 @@
+@@ -40434,17 +40434,17 @@
  
  
  cat >>confdefs.h <<_ACEOF
@@ -27,7 +27,7 @@ Last-Update: 2012-02-25
  
 --- a/configure.in
 +++ b/configure.in
-@@ -874,11 +874,11 @@
+@@ -878,11 +878,11 @@
  echo $MODLIST | $AWK -f $srcdir/build/build-modules-c.awk > modules.c
  
  APR_EXPAND_VAR(ap_prefix, $prefix)
