@@ -39938,6 +39938,13 @@ if test -d ./test; then
   APACHE_FAST_OUTPUT_FILES="$APACHE_FAST_OUTPUT_FILES test/Makefile"
 
 fi
+if test -d ./test/modules/http2; then
+
+  APACHE_FAST_OUTPUT_FILES="$APACHE_FAST_OUTPUT_FILES test/modules/http2/Makefile"
+
+    ac_config_files="$ac_config_files test/modules/http2/config.ini"
+
+fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: " >&5
 $as_echo "$as_me: " >&6;}
@@ -41174,6 +41181,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "include/ap_config_auto.h") CONFIG_HEADERS="$CONFIG_HEADERS include/ap_config_auto.h" ;;
+    "test/modules/http2/config.ini") CONFIG_FILES="$CONFIG_FILES test/modules/http2/config.ini" ;;
     "docs/conf/httpd.conf") CONFIG_FILES="$CONFIG_FILES docs/conf/httpd.conf" ;;
     "docs/conf/extra/httpd-autoindex.conf") CONFIG_FILES="$CONFIG_FILES docs/conf/extra/httpd-autoindex.conf" ;;
     "docs/conf/extra/httpd-dav.conf") CONFIG_FILES="$CONFIG_FILES docs/conf/extra/httpd-dav.conf" ;;
