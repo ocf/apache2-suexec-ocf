@@ -4,9 +4,6 @@ suexec-CVE-2007-1742.patch
 customize_apxs.patch
 build_suexec-custom.patch
 reproducible_builds.diff
-#mod_proxy_ajp-add-secret-parameter.diff
-#buffer-http-request-bodies-for-tlsv13.diff
-#tlsv13-add-logno.diff
 
 # This patch is applied manually
 #suexec-custom.patch
