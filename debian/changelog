@@ -1,3 +1,10 @@
+apache2 (2.4.51-1~deb11u1) bullseye-security; urgency=medium
+
+  * New upstream version 2.4.51
+  * Refresh patches
+
+ -- Yadd <yadd@debian.org>  Thu, 07 Oct 2021 19:49:44 +0200
+
 apache2 (2.4.50-1~deb11u1) bullseye-security; urgency=medium
 
   [ Ondřej Surý ]
