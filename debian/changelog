@@ -1,6 +1,6 @@
 apache2 (2.4.51-1~deb11u1) bullseye-security; urgency=medium
 
-  * New upstream version 2.4.51
+  * New upstream version 2.4.51 (Closes: CVE-2021-41773, CVE-2021-42013)
   * Refresh patches
 
  -- Yadd <yadd@debian.org>  Thu, 07 Oct 2021 19:49:44 +0200
