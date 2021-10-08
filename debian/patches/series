@@ -7,4 +7,3 @@ reproducible_builds.diff
 
 # This patch is applied manually
 #suexec-custom.patch
-fix-CVE-2021-36160-regression.patch
