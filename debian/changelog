@@ -1,3 +1,10 @@
+apache2 (2.4.52-1~deb11u1) bullseye-security; urgency=medium
+
+  * New upstream version 2.4.52 (Closes: CVE-2021-44224, CVE-2021-44790)
+  * Refresh patches
+
+ -- Yadd <yadd@debian.org>  Mon, 20 Dec 2021 18:15:18 +0100
+
 apache2 (2.4.51-1~deb11u1) bullseye-security; urgency=medium
 
   * Update upstream GPG keys
@@ -7,6 +14,43 @@ apache2 (2.4.51-1~deb11u1) bullseye-security; urgency=medium
   * Refresh patches
 
  -- Yadd <yadd@debian.org>  Thu, 07 Oct 2021 19:49:44 +0200
+
+apache2 (2.4.50-1~deb11u1) bullseye-security; urgency=medium
+
+  [ Ondřej Surý ]
+  * New upstream version 2.4.50 (Closes: CVE-2021-41524, CVE-2021-41773)
+
+  [ Yadd ]
+  * Refresh patches and drop CVE-2021-40438-improvement,
+    correctly-count-active-child-processes and spelling-errors patches
+
+ -- Yadd <yadd@debian.org>  Tue, 05 Oct 2021 18:10:37 +0200
+
+apache2 (2.4.49-1~deb11u3) bullseye-security; urgency=medium
+
+  [ Ondřej Surý ]
+  * Add upstream patch to fix crash in 2.4.49
+
+ -- Yadd <yadd@debian.org>  Fri, 01 Oct 2021 11:26:56 +0200
+
+apache2 (2.4.49-1~deb11u2) bullseye-security; urgency=medium
+
+  [ Yadd ]
+  * Re-export upstream signing key without extra signatures.
+
+  [ Moritz Muehlenhoff ]
+  * Fix CVE-2021-40438 regression
+
+ -- Yadd <yadd@debian.org>  Thu, 30 Sep 2021 06:06:35 +0200
+
+apache2 (2.4.49-1~deb11u1) bullseye-security; urgency=high
+
+  * Update upstream GPG keys
+  * New upstream version 2.4.49 (Closes: CVE-2021-34798, CVE-2021-36160,
+    CVE-2021-39275, CVE-2021-40438)
+  * Refresh patches
+
+ -- Yadd <yadd@debian.org>  Thu, 16 Sep 2021 05:54:22 +0200
 
 apache2 (2.4.48-3.1+deb11u1) bullseye-security; urgency=medium
 
