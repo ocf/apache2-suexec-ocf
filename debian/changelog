@@ -1,3 +1,9 @@
+apache2 (2.4.52-1~deb11u2) bullseye-security; urgency=medium
+
+  * Fix 2.4.52 regression
+
+ -- Yadd <yadd@debian.org>  Mon, 03 Jan 2022 22:27:14 +0100
+
 apache2 (2.4.52-1~deb11u1) bullseye-security; urgency=medium
 
   * New upstream version 2.4.52 (Closes: CVE-2021-44224, CVE-2021-44790)
