@@ -3,7 +3,7 @@ Upstream-Name: Apache HTTPD Server
 Source: https://httpd.apache.org/
 
 Files: *
-Copyright: Copyright 2019 The Apache Software Foundation
+Copyright: 2022 The Apache Software Foundation
 License: Apache-2.0
 
 Files: include/ap_regex.h
