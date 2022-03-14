@@ -2,6 +2,7 @@
 # will be converted to a set of NVH'es on the same dynamic port, so they
 # are collected here.
 
+MaxMemFree 1
 
 <VirtualHost strict-default:core>
       ServerName default-strict
@@ -39,6 +40,16 @@
          <LocationMatch ^/authz_core/a//b/c/index.html>
              require all denied 
          </LocationMatch>
+         <Location /authz_core/a/b/d>
+             require all denied 
+         </Location>
+          <ifModule rewrite_module>
+         <Location /CVE-2020-1927/>
+            RewriteEngine ON
+            RewriteCond %{REQUEST_URI} (.+)/$
+            RewriteRule ^ %1 [L]
+         </Location>
+          </ifModule>
    </virtualHost>
 </IfVersion>
 

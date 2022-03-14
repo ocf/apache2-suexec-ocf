@@ -3,7 +3,7 @@ use warnings FATAL => 'all';
 
 use Apache::Test;
 use Apache::TestRequest;
-use Apache::TestUtil qw(t_write_file t_start_error_log_watch t_finish_error_log_watch);
+use Apache::TestUtil qw(t_write_file t_start_error_log_watch t_finish_error_log_watch t_cmp);
 
 use File::Spec;
 
@@ -64,7 +64,7 @@ foreach my $t (@test_cases) {
                        'SomeHeader' => 'SomeValue',
                        'User-Agent' => 'SomeAgent',
                        'Referer'    => 'SomeReferer');
-    ### Sleep here, attempt to avoid intermittent failures. (LP: #1890302)
+    ### Sleep here, attempt to avoid intermittent failures.
     usleep(250000);
     my @loglines = t_finish_error_log_watch();
 
@@ -101,8 +101,7 @@ foreach my $t (@test_cases) {
                              [ ]\(log_transaction)  # trailing hook info (LogLevel debug and higher)
                            }x ) {
             my $result = $1;
-            print "Got '$result', expected '$expect'\n";
-            ok($result eq $expect);
+            ok t_cmp($result, $expect, "log message @msg didn't match");
         }
         else {
             print "Can't extract expr result from log message:\n@msg\n";

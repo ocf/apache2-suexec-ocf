@@ -262,6 +262,13 @@
     ### Redirect, server context
     RewriteRule ^/modules/rewrite/redirect.html$ http://@SERVERNAME@:@PORT@/foobar.html [L,R=301]
 
+    RewriteRule ^/modules/rewrite/cookie/$ - [CO=NAME3:VAL:localhost:86400:/0:secure:httponly]
+    RewriteRule ^/modules/rewrite/cookie/0 - [CO=NAME3:VAL:localhost:86400:/0:secure:httponly:0]
+    RewriteRule ^/modules/rewrite/cookie/false - [CO=NAME3:VAL:localhost:86400:/0:secure:httponly:false]
+    RewriteRule ^/modules/rewrite/cookie/lax - [CO=NAME3:VAL:localhost:86400:/0:secure:httponly:lax]
+    RewriteRule ^/modules/rewrite/cookie/none - [CO=NAME3:VAL:localhost:86400:/0:secure:httponly:none]
+    RewriteRule ^/modules/rewrite/cookie/foo - [CO=NAME3:VAL:localhost:86400:/0:secure:httponly:foo]
+
    <VirtualHost cve_2011_3368_rewrite>
       DocumentRoot @SERVERROOT@/htdocs/modules/proxy
       RewriteEngine On
@@ -272,10 +279,10 @@
    <IfVersion >= 2.4>
    <Location /modules/rewrite/pr60478-rewrite-loop>
       # This pair of RewriteRules will loop but should eventually 500 once we
-      # reach LimitRequestLine * 2 bytes. (In this case, 128 * 2 = 256.)
+      # reach LimitRequestLine * 2 bytes. (In this case, @limitrequestline@ * 2 = @limitrequestlinex2@.)
       RewriteRule ^(.*)X(.*)$ $1x$2
       # Don't run the test machine out of memory on failure, just stop the loop
-      RewriteCond expr "util_strlen(%{REQUEST_FILENAME}) -lt 257"
+      RewriteCond expr "util_strlen(%{REQUEST_FILENAME}) -le @limitrequestlinex2@"
       RewriteRule X - [N]
    </Location>
    </IfVersion>
@@ -289,6 +296,8 @@
       ProxyPass /reverse/notproxy/ !
       ProxyPass /reverse/ http://@SERVERNAME@:@PORT@/
       ProxyPassReverse /reverse/ http://@SERVERNAME@:@PORT@/
+      ProxyPassMatch ^/reverse-match/(.*)$ http://@SERVERNAME@:@PORT@/$1
+      ProxyPassMatch ^/reverse-slash(/.*)?$ http://@SERVERNAME@:@PORT@$1
       ProxyPassReverseCookieDomain local remote
       ProxyPassReverseCookiePath /local /remote
       <IfVersion >= 2.4.7>
@@ -340,12 +349,7 @@
     AddHandler cgi-script .sh
     AddHandler cgi-script .pl
     ScriptLog @SERVERROOT@/logs/mod_cgi.log
-    <IfModule mod_cgi.c>
-        ScriptLogLength 40960
-    </IfModule>
-    <IfModule !mod_cgi.c>
-        ScriptLogLength 8192
-    </IfModule>
+    ScriptLogLength 40960
     ScriptLogBuffer 256
 
     <Directory @SERVERROOT@/htdocs/modules/cgi>
@@ -489,6 +493,14 @@ Alias /manual @inherit_documentroot@/manual
 
 <IfModule mod_dir.c>
     <Directory @SERVERROOT@/htdocs/modules/dir/htaccess>
+        DirectorySlash OFF
+    </Directory>
+  <IfVersion >= 2.5.1>
+    <Directory @SERVERROOT@/htdocs/modules/dir/htaccess/sub>
+        DirectorySlash NotFound
+    </Directory>
+  </IfVersion>
+    <Directory @SERVERROOT@/htdocs/modules/dir/htaccess>
         AllowOverride Indexes
     </Directory>
 </IfModule>
@@ -558,7 +570,7 @@ Alias /manual @inherit_documentroot@/manual
 ## LimitRequest* directive testing
 ##
 
-LimitRequestLine      128
+LimitRequestLine      @limitrequestline@
 LimitRequestFieldSize 1024
 LimitRequestFields    32
 <Directory @SERVERROOT@/htdocs/apache/limits>
@@ -765,6 +777,46 @@ LimitRequestFields    32
     </IfModule>
 </IfDefine>
 
+##
+## Configuration for t/modules/ldap.t.
+##
+<IfDefine LDAP>
+  Alias /modules/ldap/simple @DocumentRoot@
+  Alias /modules/ldap/group @DocumentRoot@
+  Alias /modules/ldap/refer @DocumentRoot@
+
+  # Simple user lookup
+  <Location /modules/ldap/simple>
+     AuthLDAPURL "ldap://localhost:8389/dc=example,dc=com?uid"
+     AuthLDAPBindDN "cn=httpd,dc=example,dc=com"
+     AuthLDAPBindPassword mod_authnz_ldap
+     AuthType Basic
+     AuthName ldap-simple@httpd.apache.org
+     AuthBasicProvider ldap
+     Require valid-user
+  </Location>
+  # Static group configuration
+  <Location /modules/ldap/group>
+     AuthLDAPURL "ldap://localhost:8389/dc=example,dc=com?uid"
+     AuthLDAPBindDN "cn=httpd,dc=example,dc=com"
+     AuthLDAPBindPassword mod_authnz_ldap
+     AuthType Basic
+     AuthName ldap-group@httpd.apache.org
+     AuthBasicProvider ldap
+     Require ldap-group cn=Group One,dc=example,dc=com
+  </Location>
+  # Referral configuration -- the second user is only found if
+  # httpd follows the referral.
+  <Location /modules/ldap/refer>
+     AuthLDAPURL "ldap://localhost:8389/dc=example,dc=com?uid"
+     AuthLDAPBindDN "cn=httpd,dc=example,dc=com"
+     AuthLDAPBindPassword mod_authnz_ldap
+     AuthType Basic
+     AuthName ldap-refer@httpd.apache.org
+     AuthBasicProvider ldap
+     Require ldap-group cn=Subgroup,ou=dept,dc=example,dc=com
+  </Location>
+</IfDefine>
 
 ##
 ## ErrorDocument handling
@@ -854,13 +906,24 @@ LimitRequestFields    32
    <Directory @SERVERROOT@/htdocs/modules/filter/bytype>
       <IfModule mod_deflate.c>
         AddOutputFilterByType DEFLATE application/xml
+        AddOutputFilterByType DEFLATE text/xml
         AddOutputFilterByType DEFLATE text/css
       </IfModule>
       <IfModule mod_case_filter.c>
         AddOutputFilterByType CASEFILTER application/xml
+        AddOutputFilterByType CASEFILTER text/xml
         AddOutputFilterByType CASEFILTER text/plain
       </IfModule>
    </Directory>
+</IfModule>
+
+##
+## mod_dumpio configuration
+##
+<IfModule mod_dumpio.c>
+	DumpIOInput on
+	DumpIOOutput on
+	LogLevel dumpio:trace7
 </IfModule>
 
 ##
@@ -1087,6 +1150,14 @@ LimitRequestFields    32
      LuaHookTranslateName @SERVERROOT@/htdocs/modules/lua/translate.lua translate_name2
      # default: LuaInherit parent-first
    </Location>
+
+   # Filtering tests
+   LuaOutputFilter LUA_OUTPUT @SERVERROOT@/htdocs/modules/lua/filters.lua output_filter
+   Alias /modules/lua/filtered @DocumentRoot@
+   <Location /modules/lua/filtered/>
+      SetOutputFilter LUA_OUTPUT
+   </Location>
+   
 </IfModule>
 
 # 
@@ -1281,9 +1352,22 @@ LimitRequestFields    32
     <Directory @SERVERROOT@/htdocs/modules/allowmethods>
         Options +Indexes
     </Directory>
+    <IfVersion >= 2.5.1>
+        <Directory @SERVERROOT@/htdocs/modules/allowmethods/NoPost>
+            AllowMethods -POST
+        </Directory>
+    </IfVersion>
     <Directory @SERVERROOT@/htdocs/modules/allowmethods/Get>
         AllowMethods GET
     </Directory>
+    <IfVersion >= 2.5.1>
+        <Directory @SERVERROOT@/htdocs/modules/allowmethods/Get/post>
+            AllowMethods +POST
+        </Directory>
+        <Directory @SERVERROOT@/htdocs/modules/allowmethods/Get/none>
+            AllowMethods -GET
+        </Directory>
+    </IfVersion>
     <Directory @SERVERROOT@/htdocs/modules/allowmethods/Head>
         AllowMethods HEAD
     </Directory>
@@ -1344,3 +1428,47 @@ LimitRequestFields    32
       CheckCaseOnly on
    </Directory>
 </IfModule>
+
+<IfModule mod_actions.c>
+   ScriptAlias /cgi_mod_actions @SERVERROOT@/htdocs/modules/cgi
+   <Location /mod_actions>
+    	SetHandler my-handler
+	Action my-handler "/cgi_mod_actions/perl_echo.pl" virtual
+   </Location>
+
+   <Directory @SERVERROOT@/htdocs/modules/actions/action>
+   	AddHandler my-file-type1 .xyz1
+	Action my-file-type1 "/cgi_mod_actions/perl_echo.pl"
+   	AddHandler my-file-type2 .xyz2
+	Action my-file-type2 "/cgi_mod_actions/perl_echo.pl" virtual
+   </Directory>
+
+   <Directory @SERVERROOT@/htdocs/modules/actions/script>
+   	Script GET  "/cgi_mod_actions/perl_echo.pl"  
+   	Script POST "/cgi_mod_actions/perl_post.pl"  
+   </Directory>
+</IfModule>
+
+<IfModule mod_heartbeat.c>
+	<IfModule mod_heartmonitor.c>
+		HeartbeatListen 239.0.0.1:27999
+		HeartbeatAddress 239.0.0.1:27999
+	</IfModule>
+</IfModule>
+
+#
+# t/modules/sed.t test config
+#
+<IfModule mod_sed.c>
+  AliasMatch /apache/sed/[^/]+/(.*) @DocumentRoot@/$1
+
+  <Location /apache/sed/>
+    AddOutputFilter sed .html
+  </Location>
+
+  <Location /apache/sed/out-foo>
+      OutputSed "s/foo/bar/g"
+  </Location>
+</IfModule>
+
+
