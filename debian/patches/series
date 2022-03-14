@@ -4,7 +4,6 @@ suexec-CVE-2007-1742.patch
 customize_apxs.patch
 build_suexec-custom.patch
 reproducible_builds.diff
-fix-2.4.52-regression.patch
 
 # This patch is applied manually
 #suexec-custom.patch
