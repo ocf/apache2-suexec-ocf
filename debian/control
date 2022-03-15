@@ -164,6 +164,7 @@ Architecture: any
 Depends: debhelper (>= 10),
          libapr1-dev,
          libaprutil1-dev,
+         libpcre2-dev,
          openssl,
          ${misc:Depends},
          ${perl:Depends}
