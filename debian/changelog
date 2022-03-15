@@ -1,4 +1,4 @@
-apache2 (2.4.53-1~deb11u1) UNRELEASED; urgency=medium
+apache2 (2.4.53-1~deb11u1) bullseye; urgency=medium
 
   * New upstream version 2.4.53 (Closes: CVE-2022-22719,
     CVE-2022-22720, CVE-2022-22721, CVE-2022-23943)
@@ -7,7 +7,7 @@ apache2 (2.4.53-1~deb11u1) UNRELEASED; urgency=medium
   * Refresh fhs_compliance.patch
   * Update test framework (fixes autopkgtest)
 
- -- Yadd <yadd@debian.org>  Mon, 14 Mar 2022 17:23:29 +0100
+ -- Yadd <yadd@debian.org>  Mon, 14 Mar 2022 17:28:35 +0100
 
 apache2 (2.4.52-1~deb11u2) bullseye-security; urgency=medium
 
