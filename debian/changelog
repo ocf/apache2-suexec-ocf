@@ -1,4 +1,3 @@
-
 apache2 (2.4.53-1~deb11u1ocf1) bullseye; urgency=medium
 
   * Apply OCF apache2-suexec-ocf patches
